@@ -16,4 +16,12 @@ public class Node : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    private void OnDrawGizmos()
+    {
+        for (int i = 0; i < Connections.Count; i++)
+        {
+            Gizmos.DrawLine(transform.position, Connections[i].transform.position);
+        }
+    }
 }
