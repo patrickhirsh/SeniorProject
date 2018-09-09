@@ -35,7 +35,7 @@ public class SlowDownBehavior : MonoBehaviour {
 
             float unitDistance = dist / CastDistance;
 
-            Velocity = Mathf.Lerp(Velocity, 0, 1 - unitDistance)
+            Velocity = Mathf.Lerp(Velocity, 0, 1 - unitDistance);
         }
         
 
