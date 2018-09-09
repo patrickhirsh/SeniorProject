@@ -14,6 +14,8 @@ public class Car : MonoBehaviour {
 
     public float SpeedCap;
 
+    public float RotSpeed;
+
     // Use this for initialization
     void Start ()
     {
@@ -40,8 +42,11 @@ public class Car : MonoBehaviour {
             }
             if (transform.position != PathNodes[NodeCounter].transform.position)
             {
-                Vector3 pos = Vector3.MoveTowards(transform.position, PathNodes[NodeCounter].transform.position, CarSpeed * Time.deltaTime);
-                GetComponent<Rigidbody>().MovePosition(pos);
+                Vector3 Pos = Vector3.MoveTowards(transform.position, PathNodes[NodeCounter].transform.position, CarSpeed * Time.deltaTime);
+                Vector3 NewRot = Vector3.RotateTowards(transform.forward, PathNodes[NodeCounter].transform.position - transform.position, RotSpeed * Time.deltaTime, 0.0f);
+                Debug.DrawRay(transform.position, NewRot, Color.red);
+                GetComponent<Rigidbody>().MovePosition(Pos);
+                transform.rotation = Quaternion.LookRotation(NewRot);
             }
             else if (NodeCounter + 1 == PathNodes.Count)
             {

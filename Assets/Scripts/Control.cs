@@ -31,7 +31,7 @@ public class Control: MonoBehaviour
                 {
                     if (CarSelected)
                     {
-                        CurrentCar = 
+                        //CurrentCar = 
                     }
                 }
                 else
