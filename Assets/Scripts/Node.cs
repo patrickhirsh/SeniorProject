@@ -90,7 +90,10 @@ public class Node : MonoBehaviour
         output.Add(Traverse);
 
         while (Traverse.PrevNode != null)
-            output.Add(PrevNode);
+        {
+            output.Add(Traverse.PrevNode);
+            Traverse = Traverse.PrevNode;
+        }
 
         output.Reverse();
         return output;
@@ -100,7 +103,7 @@ public class Node : MonoBehaviour
     {
         for (int i = 0; i < Connections.Count; i++)
         {
-            Gizmos.DrawLine(transform.position, Connections[i].transform.position);
+           // Gizmos.DrawLine(transform.position, Connections[i].transform.position);
         }
     }
 }

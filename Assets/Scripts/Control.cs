@@ -37,8 +37,9 @@ public class Control: MonoBehaviour
                     Debug.Log("Hit Node");
                     if (CarSelected)
                     {
+                        Debug.Log("Pathing to car");
                         Node NewNode = CurrentCar.GetDestNode();
-                        //NewNode.Pathto(hitinfo.transform.gameObject); Or something like this
+                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject));
                         //route car to node somehow
                         CarSelected = false;
                     }

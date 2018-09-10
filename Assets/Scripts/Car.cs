@@ -27,10 +27,17 @@ public class Car : MonoBehaviour {
         return PathNodes[NodeCounter];
     }
 
+    public void SetPath(List<Node> InputList)
+    {
+        PathNodes = InputList;
+        NodeCounter = 0;
+        moving = true;
+    }
+
     // Use this for initialization
     void Start ()
     {
-        moving = true;
+        moving = false;
 	}
 	
 	// Update is called once per frame
