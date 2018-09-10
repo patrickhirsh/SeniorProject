@@ -29,21 +29,36 @@ public class Control: MonoBehaviour
                 Debug.Log("Hit " + hitInfo.transform.gameObject.name);
                 if (hitInfo.transform.gameObject.tag == "Car")
                 {
+                        CurrentCar = hitInfo.transform.gameObject.GetComponent<Car>();
+                        CarSelected = true;
+                }
+                else if(hitInfo.transform.gameObject.tag == "Node")
+                {
+                    Debug.Log("Hit Node");
                     if (CarSelected)
                     {
-                        //CurrentCar = 
+                        Node NewNode = CurrentCar.GetDestNode();
+                        //NewNode.Pathto(hitinfo.transform.gameObject); Or something like this
+                        //route car to node somehow
+                        CarSelected = false;
+                    }
+                    else
+                    {
+                        //Do Nothing
                     }
                 }
+                //Allow deselection of cars
                 else
                 {
-                    Debug.Log("nopz");
+                    CarSelected = false;
+                    Debug.Log("Car Deselected");
                 }
             }
             else
             {
                 Debug.Log("No hit");
+                CarSelected = false;
             }
-            Debug.Log("Mouse is down");
         }
     }
 }

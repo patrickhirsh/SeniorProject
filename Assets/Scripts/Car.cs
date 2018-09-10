@@ -16,6 +16,17 @@ public class Car : MonoBehaviour {
 
     public float RotSpeed;
 
+    Node LastNode;
+
+    public Node GetDestNode()
+    {
+        if(PathNodes.Count == 0)
+        {
+            return LastNode;
+        }
+        return PathNodes[NodeCounter];
+    }
+
     // Use this for initialization
     void Start ()
     {
@@ -23,7 +34,7 @@ public class Car : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
         if (moving)
         {
@@ -50,7 +61,8 @@ public class Car : MonoBehaviour {
             }
             else if (NodeCounter + 1 == PathNodes.Count)
             {
-                
+                LastNode = PathNodes[NodeCounter];
+                PathNodes = new List<Node>();
                 moving = false;
             }
             else
