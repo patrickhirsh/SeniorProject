@@ -98,13 +98,9 @@ public class Node : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-    {
         for (int i = 0; i < Connections.Count; i++)
         {
             Gizmos.DrawLine(transform.position, Connections[i].transform.position);
         }
     }
-
-
-    
 }
