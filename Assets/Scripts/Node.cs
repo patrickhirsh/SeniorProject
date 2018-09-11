@@ -5,7 +5,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
 
-    public GameObject[] NodeObjects;
+    public static GameObject[] NodeObjects;
 
     [SerializeField]
     public List<Node> Connections;
