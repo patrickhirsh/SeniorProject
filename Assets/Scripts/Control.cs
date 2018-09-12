@@ -32,6 +32,10 @@ public class Control: MonoBehaviour
                         CurrentCar = hitInfo.transform.gameObject.GetComponent<Car>();
                         CarSelected = true;
                 }
+                else if(hitInfo.transform.gameObject.tag == "AngryCar")
+                {
+                    //Do Nothing
+                }
                 else if(hitInfo.transform.gameObject.tag == "Node")
                 {
                     Debug.Log("Hit Node");
@@ -60,6 +64,10 @@ public class Control: MonoBehaviour
                 Debug.Log("No hit");
                 CarSelected = false;
             }
+        }
+        foreach(Node x in Node.NodeObjects)
+        {
+
         }
     }
 }

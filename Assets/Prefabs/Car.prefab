@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620282406565848}
-  - component: {fileID: 33175136221126454}
   - component: {fileID: 23107149232795500}
   - component: {fileID: 65627920056830392}
   - component: {fileID: 114291285427564778}
@@ -38,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1020076869143276}
   m_LocalRotation: {x: -0, y: 0.99999976, z: -0, w: 0.0006694141}
-  m_LocalPosition: {x: 0, y: 0, z: 5.23}
-  m_LocalScale: {x: 1, y: 2.1657, z: 1}
+  m_LocalPosition: {x: 0.03, y: 0.047, z: -0.027}
+  m_LocalScale: {x: 1, y: 1.0052447, z: 1.8872188}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -79,13 +78,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33175136221126454
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1020076869143276}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &54273619421799450
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -108,7 +100,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1020076869143276}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -125,9 +117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PathNodes:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   CarSpeed: 3
   SpeedCap: 6
