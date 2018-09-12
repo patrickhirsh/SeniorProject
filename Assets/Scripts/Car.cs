@@ -18,13 +18,23 @@ public class Car : MonoBehaviour {
 
     Node LastNode;
 
-    public Node GetDestNode()
+    public Node GetNextNode()
     {
         if(PathNodes.Count == 0)
         {
             return LastNode;
         }
         return PathNodes[NodeCounter];
+    }
+
+    public Node GetDestNode()
+    {
+        Debug.Log(PathNodes.Count);
+        Debug.Log(PathNodes[PathNodes.Count -1].gameObject.name);
+        if (PathNodes[PathNodes.Count - 1] != null)
+            return PathNodes[PathNodes.Count - 1];
+        else
+            return LastNode;
     }
 
     public void SetPath(List<Node> InputList)

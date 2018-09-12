@@ -18,6 +18,7 @@ public class Node : MonoBehaviour
     void Start ()
     {
         NodeObjects = GameObject.FindGameObjectsWithTag("Node");
+        NodeObjectsGameObject.FindGameObjectsWithTag("Parking Spot");
     }
 	
 	// Update is called once per frame
