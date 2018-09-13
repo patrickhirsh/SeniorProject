@@ -78,9 +78,13 @@ public class Car : MonoBehaviour {
             else if (NodeCounter + 1 == PathNodes.Count)
             {
                 LastNode = PathNodes[NodeCounter];
-                
                 PathNodes = new List<Node>();
                 moving = false;
+                ParkingSpotNode DestStop = LastNode.GetComponent<ParkingSpotNode>();
+                if(DestStop != null)
+                {
+                    DestStop.IsOccupied = true;
+                }
             }
             else
             {
