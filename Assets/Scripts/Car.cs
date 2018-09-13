@@ -40,7 +40,11 @@ public class Car : MonoBehaviour {
         PathNodes = InputList;
         NodeCounter = 0;
         moving = true;
-
+        if (LastNode.GetComponent<ParkingSpotNode>())
+        {
+            ParkingSpotNode psn = LastNode.GetComponent<ParkingSpotNode>();
+            psn.IsOccupied = false;
+        }
     }
 
     // Use this for initialization
