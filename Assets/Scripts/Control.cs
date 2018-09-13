@@ -18,7 +18,7 @@ public class Control : MonoBehaviour
         //No cars selected on startup
         CarSelected = false;
         //Angry car needs to be set to find it's path on startup
-        CalcAngryCarPath();
+        //CalcAngryCarPath();
 
     }
 
@@ -51,7 +51,7 @@ public class Control : MonoBehaviour
                     {
                         Debug.Log("Pathing to car");
                         Node NewNode = CurrentCar.GetNextNode();
-                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject));
+                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<Node>()));
                         //route car to node somehow
                         CarSelected = false;
                     }
@@ -67,7 +67,7 @@ public class Control : MonoBehaviour
                     {
                         Debug.Log("Pathing to car");
                         Node NewNode = CurrentCar.GetNextNode();
-                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject));
+                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<Node>()));
                         //route car to node somehow
                         CarSelected = false;
                     }
@@ -91,7 +91,7 @@ public class Control : MonoBehaviour
             }
         }
         //Check and path angry car as needed
-        PathAngryCar();
+        //PathAngryCar();
     }
 
     private void PathAngryCar()
@@ -99,7 +99,7 @@ public class Control : MonoBehaviour
         //get current destination of angrycar
         Node acardest = AngryCar.GetDestNode();
         //if the angry cars destination node is no longer active, set a new one
-        if (!acardest.gameObject.activeSelf)
+        if (!acardest.gameObject.activeSelf)  // does this work?
         {
             CalcAngryCarPath();
         }
@@ -110,9 +110,9 @@ public class Control : MonoBehaviour
         //Set mindist to max
         float MinDist = float.MaxValue;
         //Create parking spot Destination
-        Node parkingSpotDest = Node.NodeObjects[0].GetComponent<Node>();
+        Node parkingSpotDest = Node.GetNodeObjects()[0].GetComponent<Node>();
         //Foreach node
-        foreach (GameObject x in Node.NodeObjects)
+        foreach (GameObject x in Node.GetNodeObjects())
         {
             //If it's a parking spot
             if (x.tag == "Parking Spot")
@@ -127,6 +127,6 @@ public class Control : MonoBehaviour
             }
         }
         //Set the path for the angry car
-        AngryCar.SetPath(AngryCar.GetNextNode().FindShortestPath(parkingSpotDest.transform.gameObject));
+        AngryCar.SetPath(AngryCar.GetNextNode().FindShortestPath(parkingSpotDest.transform.gameObject.GetComponent<Node>()));
     }
 }
