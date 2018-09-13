@@ -8,7 +8,7 @@ public class ParkingSpotNode : Node {
 
 	// Use this for initialization
 	void Start () {
-		
+        IsOccupied = false;	
 	}
 	
 	// Update is called once per frame

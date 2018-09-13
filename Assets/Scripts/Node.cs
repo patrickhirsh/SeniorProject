@@ -15,7 +15,7 @@ public class Node : MonoBehaviour
     public Node PrevNode;      // previous node in shortest path
 
     // Use this for initialization
-    void Start ()
+    void Awake()
     {
         foreach(GameObject x in GameObject.FindGameObjectsWithTag("Node"))
         {
@@ -36,6 +36,7 @@ public class Node : MonoBehaviour
 
     public List<Node> FindShortestPath(GameObject Destination)
     {
+        Debug.Log("Number of Nodes" + NodeObjects.Count);
         // construct a transform list of all unvisited nodes
         List<Transform> Frontier = new List<Transform>();
         foreach (GameObject Obj in NodeObjects)
