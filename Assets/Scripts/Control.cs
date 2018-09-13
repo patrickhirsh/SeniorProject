@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Control: MonoBehaviour
+public class Control : MonoBehaviour
 {
     bool CarSelected;
 
@@ -60,6 +60,23 @@ public class Control: MonoBehaviour
                         //Do Nothing
                     }
                 }
+                else if (hitInfo.transform.gameObject.tag == "Parking Spot")
+                {
+                    Debug.Log("Hit Parking Spot");
+                    if (CarSelected)
+                    {
+                        Debug.Log("Pathing to car");
+                        Node NewNode = CurrentCar.GetNextNode();
+                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject));
+                        //route car to node somehow
+                        CarSelected = false;
+                    }
+                    else
+                    {
+                        //Do Nothing
+                    }
+
+                }
                 //Allow deselection of cars
                 else
                 {
@@ -79,10 +96,10 @@ public class Control: MonoBehaviour
 
     private void PathAngryCar()
     {
-        //Get current destination of AngryCar
-        Node ACarDest = AngryCar.GetDestNode();
+        //get current destination of angrycar
+        Node acardest = AngryCar.GetDestNode();
         //if the angry cars destination node is no longer active, set a new one
-        if (!ACarDest.gameObject.activeSelf)
+        if (!acardest.gameObject.activeSelf)
         {
             CalcAngryCarPath();
         }

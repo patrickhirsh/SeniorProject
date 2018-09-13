@@ -36,7 +36,6 @@ public class Node : MonoBehaviour
 
     public List<Node> FindShortestPath(GameObject Destination)
     {
-        Debug.Log("Number of Nodes" + NodeObjects.Count);
         // construct a transform list of all unvisited nodes
         List<Transform> Frontier = new List<Transform>();
         foreach (GameObject Obj in NodeObjects)

@@ -29,8 +29,6 @@ public class Car : MonoBehaviour {
 
     public Node GetDestNode()
     {
-        Debug.Log(PathNodes.Count);
-        Debug.Log(PathNodes[PathNodes.Count -1].gameObject.name);
         if (PathNodes[PathNodes.Count - 1] != null)
             return PathNodes[PathNodes.Count - 1];
         else
@@ -42,7 +40,7 @@ public class Car : MonoBehaviour {
         PathNodes = InputList;
         NodeCounter = 0;
         moving = true;
-        LastNode.gameObject.SetActive(true);
+
     }
 
     // Use this for initialization
