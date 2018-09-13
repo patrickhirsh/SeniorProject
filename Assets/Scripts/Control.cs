@@ -4,94 +4,88 @@ using UnityEngine;
 
 public class Control : MonoBehaviour
 {
-    bool CarSelected;
-
-    public GameObject target;
-
+    
+    public GameObject target;   // the point at which AngryCar will try to park closest to
     public Car AngryCar;
+    public bool InputDebugMode;
 
-    Car CurrentCar;
+    bool CarSelected;           // indicates a car is currently selected. Waiting for a dest. click for pathing...
+    Car CurrentCar;             // when CarSelected == true, this is the currently selected car
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-        //No cars selected on startup
-        CarSelected = false;
-        //Angry car needs to be set to find it's path on startup
-        //CalcAngryCarPath();
-
+        InputDebugMode = false;
+        CarSelected = false;        // reset CarSelected state
+        Node.InitializeNodes();     // initialize static node structures
+        //CalcAngryCarPath();         // determine AngryCar's initial path on startup        
     }
 
     // Update is called once per frame
     void Update()
     {
-        //get input to direct cars
+        HandleInput();
+        //Check and path angry car as needed
+        //PathAngryCar();
+    }
+
+
+    private void HandleInput()
+    {
+        // Handle MouseDown
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Mouse is down");
-
+            // determine click location
             RaycastHit hitInfo = new RaycastHit();
             bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
+
+            // if the click was valid...
             if (hit)
             {
-                Debug.Log("Hit " + hitInfo.transform.gameObject.name);
-                if (hitInfo.transform.gameObject.tag == "Car")
+                if (InputDebugMode) { Debug.Log("Hit " + hitInfo.transform.gameObject.name); }
+                switch (hitInfo.transform.gameObject.tag)
                 {
-                    CurrentCar = hitInfo.transform.gameObject.GetComponent<Car>();
-                    CarSelected = true;
-                }
-                else if (hitInfo.transform.gameObject.tag == "AngryCar")
-                {
-                    //Do Nothing
-                }
-                else if (hitInfo.transform.gameObject.tag == "Node")
-                {
-                    Debug.Log("Hit Node");
-                    if (CarSelected)
-                    {
-                        Debug.Log("Pathing to car");
-                        Node NewNode = CurrentCar.GetNextNode();
-                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<Node>()));
-                        //route car to node somehow
-                        CarSelected = false;
-                    }
-                    else
-                    {
-                        //Do Nothing
-                    }
-                }
-                else if (hitInfo.transform.gameObject.tag == "Parking Spot")
-                {
-                    Debug.Log("Hit Parking Spot");
-                    if (CarSelected)
-                    {
-                        Debug.Log("Pathing to car");
-                        Node NewNode = CurrentCar.GetNextNode();
-                        CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<Node>()));
-                        //route car to node somehow
-                        CarSelected = false;
-                    }
-                    else
-                    {
-                        //Do Nothing
-                    }
+                    case "Car":
+                        CurrentCar = hitInfo.transform.gameObject.GetComponent<Car>();
+                        CarSelected = true;
+                        break;
 
-                }
-                //Allow deselection of cars
-                else
-                {
-                    CarSelected = false;
-                    Debug.Log("Car Deselected");
+                    case "AngryCar":
+                        break;
+
+                    case "Node":
+                        if (CarSelected)
+                        {
+                            if (InputDebugMode) { Debug.Log("Pathing to Node"); }
+                            Node NewNode = CurrentCar.GetNextNode();
+                            CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<Node>()));
+                            CarSelected = false;
+                        }
+                        break;
+
+                    case "Parking Spot":
+                        if (CarSelected)
+                        {
+                            if (InputDebugMode) { Debug.Log("Pathing to ParkingSpotNode"); }
+                            Node NewNode = CurrentCar.GetNextNode();
+                            CurrentCar.SetPath(NewNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<Node>()));
+                            CarSelected = false;
+                        }
+                        break;
+
+                    default:
+                        if (InputDebugMode) { Debug.Log("No hit"); }
+                        CarSelected = false;
+                        break;
                 }
             }
+
             else
             {
                 Debug.Log("No hit");
                 CarSelected = false;
             }
         }
-        //Check and path angry car as needed
-        //PathAngryCar();
     }
 
     private void PathAngryCar()
