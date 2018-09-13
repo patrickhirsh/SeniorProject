@@ -42,6 +42,7 @@ public class Car : MonoBehaviour {
         PathNodes = InputList;
         NodeCounter = 0;
         moving = true;
+        LastNode.gameObject.SetActive(true);
     }
 
     // Use this for initialization
@@ -79,7 +80,7 @@ public class Car : MonoBehaviour {
             else if (NodeCounter + 1 == PathNodes.Count)
             {
                 LastNode = PathNodes[NodeCounter];
-                LastNode.gameObject.SetActive(false);
+                
                 PathNodes = new List<Node>();
                 moving = false;
             }
