@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,6 +37,11 @@ public class Node : MonoBehaviour
 
     public List<Node> FindShortestPath(GameObject Destination)
     {
+        // ensure we never get an invalid destination node
+        if (Destination.GetComponent<ParkingSpotNode>() != null)
+            if (Destination.GetComponent<ParkingSpotNode>().IsOccupied == true)
+                throw new Exception("FindShortestPath was given an invalid destination node");
+
         // construct a transform list of all unvisited nodes
         List<Transform> Frontier = new List<Transform>();
         foreach (GameObject Obj in NodeObjects)
