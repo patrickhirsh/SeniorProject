@@ -5,7 +5,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
 
-    public static GameObject[] NodeObjects;
+    public static List<GameObject> NodeObjects;
 
     [SerializeField]
     public List<Node> Connections;
@@ -17,8 +17,15 @@ public class Node : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        NodeObjects = GameObject.FindGameObjectsWithTag("Node");
-        NodeObjectsGameObject.FindGameObjectsWithTag("Parking Spot");
+        foreach(GameObject x in GameObject.FindGameObjectsWithTag("Node"))
+        {
+            NodeObjects.Add(x);
+        }
+        foreach (GameObject x in GameObject.FindGameObjectsWithTag("Parking Spot"))
+        {
+            NodeObjects.Add(x);
+        }
+
     }
 	
 	// Update is called once per frame
