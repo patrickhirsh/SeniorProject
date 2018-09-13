@@ -29,10 +29,17 @@ public class Car : MonoBehaviour {
 
     public Node GetDestNode()
     {
-        if (PathNodes[PathNodes.Count - 1] != null)
-            return PathNodes[PathNodes.Count - 1];
+        if (PathNodes.Count != 0)
+        {
+            if (PathNodes[PathNodes.Count - 1] != null)
+                return PathNodes[PathNodes.Count - 1];
+            else
+                return LastNode;
+        }
         else
-            return LastNode;
+        {
+            return null;
+        }
     }
 
     public void SetPath(List<Node> InputList)
