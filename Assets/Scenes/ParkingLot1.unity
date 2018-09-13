@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667582, g: 0.4842714, b: 0.5645229, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -291,6 +291,34 @@ Transform:
   m_Father: {fileID: 2080555110}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &290140903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 290140904}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &290140904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 290140903}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23.35, y: -5.5830555, z: 3.1135983}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &333488513
 Prefab:
   m_ObjectHideFlags: 0
@@ -330,6 +358,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114247091014596098, guid: bf35ce9cd73443c48b15cdbf6b2d546e,
+        type: 2}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 290140903}
+    - target: {fileID: 114247091014596098, guid: bf35ce9cd73443c48b15cdbf6b2d546e,
+        type: 2}
+      propertyPath: AngryCar
+      value: 
+      objectReference: {fileID: 1108818582}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf35ce9cd73443c48b15cdbf6b2d546e, type: 2}
   m_IsPrefabAsset: 0
@@ -1288,6 +1326,12 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 985259267}
   m_Script: {fileID: 11500000, guid: 0c15b88102b444896bf5bc619b0e0f50, type: 3}
+--- !u!114 &1108818582 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114291285427564778, guid: 0a9bb16bc5c558a4a82124462b8f760e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1403820182}
+  m_Script: {fileID: 11500000, guid: ae848ed26bf065b41957917384b45cac, type: 3}
 --- !u!114 &1133600193 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114196899607360672, guid: 55d102dbafeb14969bb81094b4ea3793,
