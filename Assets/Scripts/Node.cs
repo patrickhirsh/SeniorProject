@@ -78,7 +78,6 @@ public class Node : MonoBehaviour
             Transform Current = Frontier[0];
             Frontier.Remove(Current);
 
-            // 
             Node CurrentNode = Current.GetComponent<Node>();
             foreach (Node Connection in CurrentNode.Connections)
             {
@@ -111,13 +110,5 @@ public class Node : MonoBehaviour
 
         output.Reverse();
         return output;
-    }
-
-    private void OnDrawGizmos()
-    {
-        for (int i = 0; i < Connections.Count; i++)
-        {
-           // Gizmos.DrawLine(transform.position, Connections[i].transform.position);
-        }
     }
 }
