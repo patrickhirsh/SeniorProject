@@ -79,6 +79,7 @@ public class Car : MonoBehaviour {
             else if (NodeCounter + 1 == PathNodes.Count)
             {
                 LastNode = PathNodes[NodeCounter];
+                LastNode.gameObject.SetActive(false);
                 PathNodes = new List<Node>();
                 moving = false;
             }
