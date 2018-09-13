@@ -17,6 +17,8 @@ public class Car : MonoBehaviour {
     public float RotSpeed;
 
     Node LastNode;
+    //TODO: set the LastNode to the car's spawn point on initialization
+    // this is the cause of the NullReferenceException prior to pathing
 
     public Node GetNextNode()
     {
