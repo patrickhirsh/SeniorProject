@@ -21,7 +21,7 @@ public class Car : MonoBehaviour {
     //TODO: set the LastNode to the car's spawn point on initialization
     // this is the cause of the NullReferenceException prior to pathing
 
-    public Start(){
+    public void Start(){
     	
     }
 

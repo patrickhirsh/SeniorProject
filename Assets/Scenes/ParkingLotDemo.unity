@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667582, g: 0.4842714, b: 0.5645229, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4156,23 +4156,15 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1020076869143276, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
+      propertyPath: m_Name
+      value: Green Car0
+      objectReference: {fileID: 0}
     - target: {fileID: 114291285427564778, guid: e233620e7bf40364e979aebc43acfcef,
         type: 2}
       propertyPath: PathNodes.Array.data[0]
       value: 
       objectReference: {fileID: 1271982360}
-    - target: {fileID: 4620282406565848, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4620282406565848, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1020076869143276, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
-      propertyPath: m_Name
-      value: Green Car0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
   m_IsPrefabAsset: 0
@@ -6147,78 +6139,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 4228583342915804, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.000047422087
-      objectReference: {fileID: 0}
-    - target: {fileID: 4228583342915804, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.016547829
-      objectReference: {fileID: 0}
-    - target: {fileID: 4395632092586764, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.017002579
-      objectReference: {fileID: 0}
-    - target: {fileID: 4395632092586764, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.0247
-      objectReference: {fileID: 0}
-    - target: {fileID: 4210346925499764, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.0171
-      objectReference: {fileID: 0}
-    - target: {fileID: 4210346925499764, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.0247
-      objectReference: {fileID: 0}
-    - target: {fileID: 4243225026242888, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.017012578
-      objectReference: {fileID: 0}
-    - target: {fileID: 4243225026242888, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.011256786
-      objectReference: {fileID: 0}
-    - target: {fileID: 4673983962741416, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.014922578
-      objectReference: {fileID: 0}
-    - target: {fileID: 4673983962741416, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.03304425
-      objectReference: {fileID: 0}
-    - target: {fileID: 4449850021115254, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.014922578
-      objectReference: {fileID: 0}
-    - target: {fileID: 4449850021115254, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.001208202
-      objectReference: {fileID: 0}
-    - target: {fileID: 4110451059813340, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.015013411
-      objectReference: {fileID: 0}
-    - target: {fileID: 4110451059813340, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.001208202
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761009693974556, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.017107433
-      objectReference: {fileID: 0}
-    - target: {fileID: 4761009693974556, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.011256786
-      objectReference: {fileID: 0}
-    - target: {fileID: 4098628373959238, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.015869435
-      objectReference: {fileID: 0}
-    - target: {fileID: 4098628373959238, guid: 05a659d539bb8c942a60709ada7806fe, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.03304425
-      objectReference: {fileID: 0}
     - target: {fileID: 114589885042033130, guid: 05a659d539bb8c942a60709ada7806fe,
         type: 2}
       propertyPath: PathNodes.Array.data[0]
@@ -8056,18 +7976,6 @@ Prefab:
       propertyPath: PathNodes.Array.data[0]
       value: 
       objectReference: {fileID: 552667497}
-    - target: {fileID: 4620282406565848, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 0.99999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 4620282406565848, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 0.99999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 4620282406565848, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1.00524
-      objectReference: {fileID: 0}
     - target: {fileID: 1020076869143276, guid: e233620e7bf40364e979aebc43acfcef, type: 2}
       propertyPath: m_Name
       value: Green Car1
