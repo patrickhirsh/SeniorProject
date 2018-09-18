@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class Car : MonoBehaviour {
 
+	//List of nodes to path to
     public List<Node> PathNodes;
-
+    //Iterator through pathnodes
     int NodeCounter = 0;
-
+    //Carspeed vairable
     public float CarSpeed;
-
+    //Whether the car is currently pathing
     bool moving;
-
+    //Cap for car speed
     public float SpeedCap;
-
+    //Speed that cars will rotate to face parking spots
     public float RotSpeed;
-
+    //Node that the car ended it's pathing in. 
     Node LastNode;
     //TODO: set the LastNode to the car's spawn point on initialization
     // this is the cause of the NullReferenceException prior to pathing
+
+    public Start(){
+    	
+    }
 
     public Node GetNextNode()
     {
@@ -49,7 +54,7 @@ public class Car : MonoBehaviour {
         PathNodes = InputList;
         NodeCounter = 0;
         moving = true;
-        if (LastNode.GetComponent<ParkingSpotNode>())
+        if (LastNode.GetComponent<ParkingSpotNode>() != null)
         {
             ParkingSpotNode psn = LastNode.GetComponent<ParkingSpotNode>();
             psn.IsOccupied = false;
