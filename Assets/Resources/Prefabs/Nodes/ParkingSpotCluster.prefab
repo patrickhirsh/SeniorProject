@@ -399,8 +399,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Connections: []
-  Weight: 0
-  PrevNode: {fileID: 0}
 --- !u!114 &114280952184601196
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -413,8 +411,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Connections: []
-  Weight: 0
-  PrevNode: {fileID: 0}
 --- !u!114 &114325392082544930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -429,8 +425,6 @@ MonoBehaviour:
   Connections:
   - {fileID: 114280952184601196}
   - {fileID: 114196899607360672}
-  Weight: 0
-  PrevNode: {fileID: 0}
   IsOccupied: 0
 --- !u!114 &114398090347300326
 MonoBehaviour:
@@ -446,6 +440,4 @@ MonoBehaviour:
   Connections:
   - {fileID: 114280952184601196}
   - {fileID: 114196899607360672}
-  Weight: 0
-  PrevNode: {fileID: 0}
   IsOccupied: 0

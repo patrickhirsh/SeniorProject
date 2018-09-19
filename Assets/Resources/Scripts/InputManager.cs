@@ -4,28 +4,24 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    
-    public GameObject target;   // the point at which AngryCar will try to park closest to
-    public Car AngryCar;
     public bool InputDebugMode;
 
-    bool CarSelected;           // indicates a car is currently selected. Waiting for a dest. click for pathing...
-    Car CurrentCar;             // when CarSelected == true, this is the currently selected car
+    bool CarSelected;                   // indicates a car is currently selected. Waiting for a dest. click for pathing...
+    Car CurrentCar;                     // when CarSelected == true, this is the currently selected car
+
 
     // Use this for initialization
     void Awake()
     {
-        InputDebugMode = false;
-        CarSelected = false;        // reset CarSelected state
-        //CalcAngryCarPath();         // determine AngryCar's initial path on startup        
+        InputDebugMode = true;
+        CarSelected = false;            // reset CarSelected state       
     }
+
 
     // Update is called once per frame
     void Update()
     {
         HandleInput();
-        //Check and path angry car as needed
-        //PathAngryCar();
     }
 
 
@@ -86,38 +82,5 @@ public class InputManager : MonoBehaviour
                 CarSelected = false;
             }
         }
-    }
-
-    // checks if AngryCar's destination is still vacant. Should be ran every update
-    private void PathAngryCar()
-    {
-        Node acardest = AngryCar.GetDestNode();
-        if (!acardest.gameObject.activeSelf)
-            CalcAngryCarPath();
-    }
-
-    // recalculates the AngryCar's path to be the empty spot nearest to the target
-    private void CalcAngryCarPath()
-    {
-        //Create parking spot Destination
-        Node parkingSpotDest = Node.GetNodeObjects()[0].GetComponent<Node>();
-
-        // find empty parking spots and determine the spot closest to the target
-        float MinDist = float.MaxValue;
-        foreach (GameObject x in Node.GetNodeObjects())
-        {
-            if ((x.tag == "Parking Spot") && !(x.GetComponent<ParkingSpotNode>().IsOccupied))
-            {
-                if (Vector3.Distance(target.transform.position, x.transform.position) < MinDist)
-                {
-                    // set the parking spot as the destination for the angry car
-                    parkingSpotDest = x.GetComponent<Node>();
-                    MinDist = Vector3.Distance(target.transform.position, x.transform.position);
-                }
-            }
-        }
-
-        // set the path for the angry car
-        AngryCar.SetPath(AngryCar.GetNextNode().FindShortestPath(parkingSpotDest.transform.gameObject.GetComponent<Node>()));
     }
 }

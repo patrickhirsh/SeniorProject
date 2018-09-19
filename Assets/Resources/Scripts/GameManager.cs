@@ -10,12 +10,13 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        // initialize static structures for multi-object classes
-        Node.InitializeNodes();                         
-        ParkingSpotNode.InitializeParkingSpotNodes(3);
-
         // obtain a reference to AngryCar
         ACar = FindObjectOfType<AngryCar>();
+
+        // initialize static structures for non-singleton classes
+        Car.Initialize();
+        Node.Initialize();
+        ParkingSpotNode.Initialize(3);
     }
 	
 	// Update is called once per frame
@@ -23,4 +24,6 @@ public class GameManager : MonoBehaviour {
     {
 		
 	}
+
+    
 }
