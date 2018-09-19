@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameObject Target;   // need to swap all references to Control.Target with this one
     public static AngryCar ACar;
+    public static ParkingSpotNode StartNode;
 
 	// Use this for initialization
 	void Start ()
@@ -13,6 +15,7 @@ public class GameManager : MonoBehaviour {
         // obtain a reference to AngryCar
         ACar = FindObjectOfType<AngryCar>();
         Target = GameObject.FindGameObjectWithTag("Target");
+        StartNode = GameObject.FindGameObjectWithTag("Start Node").GetComponent<ParkingSpotNode>();
         // initialize static structures for non-singleton classes
         Car.Initialize();
         Node.Initialize();
@@ -25,5 +28,8 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
-    
+    public static Node GetStartNode()
+    {
+        return StartNode;
+    }
 }

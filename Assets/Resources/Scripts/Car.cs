@@ -94,7 +94,7 @@ public class Car : MonoBehaviour {
     }
 
     //Returns Destination Node
-    public ParkingSpotNode GetDestNode()
+    public virtual ParkingSpotNode GetDestNode()
     {
         //If pathnodes isn't empty
         if (PathNodes.Count != 0)

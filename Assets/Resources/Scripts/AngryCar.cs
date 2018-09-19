@@ -6,7 +6,7 @@ using UnityEngine;
 public class AngryCar : Car
 {
 
-
+    
 
     // TODO: Make AngryCar inherit from Car, and refactor this code to contain all of (any) angry cars' functionality
 
@@ -24,20 +24,22 @@ public class AngryCar : Car
 
     //public float RotSpeed;
 
-    Node LastNode;
+    ParkingSpotNode LastNode;
 
     public AngryCar()
     {
+        //The difference between Angry Car and a Regular Car is that angry car automatically paths on startup
+        //CalcCarPath();
     }
 
-    //public Node GetDestNode()
-    //{
-    //    if (PathNodes.Count == 0)
-    //    {
-    //        return LastNode;
-    //    }
-    //    return PathNodes[NodeCounter];
-    //}
+    public override ParkingSpotNode GetDestNode()
+    {
+        if (PathNodes.Count == 0)
+        {
+            return LastNode;
+        }
+        return (ParkingSpotNode) PathNodes[NodeCounter];
+    }
 
     //public void SetPath(List<Node> InputList)
     //{
@@ -50,7 +52,8 @@ public class AngryCar : Car
     void Start()
     {
         moving = false;
-        //CalcAngryCarPath();         // determine AngryCar's initial path on startup 
+        LastNode = GameManager.StartNode;
+        CalcCarPath();         // determine AngryCar's initial path on startup 
     }
 
     // Update is called once per frame
@@ -83,7 +86,7 @@ public class AngryCar : Car
             }
             else if (NodeCounter + 1 == PathNodes.Count)
             {
-                LastNode = PathNodes[NodeCounter];
+                LastNode = (ParkingSpotNode) PathNodes[NodeCounter];
                 PathNodes = new List<Node>();
                 moving = false;
             }
@@ -96,8 +99,36 @@ public class AngryCar : Car
         
     }
 
+    //Checks if car needs to repathed
     private void PathCar()
     {
-        throw new NotImplementedException();
+        ParkingSpotNode CarDest = this.GetDestNode();
+        //if destination Parking Spot Node has changed to Occupied, need to find a new destination node. 
+        if (CarDest.GetIsOccupied() == true)
+            CalcCarPath();
+    }
+
+    // recalculates the angrycar's path to be the empty spot nearest to the target
+    private void CalcCarPath()
+    {
+        //create parking spot destination
+        Node ParkingSpotDest = GameManager.StartNode;
+
+        // find empty parking spots and determine the spot closest to the target
+        float MinDist = float.MaxValue;
+        //This trusts that each gameobject we're getting from GetOpenSpots() is a open ParkingSpotNode;
+        foreach (GameObject x in ParkingSpotNode.GetOpenSpots())
+        {
+            if (Vector3.Distance(GameManager.Target.transform.position, x.transform.position) < MinDist)
+            {
+                // set the parking spot as the destination for the car
+                ParkingSpotDest = x.GetComponent<ParkingSpotNode>();
+                //set MinDist for further checks
+                MinDist = Vector3.Distance(GameManager.Target.transform.position, x.transform.position);
+            }
+        }
+
+        // set the path for the car
+        this.SetPath(this.GetNextNode().FindShortestPath(ParkingSpotDest.GetComponent<Node>()));
     }
 }

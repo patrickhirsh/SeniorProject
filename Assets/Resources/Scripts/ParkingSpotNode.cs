@@ -157,7 +157,7 @@ public class ParkingSpotNode : Node {
         if (GameManager.ACar != null)
         {
             float Distance = Vector3.Distance(ParkingSpotNode.transform.position, GameManager.ACar.transform.position);
-            return Distance <= MinAcceptableDistance;
+            return Distance > MinAcceptableDistance;
         }
 
         // otherwise, accept all locations
