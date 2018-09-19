@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,17 +7,16 @@ public class Car : MonoBehaviour {
 
     public static List<string> CarPrefabPaths;      // stores the paths of all available car prefabs for spawning
 
-    public List<Node> PathNodes;                    // the path of nodes defined for the current car
+    public List<Node> PathNodes;                    // the path of Nodes defined for the current car
     public float CarSpeed;                          // carspeed vairable
     public float SpeedCap;                          // cap for car speed
     public float RotSpeed;                          // speed that cars will rotate to face parking spots
 
-    private int NodeCounter = 0;                    // indicates the current node in PathNodes
+    private int NodeCounter = 0;                    // indicates the current Node in PathNodes
     private bool moving;                            // whether the car is currently pathing
-    private Node LastNode;                          // node that the car ended it's pathing in. 
+    private Node LastNode;                          // Node that the car ended it's pathing in. 
     
-    //TODO: set the LastNode to the car's spawn point on initialization
-    // this is the cause of the NullReferenceException prior to pathing
+  
 
 
     // Use this for initialization
@@ -42,7 +42,9 @@ public class Car : MonoBehaviour {
     {
         if (moving)
         {
-            //This acceleartion need to be calculated based on where the car is relative to the node it's approaching. The car should be slowing down or speeding up depending on it's postion. 
+            //Every loop should repath the car if neccessary
+            PathCar();
+            //This acceleartion need to be calculated based on where the car is relative to the Node it's approaching. The car should be slowing down or speeding up depending on it's postion. 
             float NewAccel;
             //Then add that acceleartion to the cars old speed, and cap at 0 or the max. 
             //CarSpeed = CarSpeed + 
@@ -71,19 +73,17 @@ public class Car : MonoBehaviour {
                 ParkingSpotNode DestStop = LastNode.GetComponent<ParkingSpotNode>();
                 if(DestStop != null)
                 {
-                    //DestStop.IsOccupied = true;
-                    // TODO: Use ParkingSpotNode public functions for this functionality. IsOccupied can no longer be altered directly (because it shouldn't be)
+                    DestStop.SpotTaken();
                 }
             }
             else
             {
                 NodeCounter++;
             }
-
         }
 	}
 
-
+    //Getter for next node in path
     public Node GetNextNode()
     {
         if (PathNodes.Count == 0)
@@ -93,15 +93,16 @@ public class Car : MonoBehaviour {
         return PathNodes[NodeCounter];
     }
 
-
-    public Node GetDestNode()
+    //Returns Destination Node
+    public ParkingSpotNode GetDestNode()
     {
+        //If pathnodes isn't empty
         if (PathNodes.Count != 0)
         {
             if (PathNodes[PathNodes.Count - 1] != null)
-                return PathNodes[PathNodes.Count - 1];
+                return (ParkingSpotNode) PathNodes[PathNodes.Count - 1];
             else
-                return LastNode;
+                return (ParkingSpotNode) LastNode;
         }
         else
         {
@@ -109,17 +110,63 @@ public class Car : MonoBehaviour {
         }
     }
 
-
+    //Sets cars path
     public void SetPath(List<Node> InputList)
     {
+        //Set the new set of pathnodes to the given input
         PathNodes = InputList;
+        //Set the iterator through pathnodes to 0
         NodeCounter = 0;
+        //set moving to true to get the car moving through the pathnodes in the FixedUpdate() Loop
         moving = true;
         if (LastNode.GetComponent<ParkingSpotNode>() != null)
         {
+            //Get the last node, which was the parking spot the car was parked in
             ParkingSpotNode psn = LastNode.GetComponent<ParkingSpotNode>();
-            //psn.IsOccupied = false;   
-            // TODO: Use ParkingSpotNode public functions for this functionality. IsOccupied can no longer be altered directly (because it shouldn't be)
+            //Set that parking spot to open.
+            psn.SpotOpened();  
         }
+    }
+    //Sets last node (for initilization purposes)
+    internal void SetLastNode(Node parkingSpotNode)
+    {
+        LastNode = parkingSpotNode;
+    }
+
+
+    // TODO: Implement AngryCar pathing within AngryCar as static methods
+    // Note that this should be designed such that we can have multiple "AngryCar" GameObjects
+
+    //Checks if car needs to repathed
+    private void PathCar()
+    {
+        ParkingSpotNode CarDest = this.GetDestNode();
+        //if destination Parking Spot Node has changed to Occupied, need to find a new destination node. 
+        if (CarDest.GetIsOccupied() == true)
+           CalcCarPath();
+    }
+
+    // recalculates the angrycar's path to be the empty spot nearest to the target
+    private void CalcCarPath()
+    {
+        //create parking spot destination
+        Node ParkingSpotDest = Node.GetNodeObjects()[0].GetComponent<Node>();
+
+        // find empty parking spots and determine the spot closest to the target
+        float MinDist = float.MaxValue;
+        //This trusts that each gameobject we're getting from GetOpenSpots() is a open ParkingSpotNode;
+        foreach(GameObject x in ParkingSpotNode.GetOpenSpots())
+        {
+                if (Vector3.Distance(GameManager.Target.transform.position, x.transform.position) < MinDist)
+                {
+                    // set the parking spot as the destination for the car
+                    ParkingSpotDest = x.GetComponent<ParkingSpotNode>();
+                    //set MinDist for further checks
+                    MinDist = Vector3.Distance(GameManager.Target.transform.position, x.transform.position);
+                }
+        }
+
+        // set the path for the car
+        this.SetPath(this.GetNextNode().FindShortestPath(ParkingSpotDest.GetComponent<Node>()));
     }
 }

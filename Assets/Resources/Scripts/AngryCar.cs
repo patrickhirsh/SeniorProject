@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AngryCar : MonoBehaviour
+public class AngryCar : Car
 {
 
 
@@ -11,35 +12,39 @@ public class AngryCar : MonoBehaviour
 
 
 
-    public List<Node> PathNodes;
+    //public List<Node> PathNodes;
 
     int NodeCounter = 0;
 
-    public float CarSpeed;
+    //public float CarSpeed;
 
     bool moving;
 
-    public float SpeedCap;
+    //public float SpeedCap;
 
-    public float RotSpeed;
+    //public float RotSpeed;
 
     Node LastNode;
 
-    public Node GetDestNode()
+    public AngryCar()
     {
-        if (PathNodes.Count == 0)
-        {
-            return LastNode;
-        }
-        return PathNodes[NodeCounter];
     }
 
-    public void SetPath(List<Node> InputList)
-    {
-        PathNodes = InputList;
-        NodeCounter = 0;
-        moving = true;
-    }
+    //public Node GetDestNode()
+    //{
+    //    if (PathNodes.Count == 0)
+    //    {
+    //        return LastNode;
+    //    }
+    //    return PathNodes[NodeCounter];
+    //}
+
+    //public void SetPath(List<Node> InputList)
+    //{
+    //    PathNodes = InputList;
+    //    NodeCounter = 0;
+    //    moving = true;
+    //}
 
     // Use this for initialization
     void Start()
@@ -51,7 +56,7 @@ public class AngryCar : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //PathAngryCar();
+        PathCar();
 
         if (moving)
         {
@@ -91,44 +96,8 @@ public class AngryCar : MonoBehaviour
         
     }
 
-
-    // TODO: Implement AngryCar pathing within AngryCar as static methods
-    // Note that this should be designed such that we can have multiple "AngryCar" GameObjects
-
-    /*
-
-    // checks if AngryCar's destination is still vacant. Should be ran every update
-    private void PathAngryCar()
+    private void PathCar()
     {
-        Node acardest = GetDestNode();
-        if (!acardest.gameObject.activeSelf)
-            CalcAngryCarPath();
+        throw new NotImplementedException();
     }
-
-    // recalculates the AngryCar's path to be the empty spot nearest to the target
-    private void CalcAngryCarPath()
-    {
-        //Create parking spot Destination
-        Node parkingSpotDest = Node.GetNodeObjects()[0].GetComponent<Node>();
-
-        // find empty parking spots and determine the spot closest to the target
-        float MinDist = float.MaxValue;
-        foreach (GameObject x in Node.GetNodeObjects())
-        {
-            if ((x.tag == "Parking Spot") && !(x.GetComponent<ParkingSpotNode>().GetIsOccupied()))
-            {
-                if (Vector3.Distance(GameManager.Target.transform.position, x.transform.position) < MinDist)
-                {
-                    // set the parking spot as the destination for the angry car
-                    parkingSpotDest = x.GetComponent<Node>();
-                    MinDist = Vector3.Distance(GameManager.Target.transform.position, x.transform.position);
-                }
-            }
-        }
-
-        // set the path for the angry car
-        AngryCar.SetPath(AngryCar.GetNextNode().FindShortestPath(parkingSpotDest.transform.gameObject.GetComponent<Node>()));
-    }
-
-    */
 }
