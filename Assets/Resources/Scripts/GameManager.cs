@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
         Car.Initialize();
         Node.Initialize();
         ParkingSpotNode.Initialize(3);
+        AngryCar.Initialize();
     }
 	
 	// Update is called once per frame

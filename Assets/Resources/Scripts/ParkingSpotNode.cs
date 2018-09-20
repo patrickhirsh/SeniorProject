@@ -93,7 +93,7 @@ public class ParkingSpotNode : Node {
             car.transform.position = new Vector3(ParkingSpot.transform.position.x, ParkingSpot.transform.position.y, ParkingSpot.transform.position.z);      
             car.GetComponent<Car>().PathNodes.Add(ParkingSpot.GetComponent<Node>());
             car.transform.parent = CarsFolder.transform;
-            car.GetComponent<Car>().SetLastNode(ParkingSpot.GetComponent<Node>());
+            car.GetComponent<Car>().SetLastNode(ParkingSpot.GetComponent<ParkingSpotNode>());
         }
     }
 

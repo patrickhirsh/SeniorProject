@@ -14,9 +14,13 @@ public class Car : MonoBehaviour {
 
     private int NodeCounter = 0;                    // indicates the current Node in PathNodes
     private bool moving;                            // whether the car is currently pathing
-    private Node LastNode;                          // Node that the car ended it's pathing in. 
+    private ParkingSpotNode LastNode;                          // Node that the car ended it's pathing in. 
     
   
+    public Car()
+    {
+
+    }
 
 
     // Use this for initialization
@@ -67,7 +71,7 @@ public class Car : MonoBehaviour {
             }
             else if (NodeCounter + 1 == PathNodes.Count)
             {
-                LastNode = PathNodes[NodeCounter];
+                LastNode = (ParkingSpotNode) PathNodes[NodeCounter];
                 PathNodes = new List<Node>();
                 moving = false;
                 ParkingSpotNode DestStop = LastNode.GetComponent<ParkingSpotNode>();
@@ -84,7 +88,7 @@ public class Car : MonoBehaviour {
 	}
 
     //Getter for next node in path
-    public Node GetNextNode()
+    public virtual Node GetNextNode()
     {
         if (PathNodes.Count == 0)
         {
@@ -100,9 +104,9 @@ public class Car : MonoBehaviour {
         if (PathNodes.Count != 0)
         {
             if (PathNodes[PathNodes.Count - 1] != null)
-                return (ParkingSpotNode) PathNodes[PathNodes.Count - 1];
+                return PathNodes[PathNodes.Count - 1] as ParkingSpotNode;
             else
-                return (ParkingSpotNode) LastNode;
+                return LastNode as ParkingSpotNode;
         }
         else
         {
@@ -111,7 +115,7 @@ public class Car : MonoBehaviour {
     }
 
     //Sets cars path
-    public void SetPath(List<Node> InputList)
+    public virtual void SetPath(List<Node> InputList)
     {
         //Set the new set of pathnodes to the given input
         PathNodes = InputList;
@@ -119,6 +123,7 @@ public class Car : MonoBehaviour {
         NodeCounter = 0;
         //set moving to true to get the car moving through the pathnodes in the FixedUpdate() Loop
         moving = true;
+        Debug.Log(this.gameObject.name);
         if (LastNode.GetComponent<ParkingSpotNode>() != null)
         {
             //Get the last node, which was the parking spot the car was parked in
@@ -127,18 +132,18 @@ public class Car : MonoBehaviour {
             psn.SpotOpened();  
         }
     }
+
     //Sets last node (for initilization purposes)
-    internal void SetLastNode(Node parkingSpotNode)
+    internal void SetLastNode(ParkingSpotNode parkingSpotNode)
     {
         LastNode = parkingSpotNode;
     }
-
 
     // TODO: Implement AngryCar pathing within AngryCar as static methods
     // Note that this should be designed such that we can have multiple "AngryCar" GameObjects
 
     //Checks if car needs to repathed
-    private void PathCar()
+    public void PathCar()
     {
         ParkingSpotNode CarDest = this.GetDestNode();
         //if destination Parking Spot Node has changed to Occupied, need to find a new destination node. 
@@ -147,7 +152,7 @@ public class Car : MonoBehaviour {
     }
 
     // recalculates the angrycar's path to be the empty spot nearest to the target
-    private void CalcCarPath()
+    public void CalcCarPath()
     {
         //create parking spot destination
         Node ParkingSpotDest = Node.GetNodeObjects()[0].GetComponent<Node>();
