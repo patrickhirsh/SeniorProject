@@ -9,8 +9,11 @@ public class Car : MonoBehaviour {
 
     public List<Node> PathNodes;                    // the path of Nodes defined for the current car
     public float CarSpeed;                          // carspeed vairable
+    public float Acceleration = 5.0f;               // acceleration rate
     public float SpeedCap;                          // cap for car speed
     public float RotSpeed;                          // speed that cars will rotate to face parking spots
+    public Transform Front;                         // where to cast from
+    public float CastDistance = 1.0f;               // how far to cast
 
     private int NodeCounter = 0;                    // indicates the current Node in PathNodes
     private bool moving;                            // whether the car is currently pathing
@@ -57,10 +60,29 @@ public class Car : MonoBehaviour {
             {
                 CarSpeed = 0;
             }
+
+            // Apply acceleration
+            CarSpeed += Acceleration * Time.fixedTime;
+
             if(CarSpeed > SpeedCap)
             {
                 CarSpeed = SpeedCap;
             }
+
+            // Cast a ray in front of this object
+            RaycastHit hit;
+            Physics.Raycast(Front.position, Front.forward, out hit, CastDistance);
+
+            // If there was a hit
+            if (hit.point != Vector3.zero && (hit.collider.gameObject.tag == "Car" || hit.collider.gameObject.tag == "AngryCar"))
+            {
+                float dist = Vector3.Distance(Front.position, hit.point);
+
+                float unitDistance = dist / CastDistance;
+
+                CarSpeed = Mathf.Lerp(CarSpeed, 0, 1 - unitDistance);
+            }
+
             if (transform.position != PathNodes[NodeCounter].transform.position)
             {
                 Vector3 Pos = Vector3.MoveTowards(transform.position, PathNodes[NodeCounter].transform.position, CarSpeed * Time.deltaTime);
