@@ -13,6 +13,8 @@ public class AngryCar : Car
     //Last node parking spot
     ParkingSpotNode LastNode;
 
+    public GameObject indicator;
+
     public AngryCar()
     {
         //The difference between Angry Car and a Regular Car is that angry car automatically paths on startup
@@ -97,6 +99,10 @@ public class AngryCar : Car
         NodeCounter = 0;
         //set moving to true to get the car moving through the pathnodes in the FixedUpdate() Loop
         moving = true;
+
+        Transform transformF = PathNodes[PathNodes.Count - 1].transform;
+
+        indicator.transform.position = transformF.position;
     }
     ////Checks if car needs to repathed
     //private void PathCar()
