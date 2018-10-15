@@ -72,7 +72,23 @@ namespace Level
     [Serializable]
     public class SubNode
     {
-        public Vector3 Index;
-        
+        [Flags]
+        public enum Direction
+        {
+            Up = 1 << 0,
+            Down = 1 << 1,
+            Left = 1 << 2,
+            Right = 1 << 3
+        }
+
+        [BitMask(typeof(Direction))]
+        public Direction Connections;
+
+        public Vector3 Index { get; private set; }
+
+        public SubNode(Vector3 index)
+        {
+            Index = index;
+        }
     }
 }

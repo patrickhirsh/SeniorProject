@@ -135,12 +135,16 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 13819315}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bc9d4f22a9e0624d8e454a145f306f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Dimension: {x: 2, y: 0, z: 1}
+  SubNodes:
+  - Connections: 0
+  - Connections: 0
+  - Connections: 0
 --- !u!4 &13819317
 Transform:
   m_ObjectHideFlags: 0
