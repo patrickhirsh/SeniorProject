@@ -5,7 +5,7 @@ using Level;
 namespace Level
 {
     public class LaneNode : Node
-    {       
+    {
         
     }
 }
