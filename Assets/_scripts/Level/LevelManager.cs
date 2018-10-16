@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Level;
+using Utility;
 
 public class LevelManager : MonoBehaviour
 {
@@ -10,29 +11,29 @@ public class LevelManager : MonoBehaviour
     #endregion
 
     // Indexes mapped to nodes
-    public Dictionary<Vector3, Node> Nodes;
+    public Dictionary<CellIndex, Entity> Nodes;
 
     #region Unity Methods
 
     private void Start()
     {
-        Nodes = new Dictionary<Vector3, Node>();
+        Nodes = new Dictionary<CellIndex, Entity>();
     }
 
     #endregion
 
 
-    public void AddNode(Node node)
+    public void AddNode(Entity entity)
     {
-        foreach (var index in node.GetIndices())
+        foreach (var index in entity.GetCellIndices())
         {
-            Nodes.Add(index, node);
+            Nodes.Add(index, entity);
         }
     }
 
-    public void RemoveNode(Node node)
+    public void RemoveNode(Entity entity)
     {
-        foreach (var index in node.GetIndices())
+        foreach (var index in entity.GetCellIndices())
         {
             Nodes.Remove(index);
         }

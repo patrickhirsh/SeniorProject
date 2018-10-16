@@ -10,7 +10,7 @@ namespace Level
         public struct NodeMapping
         {
             public int Index;
-            public Node Prefab;
+            public Entity Prefab;
         }
         public int[,] NodeTypes;
         public NodeMapping[] NodeMappings;

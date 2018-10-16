@@ -6,13 +6,13 @@ public class NodeOld : MonoBehaviour
 {
     public static bool FspDebugMode;
 
-    private static List<GameObject> _nodeObjects; // stores all Node GameObjects in the current scene
-    private static List<float> _fspWeight; // stores node data for FindShortestPath() (Weight). Indeces correspond 1:1 with NodeObjects
-    private static List<NodeOld> _fspPrevNode; // stores node data for FindShortestPath() (PrevNode). Indeces correspond 1:1 with NodeObjects
-    private int _nodeId; // stores the current node's index within NodeObjects for faster accesses
+    private static List<GameObject> _nodeObjects; // stores all Entity GameObjects in the current scene
+    private static List<float> _fspWeight; // stores entity data for FindShortestPath() (Weight). Indeces correspond 1:1 with NodeObjects
+    private static List<NodeOld> _fspPrevNode; // stores entity data for FindShortestPath() (PrevNode). Indeces correspond 1:1 with NodeObjects
+    private int _nodeId; // stores the current entity's index within NodeObjects for faster accesses
 
     [SerializeField]
-    public List<NodeOld> Connections; // a list of all valid paths to adjacent nodes from the current node
+    public List<NodeOld> Connections; // a list of all valid paths to adjacent nodes from the current entity
 
 
     // Use this for initialization
@@ -22,17 +22,17 @@ public class NodeOld : MonoBehaviour
     }
 
 
-    // Initialize static structures within Node. Should be called on scene load
+    // Initialize static structures within Entity. Should be called on scene load
     public static void Initialize()
     {
-        // initialize Node class datastructures
+        // initialize Entity class datastructures
         _nodeObjects = new List<GameObject>();
         _fspWeight = new List<float>();
         _fspPrevNode = new List<NodeOld>();
 
         // populate NodeObjects with all nodes in the scene
         var indexAssignment = 0;
-        foreach (var obj in GameObject.FindGameObjectsWithTag("Node"))
+        foreach (var obj in GameObject.FindGameObjectsWithTag("Entity"))
         {
             _nodeObjects.Add(obj);
             _nodeObjects[indexAssignment].GetComponent<NodeOld>()._nodeId = indexAssignment;
@@ -63,21 +63,21 @@ public class NodeOld : MonoBehaviour
     }
 
 
-    // retrieve a list of all Node GameObjects in the current scene
+    // retrieve a list of all Entity GameObjects in the current scene
     public static List<GameObject> GetNodeObjects()
     {
         return _nodeObjects;
     }
 
 
-    // Given a destination Node, FSP finds the shortest path to that node through all valid nodes
-    // The path is returned as a List with the last node being the destination
+    // Given a destination Entity, FSP finds the shortest path to that entity through all valid nodes
+    // The path is returned as a List with the last entity being the destination
     public List<NodeOld> FindShortestPath(NodeOld destination)
     {
         // check to make sure the destination isn't an occupied parking spot
         if (destination.GetComponent<ParkingSpotNodeOld>() != null)
             if (destination.GetComponent<ParkingSpotNodeOld>().GetIsOccupied())
-                throw new Exception("FindShortestPath was given an invalid destination node");
+                throw new Exception("FindShortestPath was given an invalid destination entity");
 
         // construct a list of all unvisited nodes
         var frontier = new List<GameObject>();
@@ -91,7 +91,7 @@ public class NodeOld : MonoBehaviour
             }
 
             // origin or destination parking spot nodes are always valid
-            // note that we already checked for destination parking node occupancy above
+            // note that we already checked for destination parking entity occupancy above
             else if (_nodeObjects[i] == gameObject || _nodeObjects[i] == destination.gameObject)
             {
                 _fspWeight[i] = float.MaxValue;
@@ -99,7 +99,7 @@ public class NodeOld : MonoBehaviour
                 frontier.Add(_nodeObjects[i]);
             }
 
-        // set start node and begin exploring Frontier
+        // set start entity and begin exploring Frontier
         // these are the voyages of the Starship Enterprise...
         _fspWeight[_nodeId] = 0;
         while (frontier.Count > 0)
@@ -144,8 +144,8 @@ public class NodeOld : MonoBehaviour
 
         if (FspDebugMode)
         {
-            Debug.Log("Origin Node: " + gameObject.name);
-            Debug.Log("Destination Node: " + destination.gameObject.name);
+            Debug.Log("Origin Entity: " + gameObject.name);
+            Debug.Log("Destination Entity: " + destination.gameObject.name);
             Debug.Log("FSP PathnodeNode Route:");
             foreach (var node in output)
                 Debug.Log(node.gameObject.name);
@@ -155,8 +155,8 @@ public class NodeOld : MonoBehaviour
     }
 
 
-    // returns the current node's unique ID (useful for finding this node in a list of nodes, since
-    // List.Find()'s comparer can't differentiate Node objects)
+    // returns the current entity's unique ID (useful for finding this entity in a list of nodes, since
+    // List.Find()'s comparer can't differentiate Entity objects)
     public int GetNodeId()
     {
         return _nodeId;

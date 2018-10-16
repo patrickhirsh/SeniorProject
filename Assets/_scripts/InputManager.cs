@@ -46,10 +46,10 @@ public class InputManager : MonoBehaviour
                     case "AngryCar":
                         break;
 
-                    case "Node":
+                    case "Entity":
                         if (_carSelected)
                         {
-                            if (InputDebugMode) Debug.Log("Pathing to Node");
+                            if (InputDebugMode) Debug.Log("Pathing to Entity");
                             var newNode = _currentCar.GetNextNode();
                             _currentCar.SetPath(newNode.FindShortestPath(hitInfo.transform.gameObject.GetComponent<NodeOld>()));
                             _carSelected = false;

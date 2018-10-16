@@ -5,12 +5,12 @@ using Grid = Utility.Grid;
 
 namespace Level
 {
-    [CustomEditor(typeof(Node))]
+    [CustomEditor(typeof(Entity))]
     public class NodeEditor : Editor
     {
         public override void OnInspectorGUI()
         {
-            var node = target as Node;
+            var node = target as Entity;
 
             var index = Grid.GetCellIndex(node.transform.position);
             EditorGUILayout.LabelField($"Cell Index\n{index}", new GUIStyle()

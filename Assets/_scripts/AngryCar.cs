@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AngryCar : Car
 {
-    //Last node parking spot
+    //Last entity parking spot
     private ParkingSpotNodeOld _lastNodeOld;
 
     //bool for movement
@@ -23,14 +23,14 @@ public class AngryCar : Car
         CalcCarPath();
     }
 
-    //Get destination parking spot node
+    //Get destination parking spot entity
     public override ParkingSpotNodeOld GetDestNode()
     {
         if (PathNodes.Count == 0) return _lastNodeOld;
         return (ParkingSpotNodeOld) PathNodes[PathNodes.Count - 1];
     }
 
-    //Get next node in pathnodes
+    //Get next entity in pathnodes
     public override NodeOld GetNextNode()
     {
         if (PathNodes.Count == 0) return _lastNodeOld;
@@ -44,7 +44,7 @@ public class AngryCar : Car
 
         if (_moving)
         {
-            //This acceleartion need to be calculated based on where the car is relative to the node it's approaching. The car should be slowing down or speeding up depending on it's postion. 
+            //This acceleartion need to be calculated based on where the car is relative to the entity it's approaching. The car should be slowing down or speeding up depending on it's postion. 
             float newAccel;
             //Then add that acceleartion to the cars old speed, and cap at 0 or the max. 
             //CarSpeed = CarSpeed + 
@@ -89,7 +89,7 @@ public class AngryCar : Car
     //private void PathCar()
     //{
     //    ParkingSpotNode CarDest = this.GetDestNode();
-    //    //if destination Parking Spot Node has changed to Occupied, need to find a new destination node. 
+    //    //if destination Parking Spot Entity has changed to Occupied, need to find a new destination entity. 
     //    if (CarDest.GetIsOccupied() == true)
     //        CalcCarPath();
     //}
@@ -98,7 +98,7 @@ public class AngryCar : Car
     //private void CalcCarPath()
     //{
     //    //create parking spot destination
-    //    Node ParkingSpotDest = GameManager.StartNode;
+    //    Entity ParkingSpotDest = GameManager.StartNode;
 
     //    // find empty parking spots and determine the spot closest to the target
     //    float MinDist = float.MaxValue;
@@ -115,7 +115,7 @@ public class AngryCar : Car
     //    }
 
 
-    //    Node foo = this.GetNextNode();
+    //    Entity foo = this.GetNextNode();
     //    // set the path for the car
     //    this.SetPath(this.GetNextNode().FindShortestPath(ParkingSpotDest.GetComponent<ParkingSpotNode>()));
     //}

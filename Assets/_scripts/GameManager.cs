@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
         // obtain a reference to AngryCar
         ACar = FindObjectOfType<AngryCar>();
         Target = GameObject.FindGameObjectWithTag("Target");
-        StartNodeOld = GameObject.FindGameObjectWithTag("Start Node").GetComponent<ParkingSpotNodeOld>();
+        StartNodeOld = GameObject.FindGameObjectWithTag("Start Entity").GetComponent<ParkingSpotNodeOld>();
         // initialize static structures for non-singleton classes
         Car.Initialize();
         NodeOld.Initialize();

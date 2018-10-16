@@ -4,10 +4,10 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     public static List<string> CarPrefabPaths; // stores the paths of all available car prefabs for spawning
-    private ParkingSpotNodeOld _lastNodeOld; // Node that the car ended it's pathing in. 
+    private ParkingSpotNodeOld _lastNodeOld; // Entity that the car ended it's pathing in. 
     private bool _moving; // whether the car is currently pathing
 
-    private int _nodeCounter; // indicates the current Node in PathNodes
+    private int _nodeCounter; // indicates the current Entity in PathNodes
     public float Acceleration = 5.0f; // acceleration rate
     public float CarSpeed; // carspeed vairable
     public float CastDistance = 1.0f; // how far to cast
@@ -43,7 +43,7 @@ public class Car : MonoBehaviour
         {
             //Every loop should repath the car if neccessary
             PathCar();
-            //This acceleartion need to be calculated based on where the car is relative to the Node it's approaching. The car should be slowing down or speeding up depending on it's postion. 
+            //This acceleartion need to be calculated based on where the car is relative to the Entity it's approaching. The car should be slowing down or speeding up depending on it's postion. 
             float newAccel;
             //Then add that acceleartion to the cars old speed, and cap at 0 or the max. 
             //CarSpeed = CarSpeed + 
@@ -92,14 +92,14 @@ public class Car : MonoBehaviour
         }
     }
 
-    //Getter for next node in path
+    //Getter for next entity in path
     public virtual NodeOld GetNextNode()
     {
         if (PathNodes.Count == 0) return _lastNodeOld;
         return PathNodes[_nodeCounter];
     }
 
-    //Returns Destination Node
+    //Returns Destination Entity
     public virtual ParkingSpotNodeOld GetDestNode()
     {
         //If pathnodes isn't empty
@@ -125,14 +125,14 @@ public class Car : MonoBehaviour
         Debug.Log(gameObject.name);
         if (_lastNodeOld.GetComponent<ParkingSpotNodeOld>() != null)
         {
-            //Get the last node, which was the parking spot the car was parked in
+            //Get the last entity, which was the parking spot the car was parked in
             var psn = _lastNodeOld.GetComponent<ParkingSpotNodeOld>();
             //Set that parking spot to open.
             psn.SpotOpened();
         }
     }
 
-    //Sets last node (for initilization purposes)
+    //Sets last entity (for initilization purposes)
     internal void SetLastNode(ParkingSpotNodeOld parkingSpotNodeOld)
     {
         _lastNodeOld = parkingSpotNodeOld;
@@ -145,7 +145,7 @@ public class Car : MonoBehaviour
     public void PathCar()
     {
         var carDest = GetDestNode();
-        //if destination Parking Spot Node has changed to Occupied, need to find a new destination node. 
+        //if destination Parking Spot Entity has changed to Occupied, need to find a new destination entity. 
         if (carDest.GetIsOccupied())
             CalcCarPath();
     }

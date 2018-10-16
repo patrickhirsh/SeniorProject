@@ -33,10 +33,10 @@ public class ParkingSpotNodeOld : NodeOld
         // Obtain all parking spots from NodeObjects
         var nodeObjects = GetNodeObjects();
 
-        // Node.Initialize() needs to be called first to populate Node.NodeObjects
+        // Entity.Initialize() needs to be called first to populate Entity.NodeObjects
         if (nodeObjects == null)
         {
-            Debug.Log("WARNING: ParkingSpotNode.Initialize() was called after Node.Initialize()");
+            Debug.Log("WARNING: ParkingSpotNode.Initialize() was called after Entity.Initialize()");
             Initialize();
             nodeObjects = GetNodeObjects();
         }
@@ -48,7 +48,7 @@ public class ParkingSpotNodeOld : NodeOld
             Car.Initialize();
         }
 
-        // construct the underlying parking lot node structures
+        // construct the underlying parking lot entity structures
         _openSpots = new List<GameObject>();
         _takenSpots = new List<GameObject>();
 
