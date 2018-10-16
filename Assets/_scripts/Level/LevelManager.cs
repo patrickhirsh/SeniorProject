@@ -22,6 +22,15 @@ public class LevelManager : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Returns true if a Entity is in the given CellIndex
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public bool ContainsEntity(CellIndex index)
+    {
+        return Nodes.ContainsKey(index);
+    }
 
     public void AddNode(Entity entity)
     {

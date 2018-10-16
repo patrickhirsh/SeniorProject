@@ -8,8 +8,6 @@ namespace Level
     [ExecuteInEditMode]
     public abstract class Entity : MonoBehaviour
     {
-//        public Node[] Nodes;
-//        public Dictionary<Vector3, Node> SubNodeMap;
         public Transform NodeContainer;
 
         #region Unity Methods
@@ -23,12 +21,12 @@ namespace Level
         {
             if (transform.hasChanged)
             {
-                transform.SnapToGrid();
+//                transform.SnapToGrid();
 
                 //TODO: Make this work in editor
                 var rotation = transform.eulerAngles;
                 rotation.y = Mathf.Round(rotation.y / 90) * 90;
-                transform.eulerAngles = rotation;
+//                transform.eulerAngles = rotation;
 
                 transform.hasChanged = false;
             }

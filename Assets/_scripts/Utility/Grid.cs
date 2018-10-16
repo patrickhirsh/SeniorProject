@@ -37,7 +37,7 @@ namespace Utility
 
         public static Vector3 GetPosition(this CellIndex index)
         {
-            return Grid.GetCellPos(index);
+            return GetCellPos(index);
         }
 
         public static void SnapToGrid(this Transform transform)

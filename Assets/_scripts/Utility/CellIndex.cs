@@ -4,7 +4,6 @@ namespace Utility
 {
     public struct CellIndex
     {
-
         public int x { get; set; }
         public int y { get; set; }
         public int z { get; set; }
@@ -23,13 +22,17 @@ namespace Utility
             this.z = z;
         }
 
-        //  CellIndex to Vector3
+        /// <summary>
+        /// Converts a CellIndex to a Vector3
+        /// </summary>
         public static explicit operator Vector3(CellIndex index)
         {
             return new Vector3(index.x, index.y, index.z);
         }
 
-        //  Vector3 to CellIndex
+        /// <summary>
+        /// Converts a Vector3 to a CellIndex
+        /// </summary>
         public static explicit operator CellIndex(Vector3 vector)
         {
             return new CellIndex(vector.x, vector.y, vector.z);

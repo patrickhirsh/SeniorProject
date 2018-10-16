@@ -30,7 +30,7 @@ namespace Level
         {
             if (transform.hasChanged)
             {
-                transform.SnapToGrid();
+//                transform.SnapToGrid();
                 transform.hasChanged = false;
             }
         }
