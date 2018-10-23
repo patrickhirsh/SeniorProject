@@ -1,8 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using Level;
+using UnityEditor;
 using Utility;
 
+/// <summary>
+/// Manages construction of the level and high level state
+/// </summary>
 public class LevelManager : MonoBehaviour
 {
     #region Singleton
@@ -10,41 +15,30 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance => _instance ?? (_instance = FindObjectOfType<LevelManager>());
     #endregion
 
-    // Indexes mapped to nodes
-    public Dictionary<CellIndex, Entity> Nodes;
-
+    
     #region Unity Methods
 
     private void Start()
     {
-        Nodes = new Dictionary<CellIndex, Entity>();
     }
 
     #endregion
 
-    /// <summary>
-    /// Returns true if a Entity is in the given CellIndex
-    /// </summary>
-    /// <param name="index"></param>
-    /// <returns></returns>
-    public bool ContainsEntity(CellIndex index)
+
+    public void GenerateLevel(LevelData data)
     {
-        return Nodes.ContainsKey(index);
+        throw new NotImplementedException();
     }
 
-    public void AddNode(Entity entity)
+    public void SaveLevel(LevelData data)
     {
-        foreach (var index in entity.GetCellIndices())
-        {
-            Nodes.Add(index, entity);
-        }
+        var json = JsonUtility.ToJson(data);
+        //TODO: Write to file
     }
 
-    public void RemoveNode(Entity entity)
+    public void LoadLevel(LevelData data)
     {
-        foreach (var index in entity.GetCellIndices())
-        {
-            Nodes.Remove(index);
-        }
+        var level = JsonUtility.FromJson<LevelData>("{}");
+        GenerateLevel(level);
     }
 }

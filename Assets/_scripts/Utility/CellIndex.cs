@@ -37,5 +37,10 @@ namespace Utility
         {
             return new CellIndex(vector.x, vector.y, vector.z);
         }
+
+        public static CellIndex Infinity()
+        {
+            return new CellIndex(int.MaxValue, int.MaxValue, int.MaxValue);
+        }
     }
 }

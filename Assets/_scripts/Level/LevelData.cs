@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Utility;
 
 namespace Level
 {
@@ -7,13 +8,10 @@ namespace Level
     public class LevelData : ScriptableObject
     {
         [Serializable]
-        public struct NodeMapping
+        public struct EntityMapping
         {
-            public int Index;
+            public CellIndex Index;
             public Entity Prefab;
         }
-        public int[,] NodeTypes;
-        public NodeMapping[] NodeMappings;
-
     }
 }

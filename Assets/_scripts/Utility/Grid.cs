@@ -4,35 +4,40 @@ namespace Utility
 {
     public static class Grid
     {
-        public const float CellSizeX = 1.5f;
-        public const float CellSizeY = 1;
-        public const float CellSizeZ = 1.5f;
+        public const float CELL_SIZE_X = 1.5f;
+        public const float CELL_SIZE_Y = 1;
+        public const float CELL_SIZE_Z = 1.5f;
 
-        public const float CellHalfSizeX = CellSizeX / 2f;
-        public const float CellHalfSizeY = CellSizeY / 2f;
-        public const float CellHalfSizeZ = CellSizeZ / 2f;
+        public const float CELL_HALF_X = CELL_SIZE_X / 2f;
+        public const float CELL_HALF_Y = CELL_SIZE_Y / 2f;
+        public const float CELL_HALF_Z = CELL_SIZE_Z / 2f;
 
-        public static CellIndex CellSize => new CellIndex(CellSizeX, CellSizeY, CellSizeZ);
+        public static CellIndex CellSize => new CellIndex(CELL_SIZE_X, CELL_SIZE_Y, CELL_SIZE_Z);
 
         public static Vector3 GetCellPos(CellIndex index)
         {
-            return new Vector3(index.x * CellSizeX, index.y * CellSizeY, index.z * CellSizeZ);
+            return new Vector3(index.x * CELL_SIZE_X, index.y * CELL_SIZE_Y, index.z * CELL_SIZE_Z);
         }
 
         public static Vector3 GetCellPosPlusHalf(CellIndex index)
         {
             var cellPos = GetCellPos(index);
-            return new Vector3(cellPos.x + CellHalfSizeX, cellPos.y + CellHalfSizeY, cellPos.z + CellHalfSizeZ);
+            return new Vector3(cellPos.x + CELL_HALF_X, cellPos.y + CELL_HALF_Y, cellPos.z + CELL_HALF_Z);
         }
 
         public static CellIndex GetCellIndex(Vector3 position)
         {
-            return new CellIndex(Mathf.RoundToInt(position.x / CellSizeX), Mathf.RoundToInt(position.y / CellSizeY), Mathf.RoundToInt(position.z / CellSizeZ));
+            return new CellIndex(Mathf.RoundToInt(position.x / CELL_SIZE_X), Mathf.RoundToInt(position.y / CELL_SIZE_Y), Mathf.RoundToInt(position.z / CELL_SIZE_Z));
         }
 
         public static CellIndex CellIndex(this Transform transform)
         {
             return GetCellIndex(transform.position);
+        }
+
+        public static Vector3 CellPosition(this Transform transform)
+        {
+            return transform.CellIndex().GetPosition();
         }
 
         public static Vector3 GetPosition(this CellIndex index)
