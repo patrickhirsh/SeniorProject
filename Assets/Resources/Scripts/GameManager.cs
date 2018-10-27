@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
         // initialize static structures for non-singleton classes
         Car.Initialize();
         Node.Initialize();
-        ParkingSpotNode.Initialize(2);
+        ParkingSpotNode.Initialize(4);
         AngryCar.Initialize();
     }
 	
