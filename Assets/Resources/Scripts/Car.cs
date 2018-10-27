@@ -17,7 +17,7 @@ public class Car : MonoBehaviour {
 
     private int NodeCounter = 0;                    // indicates the current Node in PathNodes
     private bool moving;                            // whether the car is currently pathing
-    private ParkingSpotNode LastNode;                          // Node that the car ended it's pathing in. 
+    public ParkingSpotNode LastNode;                          // Node that the car ended it's pathing in. 
     
   
     public Car()
@@ -50,7 +50,7 @@ public class Car : MonoBehaviour {
         if (moving)
         {
             //Every loop should repath the car if neccessary
-            PathCar();
+            //PathCar();
             //This acceleartion need to be calculated based on where the car is relative to the Node it's approaching. The car should be slowing down or speeding up depending on it's postion. 
             float NewAccel;
             //Then add that acceleartion to the cars old speed, and cap at 0 or the max. 
@@ -109,6 +109,7 @@ public class Car : MonoBehaviour {
         }
 	}
 
+
     //Getter for next node in path
     public virtual Node GetNextNode()
     {
@@ -155,6 +156,12 @@ public class Car : MonoBehaviour {
         }
     }
 
+    internal void ManualPathAdd(List<Node> InputList)
+    {
+        PathNodes = InputList;
+    }
+
+
     //Sets last node (for initilization purposes)
     internal void SetLastNode(ParkingSpotNode parkingSpotNode)
     {
@@ -181,17 +188,26 @@ public class Car : MonoBehaviour {
 
         // find empty parking spots and determine the spot closest to the target
         float MinDist = float.MaxValue;
-        //This trusts that each gameobject we're getting from GetOpenSpots() is a open ParkingSpotNode;
+        ////This trusts that each gameobject we're getting from GetOpenSpots() is a open ParkingSpotNode;
+        //foreach(GameObject x in ParkingSpotNode.GetOpenSpots())
+        //{
+        //        if (Vector3.Distance(GameManager.Target.transform.position, x.transform.position) < MinDist)
+        //        {
+        //            // set the parking spot as the destination for the car
+        //            ParkingSpotDest = x.GetComponent<ParkingSpotNode>();
+        //            //set MinDist for further checks
+        //            MinDist = Vector3.Distance(GameManager.Target.transform.position, x.transform.position);
+        //        }
+        //}
+        
         foreach(GameObject x in ParkingSpotNode.GetOpenSpots())
         {
-                if (Vector3.Distance(GameManager.Target.transform.position, x.transform.position) < MinDist)
-                {
-                    // set the parking spot as the destination for the car
-                    ParkingSpotDest = x.GetComponent<ParkingSpotNode>();
-                    //set MinDist for further checks
-                    MinDist = Vector3.Distance(GameManager.Target.transform.position, x.transform.position);
-                }
-        }
+            if((Vector3.Distance(x.transform.position, this.transform.position)) < MinDist)
+            {
+                ParkingSpotDest = x.GetComponent<ParkingSpotNode>();
+                MinDist = Vector3.Distance(this.transform.position, x.transform.position);
+            }
+        }    
 
         // set the path for the car
         this.SetPath(this.GetNextNode().FindShortestPath(ParkingSpotDest.GetComponent<Node>()));
