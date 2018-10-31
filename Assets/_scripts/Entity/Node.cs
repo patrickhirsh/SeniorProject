@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Utility;
@@ -13,19 +12,30 @@ namespace Level
     [ExecuteInEditMode]
     public class Node : MonoBehaviour
     {
-        public IEnumerable<Connection> InboundConnections => GetComponentsInChildren<Connection>().Where(connection => connection.Traveling == Connection.TravelingDirection.Inbound);
-        public IEnumerable<Connection> OutBoundConnections => GetComponentsInChildren<Connection>().Where(connection => connection.Traveling == Connection.TravelingDirection.Outbound);
-
         public CellIndex Index => transform.CellIndex();
 
         public Entity Entity => transform.GetComponentInParent<Entity>();
+
+        #region Connections
+        private Connection[] _inboundConnections;
+        public IEnumerable<Connection> InboundConnections => _inboundConnections ??
+                                                             (_inboundConnections = GetComponentsInChildren<Connection>()
+                                                                 .Where(connection => connection.Traveling == Connection.TravelingDirection.Inbound)
+                                                                 .ToArray());
+
+        private Connection[] _outboundConnections;
+        public IEnumerable<Connection> OutBoundConnections => _outboundConnections ?? (
+                                                                  _outboundConnections = GetComponentsInChildren<Connection>()
+                                                                      .Where(connection => connection.Traveling == Connection.TravelingDirection.Outbound)
+                                                                      .ToArray());
+        #endregion
 
         protected virtual void Update()
         {
 
             if (transform.hasChanged && !Input.GetMouseButton(0))
             {
-//                transform.SnapToGrid();
+                //                transform.SnapToGrid();
                 transform.hasChanged = false;
             }
         }

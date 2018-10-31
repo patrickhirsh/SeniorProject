@@ -28,6 +28,9 @@ namespace Level
 
         public List<ConnectionPath> Paths = new List<ConnectionPath>();
 
+        private Dictionary<Connection, BezierCurve> _connectionPaths;
+        private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.OutboundConnection, path => path.Path));
+
         protected Node Node => GetComponentInParent<Node>();
 
         #region Unity Methods
@@ -60,12 +63,35 @@ namespace Level
             CalculateConnections();
         }
 
+        /// <summary>
+        /// Finds a path from this connection to connection
+        /// </summary>
+        public bool FindPathToConnection(Connection connection, out BezierCurve path)
+        {
+            path = null;
+            if (connection.Traveling == TravelingDirection.Inbound)
+            {
+                Debug.LogError("Can't get path to an inbound connection");
+                return false;
+            }
+
+            // Check if we have a path to the connection
+            if (!ConnectionPaths.ContainsKey(connection)) return false;
+
+            // Return the path to the connection
+            path = ConnectionPaths[connection];
+            return true;
+        }
+
         public void CalculateConnections()
         {
             if (Traveling == TravelingDirection.Inbound) return;
+
             ConnectsTo = EntityManager.Instance.InboundConnections.FirstOrDefault(connection =>
-                Vector3.Distance(transform.position, connection.transform.position) < Mathf.Max(Grid.CELL_SIZE_X, Grid.CELL_SIZE_Z));
-            ConnectingEntity = ConnectsTo != null ? ConnectsTo.Node.Entity : null;
+                Vector3.Distance(transform.position, connection.transform.position) 
+                < Mathf.Max(Grid.CELL_SIZE_X, Grid.CELL_SIZE_Z));
+
+            ConnectingEntity = ConnectsTo?.Node.Entity;
         }
 
         private void SnapToValidPosition()

@@ -20,6 +20,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        EntityManager.Instance.Setup();
     }
 
     #endregion

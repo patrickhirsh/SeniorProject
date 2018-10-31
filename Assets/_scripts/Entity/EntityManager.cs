@@ -20,23 +20,24 @@ public class EntityManager : MonoBehaviour
     private Dictionary<CellIndex, IList<Entity>> _cellIndexToEntities = new Dictionary<CellIndex, IList<Entity>>();
 
     public IEnumerable<Entity> Entities => _entitiesToCellIndex.Keys.ToList();
-    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.GetOutboundConnectionPoints());
-    public IEnumerable<Connection> InboundConnections => Entities.SelectMany(entity => entity.GetInboundConnectionPoints());
+    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
+    public IEnumerable<Connection> InboundConnections => Entities.SelectMany(entity => entity.InboundConnections);
 
     #region Unity Methods
 
-    private void Start()
+    #endregion
+
+    public void Setup()
     {
         CalculateEntities();
     }
 
-    #endregion
-
     private void CalculateEntities()
     {
-        foreach (var entity in Entities.Where(entity => entity.GetType() != typeof(Vehicle)))
+        // Setup all child Entities
+        foreach (Transform child in transform)
         {
-            entity.Setup();
+            child.GetComponent<Entity>()?.Setup();
         }
     }
 
@@ -112,22 +113,12 @@ public class EntityManager : MonoBehaviour
         {
             // Find the next entity
             var next = current.NeighborEntities.First(entity => entity == toEntity || entity.ConnectingEntities.Contains(toEntity));
-            Debug.Log(next, next);
 
-            // Find an outbound connection that connects to the next entity
-            var outbound = current.GetOutboundConnectionPoints().FirstOrDefault(c => c.ConnectingEntity == next);
-            Debug.Log(outbound, outbound);
-
-            // Find an inbound connection that connects to outbound
-            var inbound = current.GetInboundConnectionPoints().FirstOrDefault(connection => connection.Paths.Any(p => p.OutboundConnection == outbound));
-            Debug.Log(inbound, inbound);
-
-            if (inbound != null)
+            BezierCurve curve;
+            // From current (and the inbound connection), find a path to next
+            if (current.FindPathToEntity(current.InboundConnections.First(), next, out curve))
             {
-                var takePath = inbound.Paths.FirstOrDefault(p => p.OutboundConnection == outbound);
-
-                Debug.Assert(takePath != null, $"Path is null for inbound to outbound node {inbound}", inbound);
-                path.Add(takePath.Path);
+                path.Add(curve);
             }
             else
             {
@@ -136,7 +127,7 @@ public class EntityManager : MonoBehaviour
 
             current = next;
         }
-//        path.Add(toEntity.transform.position);
+        //        path.Add(toEntity.transform.position);
         Debug.Log(path.Count);
         return true;
     }
