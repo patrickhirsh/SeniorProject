@@ -38,6 +38,7 @@ namespace Level
             if (transform.hasChanged)
             {
                 EntityManager.Instance.UpdateEntity(this);
+                transform.hasChanged = false;
             }
         }
 

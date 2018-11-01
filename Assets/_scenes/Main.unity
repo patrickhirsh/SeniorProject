@@ -550,6 +550,10 @@ Prefab:
       propertyPath: lastSrcPosition.x
       value: -0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 1917040755874644, guid: 52449ea6a37f55c4a86c45ab16c5fbee, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52449ea6a37f55c4a86c45ab16c5fbee, type: 2}
   m_IsPrefabAsset: 0
@@ -1221,8 +1225,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeContainer: {fileID: 2133362386}
-  ConnectingEntities: []
-  NeighborEntities: []
   Target: {fileID: 1370358805}
   LookAhead: 0.04
   Speed: 20
