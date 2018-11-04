@@ -28,7 +28,7 @@ public class InputController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             //reset these values
-            currentConnection = new Level.Connection();
+            currentConnection = VehicleEntity.Vehicle.getNextInbound();
             currentVehicle = new VehicleEntity.Vehicle();
             curves = new List<BezierCurve>();
 
@@ -57,20 +57,33 @@ public class InputController : MonoBehaviour {
             //if you hit an outbound node
             if (hit)
             {
+                //If the node is a connection
                 if (hitInfo.transform.gameObject.GetComponent<Level.Connection>() != null)
                 {
+                    //If the connection you hit is an outbbound
                     if (hitInfo.transform.gameObject.GetComponent<Level.Connection>().Traveling == Level.Connection.TravelingDirection.Outbound)
                     {
-                        Debug.Log("Hit an outbound node");
-                        //then you can add the path from the previous inbound node to this outbound node to the path
-                        BezierCurve newPath;
-                        var connection = hitInfo.transform.gameObject.GetComponent<Level.Connection>();
-                        currentConnection.FindPathToConnection(connection, out newPath);
-                        curves.Add(newPath);
+                        Debug.Log("hit a connection");
+                        //If the outbound connection you hit is directly connected to the inbound connection you started with
+                        //if there is a better way to do this I'm open to it
+                        foreach(Level.Connection.ConnectionPath x in currentConnection.Paths)
+                        {
+                            if (x.OutboundConnection == hitInfo.transform.gameObject.GetComponent<Level.Connection>())
+                            {
+                                Debug.Log("Hit an outbound node");
+                                //then you can add the path from the previous inbound node to this outbound node to the path
+                                BezierCurve newPath;
+                                var connection = hitInfo.transform.gameObject.GetComponent<Level.Connection>();
+                                currentConnection.FindPathToConnection(connection, out newPath);
+                                curves.Add(newPath);
 
-                        //and then set the "currentNode" to be the inbound node that connects to the outbound node hit
-                        currentConnection = connection.ConnectsTo;
-                        //Debug.Log("Hit node");
+                                //and then set the "currentNode" to be the inbound node that connects to the outbound node hit
+                                currentConnection = connection.ConnectsTo;
+                                //Debug.Log("Hit node");
+                                break;
+                            }
+                        }
+
                     }
                 }
             }

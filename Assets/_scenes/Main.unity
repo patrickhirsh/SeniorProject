@@ -1266,9 +1266,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeContainer: {fileID: 2133362386}
-  Target: {fileID: 1370358805}
+  Target: {fileID: 0}
   LookAhead: 0.04
   Speed: 20
+  lastConnection: {fileID: 0}
 --- !u!65 &1162336495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1530,12 +1531,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52449ea6a37f55c4a86c45ab16c5fbee, type: 2}
   m_IsPrefabAsset: 0
---- !u!114 &1370358805 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114665874453937694, guid: 52449ea6a37f55c4a86c45ab16c5fbee,
-    type: 2}
-  m_PrefabInternal: {fileID: 1370358804}
-  m_Script: {fileID: 11500000, guid: 4bc9d4f22a9e0624d8e454a145f306f6, type: 3}
 --- !u!4 &1370358806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4172409532465272, guid: 52449ea6a37f55c4a86c45ab16c5fbee,
@@ -1867,6 +1862,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1667063437 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1970111304776800, guid: 52449ea6a37f55c4a86c45ab16c5fbee,
+    type: 2}
+  m_PrefabInternal: {fileID: 356083299}
+--- !u!135 &1667063440
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1667063437}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1676690065
 GameObject:
   m_ObjectHideFlags: 0

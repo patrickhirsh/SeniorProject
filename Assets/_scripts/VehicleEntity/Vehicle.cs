@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Level;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace VehicleEntity
         public Entity Target;
         public float LookAhead = .035f;
         public float Speed = 20;
+
+        public Connection lastConnection;
 
         protected IEnumerator Start()
         {
@@ -37,6 +40,11 @@ namespace VehicleEntity
             {
                 Debug.Log("Couldn't reach path!");
             }
+        }
+
+        internal static Connection getNextInbound()
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerator TravelPath(BezierCurve curve)
