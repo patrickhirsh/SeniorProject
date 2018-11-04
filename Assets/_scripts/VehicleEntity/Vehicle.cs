@@ -39,7 +39,7 @@ namespace VehicleEntity
             }
         }
 
-        private IEnumerator TravelPath(BezierCurve curve)
+        public IEnumerator TravelPath(BezierCurve curve)
         {
 //            var tween = transform.DOMove(curve.GetPointAt(0), 1f);
 //            yield return tween.WaitForCompletion();
