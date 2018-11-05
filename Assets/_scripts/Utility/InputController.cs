@@ -14,6 +14,10 @@ public class InputController : MonoBehaviour {
     //The list of curves used to construct a curve path
     private List<BezierCurve> curves;
 
+    public GameObject navPrefab;
+
+    public bool indicator;
+
 	// Use this for initialization
 	void Start () {
         CarSelected = false;
@@ -56,6 +60,15 @@ public class InputController : MonoBehaviour {
         //get dragging movements
         if (Input.GetMouseButton(0) && CarSelected)
         {
+            //primitave way to indicate selectable paths
+            if (indicator)
+            {
+                foreach (Level.Connection.ConnectionPath x in currentConnection.Paths)
+                {
+
+                    Instantiate(navPrefab, currentConnection.transform);
+                }
+            }
             RaycastHit hitInfo = new RaycastHit();
             bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
             //if you hit an outbound node
