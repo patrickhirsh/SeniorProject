@@ -100,7 +100,7 @@ public class InputController : MonoBehaviour {
         if (Input.GetMouseButtonUp(0) && curves.Count > 0)
         {
             var curve = new BezierCurve();
-            curve = currentVehicle.transform.GetOrAddComponent<BezierCurve>();
+            //curve = currentVehicle.transform.GetOrAddComponent<BezierCurve>();
             foreach (var point in curves.SelectMany(b => b.GetAnchorPoints()))
             {
                 Debug.Log("Adding a curve");
