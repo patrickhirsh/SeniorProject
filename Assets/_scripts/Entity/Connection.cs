@@ -17,6 +17,7 @@ namespace Level
         }
 
         public Connection ConnectsTo;
+        public Entity parentEntity;
         public Entity ConnectingEntity;
 
         [Serializable]
@@ -58,8 +59,9 @@ namespace Level
 
         #endregion
 
-        public void Setup()
+        public void Setup(Entity parent)
         {
+            this.parentEntity = parent;
             CalculateConnections();
         }
 

@@ -81,7 +81,7 @@ namespace Level
         {
             foreach (var connection in OutboundConnections)
             {
-                connection.Setup();
+                connection.Setup(this);
             }
         }
 
