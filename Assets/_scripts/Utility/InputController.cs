@@ -9,16 +9,18 @@ public class InputController : MonoBehaviour {
     private bool CarSelected;
     //The current selected car
     private VehicleEntity.Vehicle currentVehicle;
-    //The inbbound connection last pathed to on the path
-    private Level.Connection currentConnection;
+    //The inbbound connection last pathed to on the path. MUST ALWAYS BE AN INBOUND CONNECTION
+    public Level.Connection currentConnection;
     //The list of curves used to construct a curve path
     private List<BezierCurve> curves;
 
 	// Use this for initialization
 	void Start () {
         CarSelected = false;
-        currentConnection = new Level.Connection();
+   
         currentVehicle = new VehicleEntity.Vehicle();
+        //currentConnection = new Level.Connection();
+
         curves = new List<BezierCurve>();
 	}
 
@@ -28,7 +30,7 @@ public class InputController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             //reset these values
-            currentConnection = VehicleEntity.Vehicle.getNextInbound();
+            
             currentVehicle = new VehicleEntity.Vehicle();
             curves = new List<BezierCurve>();
 
@@ -41,8 +43,10 @@ public class InputController : MonoBehaviour {
                 if (hitInfo.transform.gameObject.GetComponent<VehicleEntity.Vehicle>())
                 {
                     currentVehicle = hitInfo.transform.gameObject.GetComponent<VehicleEntity.Vehicle>();
+                    
+                    //currentConnection = currentVehicle.GetComponent<Level.Connection>();
                     CarSelected = true;
-                    curves = new List<BezierCurve>();
+                   
                     Debug.Log("Hit Car");
                     //curves.Add(The path the car is currently on);
                 }
@@ -68,6 +72,9 @@ public class InputController : MonoBehaviour {
                         //if there is a better way to do this I'm open to it
                         foreach(Level.Connection.ConnectionPath x in currentConnection.Paths)
                         {
+                            
+                            Debug.Log(x.OutboundConnection.name);
+                            Debug.Log(hitInfo.transform.gameObject.GetComponent<Level.Connection>().Equals(x.OutboundConnection));
                             if (x.OutboundConnection == hitInfo.transform.gameObject.GetComponent<Level.Connection>())
                             {
                                 Debug.Log("Hit an outbound node");
@@ -90,13 +97,16 @@ public class InputController : MonoBehaviour {
         }
 
         //when you stop touching, the curve is calcuated and the vehicle is set to travel the path you dragged
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && curves.Count > 0)
         {
-            var curve = currentVehicle.transform.GetOrAddComponent<BezierCurve>();
+            var curve = new BezierCurve();
+            curve = currentVehicle.transform.GetOrAddComponent<BezierCurve>();
             foreach (var point in curves.SelectMany(b => b.GetAnchorPoints()))
             {
+                Debug.Log("Adding a curve");
                 curve.AddPoint(point);
             }
+            
             //Set car's new path to curves
             StartCoroutine(currentVehicle.TravelPath(curve));
         }

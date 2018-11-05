@@ -42,11 +42,8 @@ namespace VehicleEntity
             }
         }
 
-        internal static Connection getNextInbound()
-        {
-            throw new NotImplementedException();
-        }
 
+       
         public IEnumerator TravelPath(BezierCurve curve)
         {
 //            var tween = transform.DOMove(curve.GetPointAt(0), 1f);
