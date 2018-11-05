@@ -78,7 +78,7 @@ public class InputController : MonoBehaviour {
                 if (hitInfo.transform.gameObject.GetComponent<Level.Connection>() != null)
                 {
                     //If the connection you hit is an outbbound
-                    if (hitInfo.transform.gameObject.GetComponent<Level.Connection>().Traveling == Level.Connection.TravelingDirection.Outbound)
+                    if (hitInfo.transform.gameObject.GetComponent<Level.Connection>().Type == Level.Connection.ConnectionType.Outbound)
                     {
                         Debug.Log("hit a connection");
                         //If the outbound connection you hit is directly connected to the inbound connection you started with

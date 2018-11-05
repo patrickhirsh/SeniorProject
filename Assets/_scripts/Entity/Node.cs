@@ -20,13 +20,13 @@ namespace Level
         private Connection[] _inboundConnections;
         public IEnumerable<Connection> InboundConnections => _inboundConnections ??
                                                              (_inboundConnections = GetComponentsInChildren<Connection>()
-                                                                 .Where(connection => connection.Traveling == Connection.TravelingDirection.Inbound)
+                                                                 .Where(connection => connection.Type == Connection.ConnectionType.Inbound)
                                                                  .ToArray());
 
         private Connection[] _outboundConnections;
         public IEnumerable<Connection> OutBoundConnections => _outboundConnections ?? (
                                                                   _outboundConnections = GetComponentsInChildren<Connection>()
-                                                                      .Where(connection => connection.Traveling == Connection.TravelingDirection.Outbound)
+                                                                      .Where(connection => connection.Type == Connection.ConnectionType.Outbound)
                                                                       .ToArray());
         #endregion
 

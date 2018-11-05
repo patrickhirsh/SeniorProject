@@ -9,8 +9,8 @@ namespace Level
 {
     public class Connection : MonoBehaviour
     {
-        public TravelingDirection Traveling;
-        public enum TravelingDirection
+        public ConnectionType Type;
+        public enum ConnectionType
         {
             Inbound,
             Outbound
@@ -49,7 +49,7 @@ namespace Level
         {
             foreach (var connection in Paths)
             {
-                if (connection.OutboundConnection.Traveling == TravelingDirection.Inbound)
+                if (connection.OutboundConnection.Type == ConnectionType.Inbound)
                 {
                     connection.OutboundConnection = null;
                     Debug.LogError("Can't connect to an inbound connection", gameObject);
@@ -71,7 +71,7 @@ namespace Level
         public bool FindPathToConnection(Connection connection, out BezierCurve path)
         {
             path = null;
-            if (connection.Traveling == TravelingDirection.Inbound)
+            if (connection.Type == ConnectionType.Inbound)
             {
                 Debug.LogError("Can't get path to an inbound connection");
                 return false;
@@ -87,7 +87,7 @@ namespace Level
 
         public void CalculateConnections()
         {
-            if (Traveling == TravelingDirection.Inbound) return;
+            if (Type == ConnectionType.Inbound) return;
 
             ConnectsTo = EntityManager.Instance.InboundConnections.FirstOrDefault(connection =>
                 Vector3.Distance(transform.position, connection.transform.position) 

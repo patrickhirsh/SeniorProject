@@ -15,8 +15,8 @@ namespace Level
             EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour((Connection)target), typeof(Connection), false);
             GUI.enabled = true;
 
-            myTarget.Traveling = (Connection.TravelingDirection)EditorGUILayout.EnumPopup("Traveling", myTarget.Traveling);
-            if (myTarget.Traveling == Connection.TravelingDirection.Inbound)
+            myTarget.Type = (Connection.ConnectionType)EditorGUILayout.EnumPopup("Traveling", myTarget.Type);
+            if (myTarget.Type == Connection.ConnectionType.Inbound)
             {
 
                 var myIterator = serializedObject.FindProperty("Paths");
