@@ -64,12 +64,12 @@ namespace VehicleEntity
             while (transform.position != curve.GetPointAt(1))
             {
                 transform.position = curve.GetPointAt(Pos);
-                Pos += ticks;
                 if (Pos + LookAhead <= 1f)
                 {
                     transform.LookAt(curve.GetPointAt(Pos + LookAhead));
                 }
 
+                Pos += ticks;
                 yield return new WaitForSeconds(ticks);
             }
             /*
