@@ -12,8 +12,8 @@ namespace VehicleEntity
             .OrderBy(connection => Vector3.Distance(transform.position, connection.transform.position))
             .FirstOrDefault();
         public Entity Target;
-        public float LookAhead = 5.0f;
-        public float Speed = 20;
+        private float LookAhead = 1.3f;
+        private float Speed = 5f;
         private Coroutine _animationTween;
 
         protected IEnumerator Start()
@@ -46,9 +46,7 @@ namespace VehicleEntity
             curve.Clear();
 
             foreach (var point in curves.SelectMany(b => b.GetAnchorPoints()))
-            {
                 curve.AddPoint(point);
-            }
 
             _animationTween = StartCoroutine(TravelPath(curve));
         }
@@ -56,40 +54,26 @@ namespace VehicleEntity
         public IEnumerator TravelPath(BezierCurve curve)
         {
             DrawPath(curve);
+            float position = 0.0f;
+            //float speedScale = 0.05f;
 
-            // TODO: Figure this one out
-            var totalTime = curve.length / Speed;
-            Debug.Log(totalTime);
-            var Pos = 0.0f;
-
-            var ticks = .004f / totalTime;
-            while (transform.position != curve.GetPointAt(1))
+            while (position <= 1)
             {
-                transform.position = curve.GetPointAt(Pos);
-                if (Pos + LookAhead <= 1f)
+                position += (Speed * Time.deltaTime) / curve.length;
+                transform.position = curve.GetPointAt(position);
+
+                if (position + (LookAhead / curve.length) <= 1f)
                 {
-                    transform.LookAt(curve.GetPointAt(Pos + LookAhead));
+                    transform.LookAt(curve.GetPointAt(position + (LookAhead / curve.length)));
                 }
 
-                Pos += ticks;
-                yield return new WaitForSeconds(ticks);
+                yield return new WaitForSeconds(0);
             }
 
             // Delete the drawn path
             var lineRenderer = this.GetOrAddComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
-            /*
-            for (float i = 0; i < totalTime; i += ticks)
-            {
-                transform.position = curve.GetPointAt(i);
-                if (i + LookAhead <= 1f)
-                {
-                    transform.LookAt(curve.GetPointAt(i + LookAhead));
-                }
 
-                yield return new WaitForSeconds(ticks);
-            }
-            */
         }
 
         private void DrawPath(BezierCurve curve)
