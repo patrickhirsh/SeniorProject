@@ -57,9 +57,11 @@ namespace VehicleEntity
 
         public IEnumerator TravelPath(BezierCurve curve)
         {
-            var time = curve.length / Speed;
-            
-            for (float i = 0; i < 1; i += time)
+            // TODO: Figure this one out
+            var totalTime = curve.length / Speed;
+            Debug.Log(totalTime);
+            var ticks = totalTime / 100;
+            for (float i = 0; i < 1; i += ticks)
             {
                 transform.position = curve.GetPointAt(i);
                 if (i <= 1f - LookAhead)
@@ -67,7 +69,7 @@ namespace VehicleEntity
                     transform.LookAt(curve.GetPointAt(i + LookAhead));
                 }
 
-                yield return new WaitForSeconds(time);
+                yield return new WaitForSeconds(ticks);
             }
         }
     }
