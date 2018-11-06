@@ -61,6 +61,7 @@ namespace VehicleEntity
             var totalTime = curve.length / Speed;
             Debug.Log(totalTime);
             var Pos = 0.0f;
+
             var ticks = .004f / totalTime ;
             while(transform.position != curve.GetPointAt(1))
             {
@@ -69,6 +70,7 @@ namespace VehicleEntity
                 if(Pos + ticks*5 <= 1f)
                 {
                     transform.LookAt(curve.GetPointAt(Pos + ticks* LookAhead));
+
                 }
 
                 yield return new WaitForSeconds(ticks);
