@@ -22,6 +22,9 @@ namespace Level
 
         private float spawnInterval = 5f;
 
+        public GameObject redCar;
+        public GameObject greeCar;
+
 
         // Use this for initialization
         void Start()
@@ -45,7 +48,6 @@ namespace Level
         {
             while (true)
             {
-
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
