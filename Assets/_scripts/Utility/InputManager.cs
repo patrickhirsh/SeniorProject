@@ -20,8 +20,8 @@ public class InputManager : MonoBehaviour
     #endregion
 
     //The inbound connection last pathed to on the path. MUST ALWAYS BE AN INBOUND CONNECTION
-    public bool Indicator;
-    public GameObject NavPrefab;
+    public GameObject NextIndicatorPrefab;
+    public GameObject CurrentIndicatorPrefab;
 
     private Connection _currentConnection;
     private bool HasCurrentConnection => _currentConnection != null;
@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
     //The list of curves used to construct a curve path
     private List<BezierCurve> _curves;
     private List<GameObject> _indicators;
+    private GameObject _currentIndicator;
 
     // Use this for initialization
     private void Start()
@@ -67,16 +68,7 @@ public class InputManager : MonoBehaviour
         //get dragging movements
         if (Input.GetMouseButton(0) && CarSelected && HasCurrentConnection)
         {
-            //primitive way to indicate selectable paths
-            if (Indicator)
-            {
-                // TODO: Object Pooling
-                _indicators.ForEach(Destroy);
-                foreach (var connection in _currentConnection.ConnectedConnections())
-                {
-                    _indicators.Add(Instantiate(NavPrefab, connection.transform, false));
-                }
-            }
+            DrawIndicators();
 
             RaycastHit hitInfo;
             //if you hit an outbound node
@@ -101,9 +93,21 @@ public class InputManager : MonoBehaviour
         //when you stop touching, the curve is calculated and the vehicle is set to travel the path you dragged
         if (Input.GetMouseButtonUp(0) && _curves.Any())
         {
-            Debug.Log("GO");
             _currentVehicle.TravelPath(_curves);
             _indicators.ForEach(Destroy);
+        }
+    }
+
+    private void DrawIndicators()
+    {
+        Destroy(_currentIndicator);
+        _currentIndicator = Instantiate(CurrentIndicatorPrefab, _currentConnection.transform, false);
+
+        // TODO: Object Pooling
+        _indicators.ForEach(Destroy);
+        foreach (var connection in _currentConnection.ConnectedConnections())
+        {
+            _indicators.Add(Instantiate(NextIndicatorPrefab, connection.transform, false));
         }
     }
 }
