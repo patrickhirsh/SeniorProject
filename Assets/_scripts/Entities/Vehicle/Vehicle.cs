@@ -14,7 +14,7 @@ namespace VehicleEntity
             .OrderBy(connection => Vector3.Distance(transform.position, connection.transform.position))
             .FirstOrDefault();
         public Entity Target;
-        public float LookAhead = .035f;
+        public float LookAhead = 5.0f;
         public float Speed = 20;
         private Coroutine _animationTween;
 
@@ -60,8 +60,23 @@ namespace VehicleEntity
             // TODO: Figure this one out
             var totalTime = curve.length / Speed;
             Debug.Log(totalTime);
-            var ticks = totalTime / 100;
-            for (float i = 0; i < 1; i += ticks)
+            var Pos = 0.0f;
+
+            var ticks = .004f / totalTime ;
+            while(transform.position != curve.GetPointAt(1))
+            {
+                transform.position = curve.GetPointAt(Pos);
+                Pos += ticks;
+                if(Pos + ticks*5 <= 1f)
+                {
+                    transform.LookAt(curve.GetPointAt(Pos + ticks* LookAhead));
+
+                }
+
+                yield return new WaitForSeconds(ticks);
+            }
+            /*
+            for (float i = 0; i < totalTime; i += ticks)
             {
                 transform.position = curve.GetPointAt(i);
                 if (i + LookAhead <= 1f)
@@ -71,6 +86,7 @@ namespace VehicleEntity
 
                 yield return new WaitForSeconds(ticks);
             }
+            */
         }
     }
 }
