@@ -94,7 +94,7 @@ namespace Level
             Debug.Assert(OutboundConnectingEntities.ContainsKey(target), "target is in neighbors, but no connection exists?");
 
             var outboundConnection = OutboundConnectingEntities[target];
-            inboundConnection.FindPathToConnection(outboundConnection, out path);
+            inboundConnection.GetPathToConnection(outboundConnection, out path);
             return true;
         }
 

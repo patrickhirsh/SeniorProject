@@ -13,7 +13,8 @@ namespace Level
         public enum ConnectionType
         {
             Inbound,
-            Outbound
+            Outbound,
+            Internal
         }
 
         public Connection ConnectsTo;
@@ -23,10 +24,14 @@ namespace Level
         [Serializable]
         public class ConnectionPath
         {
-            public Connection OutboundConnection;
+            public Connection OutboundConnection;       // per the spec below, this would now just be "connection"
             public BezierCurve Path;
         }
 
+        // TODO: include internal connection types for applicable entities (parking, for now)
+        // Pathfinding needs to check Paths within a Parking entity's inbound connection to find it's inbound connections
+        // NOTE: This means Paths will no longer ONLY contain associated outbound connections. It could also contain internal connections.
+        // this means Austin's path drawing probably needs an aditional if statement to make sure he's only looking at outbound connections
         public List<ConnectionPath> Paths = new List<ConnectionPath>();
 
         private Dictionary<Connection, BezierCurve> _connectionPaths;
@@ -66,9 +71,14 @@ namespace Level
         }
 
         /// <summary>
-        /// Finds a path from this connection to connection
+        /// Gets the BezierCurve path from this connection to the given connection.
+        /// returns false if no such connection exists.
+        /// 
+        /// This method only returns paths within the current connection's entity.
+        /// If you want a path that spans entities, you're probably looking for
+        /// a function in PathfinderManager
         /// </summary>
-        public bool FindPathToConnection(Connection connection, out BezierCurve path)
+        public bool GetPathToConnection(Connection connection, out BezierCurve path)
         {
             path = null;
             if (connection.Type == ConnectionType.Inbound)

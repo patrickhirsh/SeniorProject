@@ -8,11 +8,11 @@ namespace Level
     {
         public int Compare(PathNode node1, PathNode node2)
         {
-            if (node1.weight < node2.weight)
+            if (node1.distance < node2.distance)
                 return -1;
-            else if (node1.weight > node2.weight)
+            else if (node1.distance > node2.distance)
                 return 1;
-            else if (node1.weight == node2.weight)
+            else if (node1.distance == node2.distance)
                 return 0;
 
             else return 0;

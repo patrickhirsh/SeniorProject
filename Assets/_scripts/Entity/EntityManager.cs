@@ -127,7 +127,7 @@ public class EntityManager : MonoBehaviour
 
             current = next;
         }
-        //        path.Add(toEntity.transform.position);
+        // path.Add(toEntity.transform.position);
         Debug.Log(path.Count);
         return true;
     }

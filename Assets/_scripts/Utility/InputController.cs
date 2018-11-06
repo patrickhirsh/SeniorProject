@@ -94,7 +94,7 @@ public class InputController : MonoBehaviour {
                                 //then you can add the path from the previous inbound node to this outbound node to the path
                                 BezierCurve newPath;
                                 var connection = hitInfo.transform.gameObject.GetComponent<Level.Connection>();
-                                currentConnection.FindPathToConnection(connection, out newPath);
+                                currentConnection.GetPathToConnection(connection, out newPath);
                                 curves.Add(newPath);
 
                                 //and then set the "currentNode" to be the inbound node that connects to the outbound node hit
