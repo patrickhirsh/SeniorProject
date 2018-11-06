@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-using Level;
-using System;
+﻿using Level;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +19,7 @@ namespace VehicleEntity
         protected IEnumerator Start()
         {
             yield return new WaitForSeconds(1);
-//            PathToTarget(Target);
+            //            PathToTarget(Target);
         }
 
         private void PathToTarget(Entity target)
@@ -62,17 +60,16 @@ namespace VehicleEntity
             Debug.Log(totalTime);
             var Pos = 0.0f;
 
-            var ticks = .004f / totalTime ;
-            while(transform.position != curve.GetPointAt(1))
+            var ticks = .004f / totalTime;
+            while (transform.position != curve.GetPointAt(1))
             {
                 transform.position = curve.GetPointAt(Pos);
-                Pos += ticks;
-                if(Pos + ticks*5 <= 1f)
+                if (Pos + LookAhead <= 1f)
                 {
-                    transform.LookAt(curve.GetPointAt(Pos + ticks* LookAhead));
-
+                    transform.LookAt(curve.GetPointAt(Pos + LookAhead));
                 }
 
+                Pos += ticks;
                 yield return new WaitForSeconds(ticks);
             }
             /*
