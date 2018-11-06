@@ -78,7 +78,7 @@ public class InputManager : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 var target = hitInfo.transform.GetComponent<Connection>();
-                if (target != null && target.OutboundOrInternal && target.ConnectsTo != null)
+                if (target != null && ((target.Type == Connection.ConnectionType.Outbound && target.ConnectsTo != null) || target.Type == Connection.ConnectionType.Internal))
                 {
                     BezierCurve curve;
                     if (_currentConnection.GetPathToConnection(target, out curve))
@@ -116,7 +116,7 @@ public class InputManager : MonoBehaviour
         // TODO: Object Pooling
         foreach (var connection in _currentConnection.ConnectedConnections())
         {
-            if(connection.ConnectsTo != null) {
+            if(connection.ConnectsTo != null || connection.Type == Connection.ConnectionType.Internal) {
 
                 _indicators.Add(Instantiate(NextIndicatorPrefab, connection.transform, false));
 
