@@ -534,26 +534,6 @@ Prefab:
       propertyPath: m_Name
       value: Lane (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: wps.Array.data[0].x
-      value: -3.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: path.wps.Array.data[0].x
-      value: -0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: path.wps.Array.data[1].x
-      value: -3.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: lastSrcPosition.x
-      value: -0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1917040755874644, guid: 52449ea6a37f55c4a86c45ab16c5fbee, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52449ea6a37f55c4a86c45ab16c5fbee, type: 2}
   m_IsPrefabAsset: 0
@@ -1062,6 +1042,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69d5d5807ddbb24cbfdb208c074e761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Indicator: 1
+  NavPrefab: {fileID: 1247430489752376, guid: 823855a88bdbc474abfaa093bb676b8a, type: 2}
 --- !u!4 &672874435
 Transform:
   m_ObjectHideFlags: 0
@@ -1268,8 +1250,7 @@ MonoBehaviour:
   NodeContainer: {fileID: 2133362386}
   Target: {fileID: 0}
   LookAhead: 0.04
-  Speed: 20
-  lastConnection: {fileID: 0}
+  Speed: 25
 --- !u!65 &1162336495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1862,23 +1843,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1667063437 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1970111304776800, guid: 52449ea6a37f55c4a86c45ab16c5fbee,
-    type: 2}
-  m_PrefabInternal: {fileID: 356083299}
---- !u!135 &1667063440
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1667063437}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1676690065
 GameObject:
   m_ObjectHideFlags: 0

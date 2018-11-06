@@ -8,15 +8,19 @@ namespace Level
     public class PathfindingManager : MonoBehaviour
     {
         private bool _debugMode = true;
-        EntityManager _entityManager;    // PathfindingManager utilizes structures from the scene's EntityManager
 
+        #region Singleton
+        private static PathfindingManager _instance;
+        public static PathfindingManager Instance => _instance ?? (_instance = Create());
 
-        // Use this for initialization
-        void Start()
+        private static PathfindingManager Create()
         {
-            _entityManager = EntityManager.Instance;
+            GameObject singleton = FindObjectOfType<PathfindingManager>()?.gameObject;
+            if (singleton == null) singleton = new GameObject { name = typeof(PathfindingManager).Name };
+            singleton.AddComponent<PathfindingManager>();
+            return singleton.GetComponent<PathfindingManager>();
         }
-
+        #endregion
 
         /// <summary>
         /// GetPath is used to obtain the best path between two connections of any type. 

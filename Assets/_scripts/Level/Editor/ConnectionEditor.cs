@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Level
 {
     [CustomEditor(typeof(Connection))]
+    [CanEditMultipleObjects]
     public class ConnectionEditor : Editor
     {
         public override void OnInspectorGUI()
@@ -24,11 +25,11 @@ namespace Level
             }
             else
             {
-                var myIterator1 = serializedObject.FindProperty("ConnectsTo");
-                EditorGUILayout.ObjectField(myIterator1);
-
-                var myIterator2 = serializedObject.FindProperty("ConnectingEntity");
-                EditorGUILayout.ObjectField(myIterator2);
+//                var myIterator1 = serializedObject.FindProperty("ConnectsTo");
+//                EditorGUILayout.ObjectField(myIterator1);
+//
+//                var myIterator2 = serializedObject.FindProperty("ConnectingEntity");
+//                EditorGUILayout.ObjectField(myIterator2);
             }
             // Apply changes to the serializedProperty - always do this at the end of OnInspectorGUI.
             serializedObject.ApplyModifiedProperties();

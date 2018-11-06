@@ -30,6 +30,7 @@ public class EntityManager : MonoBehaviour
     public void Setup()
     {
         CalculateEntities();
+        Debug.Log(InboundConnections.Count());
     }
 
     private void CalculateEntities()
@@ -131,8 +132,4 @@ public class EntityManager : MonoBehaviour
         Debug.Log(path.Count);
         return true;
     }
-}
-
-public class EntityContainer<T>
-{
 }

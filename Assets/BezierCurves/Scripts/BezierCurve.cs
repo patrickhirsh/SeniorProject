@@ -555,4 +555,8 @@ public class BezierCurve : MonoBehaviour {
 		return GetPoint(distance / curveLength, firstPoint, secondPoint);
 	}
 	*/
+    public void Clear()
+    {
+        points = new BezierPoint[0];
+    }
 }

@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,9 +11,9 @@ namespace Level
         public ConnectionType Type;
         public enum ConnectionType
         {
-            Inbound,
-            Outbound,
-            Internal
+            Inbound = 0,
+            Outbound = 1,
+            Internal = 2
         }
 
         public Connection ConnectsTo;
@@ -52,14 +51,18 @@ namespace Level
 
         protected void OnValidate()
         {
-            foreach (var connection in Paths)
+            if (Type == ConnectionType.Inbound)
             {
-                if (connection.OutboundConnection.Type == ConnectionType.Inbound)
+                foreach (var connection in Paths)
                 {
-                    connection.OutboundConnection = null;
-                    Debug.LogError("Can't connect to an inbound connection", gameObject);
+                    if (connection.OutboundConnection.Type == ConnectionType.Inbound)
+                    {
+                        connection.OutboundConnection = null;
+                        Debug.LogError("Can't connect to an inbound connection", gameObject);
+                    }
                 }
             }
+
         }
 
         #endregion
@@ -68,6 +71,11 @@ namespace Level
         {
             this.parentEntity = parent;
             CalculateConnections();
+        }
+
+        public Connection[] ConnectedConnections()
+        {
+            return ConnectionPaths.Keys.ToArray();
         }
 
         /// <summary>
@@ -100,7 +108,7 @@ namespace Level
             if (Type == ConnectionType.Inbound) return;
 
             ConnectsTo = EntityManager.Instance.InboundConnections.FirstOrDefault(connection =>
-                Vector3.Distance(transform.position, connection.transform.position) 
+                Vector3.Distance(transform.position, connection.transform.position)
                 < Mathf.Max(Grid.CELL_SIZE_X, Grid.CELL_SIZE_Z));
 
             ConnectingEntity = ConnectsTo?.Node.Entity;

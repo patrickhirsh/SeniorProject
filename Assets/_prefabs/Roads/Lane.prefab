@@ -213,6 +213,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4360179976877488}
   - component: {fileID: 114845394369987700}
+  - component: {fileID: 135938208141719728}
   m_Layer: 0
   m_Name: Outbound
   m_TagString: Untagged
@@ -751,8 +752,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Traveling: 0
+  Type: 0
   ConnectsTo: {fileID: 0}
+  parentEntity: {fileID: 0}
   ConnectingEntity: {fileID: 0}
   Paths:
   - OutboundConnection: {fileID: 114845394369987700}
@@ -769,8 +771,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeContainer: {fileID: 4309837895217466}
-  ConnectingEntities: []
-  NeighborEntities: []
 --- !u!114 &114845394369987700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -782,7 +782,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Traveling: 1
+  Type: 1
   ConnectsTo: {fileID: 0}
+  parentEntity: {fileID: 0}
   ConnectingEntity: {fileID: 0}
   Paths: []
+--- !u!135 &135938208141719728
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1970111304776800}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}

@@ -12,10 +12,18 @@ public class LevelManager : MonoBehaviour
 {
     #region Singleton
     private static LevelManager _instance;
-    public static LevelManager Instance => _instance ?? (_instance = FindObjectOfType<LevelManager>());
+    public static LevelManager Instance => _instance ?? (_instance = Create());
+
+    private static LevelManager Create()
+    {
+        GameObject singleton = FindObjectOfType<LevelManager>()?.gameObject;
+        if (singleton == null) singleton = new GameObject { name = typeof(LevelManager).Name };
+        singleton.AddComponent<LevelManager>();
+        return singleton.GetComponent<LevelManager>();
+    }
     #endregion
 
-    
+
     #region Unity Methods
 
     private void Start()

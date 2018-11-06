@@ -165,6 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4573693131818154}
   - component: {fileID: 114956176997434458}
+  - component: {fileID: 135550735626661558}
   m_Layer: 0
   m_Name: Outbound
   m_TagString: Untagged
@@ -244,6 +245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4851717253362552}
   - component: {fileID: 114474097192290980}
+  - component: {fileID: 135075755596233106}
   m_Layer: 0
   m_Name: Outbound
   m_TagString: Untagged
@@ -835,8 +837,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Traveling: 0
+  Type: 0
   ConnectsTo: {fileID: 0}
+  parentEntity: {fileID: 0}
   ConnectingEntity: {fileID: 0}
   Paths:
   - OutboundConnection: {fileID: 114956176997434458}
@@ -1086,11 +1089,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Traveling: 1
+  Type: 1
   ConnectsTo: {fileID: 0}
+  parentEntity: {fileID: 0}
   ConnectingEntity: {fileID: 0}
   Paths:
-  - OutboundConnection: {fileID: 114956176997434458}
+  - OutboundConnection: {fileID: 0}
     Path: {fileID: 0}
 --- !u!114 &114512026633776884
 MonoBehaviour:
@@ -1134,8 +1138,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeContainer: {fileID: 4168734893599224}
-  ConnectingEntities: []
-  NeighborEntities: []
 --- !u!114 &114769739420133284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1194,8 +1196,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Traveling: 1
+  Type: 1
   ConnectsTo: {fileID: 0}
+  parentEntity: {fileID: 0}
   ConnectingEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114979584316749252
@@ -1224,3 +1227,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ac12bc738f17d438700d20a3093cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &135075755596233106
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1565747572279406}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &135550735626661558
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1386913066376752}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
