@@ -55,6 +55,8 @@ namespace VehicleEntity
 
         public IEnumerator TravelPath(BezierCurve curve)
         {
+            DrawPath(curve);
+
             // TODO: Figure this one out
             var totalTime = curve.length / Speed;
             Debug.Log(totalTime);
@@ -72,6 +74,10 @@ namespace VehicleEntity
                 Pos += ticks;
                 yield return new WaitForSeconds(ticks);
             }
+
+            // Delete the drawn path
+            var lineRenderer = this.GetOrAddComponent<LineRenderer>();
+            lineRenderer.positionCount = 0;
             /*
             for (float i = 0; i < totalTime; i += ticks)
             {
@@ -84,6 +90,25 @@ namespace VehicleEntity
                 yield return new WaitForSeconds(ticks);
             }
             */
+        }
+
+        private void DrawPath(BezierCurve curve)
+        {
+            var lineRenderer = this.GetOrAddComponent<LineRenderer>();
+            int lengthOfLineRenderer = 200;
+            lineRenderer.positionCount = lengthOfLineRenderer;
+            lineRenderer.widthMultiplier = .2f;
+            lineRenderer.numCapVertices = 10;
+            lineRenderer.numCornerVertices = 10;
+            var points = new Vector3[lengthOfLineRenderer];
+
+            for (int i = 0; i < lengthOfLineRenderer; i++)
+            {
+                points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
+                points[i] += Vector3.up * .2f;
+            }
+
+            lineRenderer.SetPositions(points);
         }
     }
 }
