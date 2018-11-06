@@ -71,6 +71,8 @@ public class InputManager : MonoBehaviour
             DestroyIndicators();
             DrawIndicators();
 
+            if (_currentConnection.Type == Connection.ConnectionType.Internal) return;
+
             RaycastHit hitInfo;
             //if you hit an outbound node
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
@@ -85,7 +87,7 @@ public class InputManager : MonoBehaviour
                         _curves.Add(curve);
 
                         //and then set the "currentNode" to be the inbound node that connects to the outbound node hit
-                        _currentConnection = target.ConnectsTo;
+                        _currentConnection = target.Type == Connection.ConnectionType.Internal ? target : target.ConnectsTo;
                     }
                 }
             }
@@ -108,6 +110,8 @@ public class InputManager : MonoBehaviour
     private void DrawIndicators()
     {
         _currentIndicator = Instantiate(CurrentIndicatorPrefab, _currentConnection.transform, false);
+
+        if (_currentConnection.Type == Connection.ConnectionType.Internal) return;
 
         // TODO: Object Pooling
         foreach (var connection in _currentConnection.ConnectedConnections())
