@@ -23,12 +23,15 @@ namespace Level
         private float spawnInterval = 5f;
 
         public GameObject redCar;
-        public GameObject greeCar;
-
+        public GameObject greenCar;
+        public GameObject spawnPoint;
 
         // Use this for initialization
         void Start()
         {
+            spawnPoint = GameObject.Find("Spawn");
+            redCar = GameObject.Find("redCar");
+            greenCar = GameObject.Find("greenCar");
             StartCoroutine(spawnTimer());
         }
 
@@ -38,9 +41,22 @@ namespace Level
 
         }
 
-        private void spawnCar()
+        
+        private void spawnCar(GameObject car)
         {
+            GameObject newCar = Instantiate(car, car.transform.parent);
+            newCar.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);
+        }
 
+
+        private GameObject getRandomCarType()
+        {
+            float type = UnityEngine.Random.Range(-1, 1);
+
+            if (type >= 0)
+                return redCar;
+            else
+                return greenCar;
         }
 
 
