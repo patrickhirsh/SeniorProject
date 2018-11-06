@@ -68,6 +68,7 @@ public class InputManager : MonoBehaviour
         //get dragging movements
         if (Input.GetMouseButton(0) && CarSelected && HasCurrentConnection)
         {
+            DestroyIndicators();
             DrawIndicators();
 
             RaycastHit hitInfo;
@@ -75,7 +76,7 @@ public class InputManager : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 var target = hitInfo.transform.GetComponent<Connection>();
-                if (target != null && target.Type == Connection.ConnectionType.Outbound)
+                if (target != null && target.OutboundOrInternal)
                 {
                     BezierCurve curve;
                     if (_currentConnection.GetPathToConnection(target, out curve))
@@ -94,17 +95,21 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && _curves.Any())
         {
             _currentVehicle.TravelPath(_curves);
-            _indicators.ForEach(Destroy);
+            DestroyIndicators();
         }
+    }
+
+    private void DestroyIndicators()
+    {
+        Destroy(_currentIndicator);
+        _indicators.ForEach(Destroy);
     }
 
     private void DrawIndicators()
     {
-        Destroy(_currentIndicator);
         _currentIndicator = Instantiate(CurrentIndicatorPrefab, _currentConnection.transform, false);
 
         // TODO: Object Pooling
-        _indicators.ForEach(Destroy);
         foreach (var connection in _currentConnection.ConnectedConnections())
         {
             _indicators.Add(Instantiate(NextIndicatorPrefab, connection.transform, false));

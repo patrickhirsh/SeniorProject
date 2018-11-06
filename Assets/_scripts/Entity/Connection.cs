@@ -15,15 +15,16 @@ namespace Level
             Outbound = 1,
             Internal = 2
         }
+        public bool OutboundOrInternal => Type == ConnectionType.Outbound || Type == ConnectionType.Internal;
 
         public Connection ConnectsTo;
-        public Entity parentEntity;
+        public Entity ParentEntity;
         public Entity ConnectingEntity;
 
         [Serializable]
         public class ConnectionPath
         {
-            public Connection OutboundConnection;       // per the spec below, this would now just be "connection"
+            public Connection Connection;       // per the spec below, this would now just be "connection"
             public BezierCurve Path;
         }
 
@@ -34,31 +35,25 @@ namespace Level
         public List<ConnectionPath> Paths = new List<ConnectionPath>();
 
         private Dictionary<Connection, BezierCurve> _connectionPaths;
-        private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.OutboundConnection, path => path.Path));
-
-        protected Node Node => GetComponentInParent<Node>();
+        private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
 
         #region Unity Methods
-
-        protected void Update()
-        {
-            if (transform.hasChanged)
-            {
-                SnapToValidPosition();
-                transform.hasChanged = false;
-            }
-        }
 
         protected void OnValidate()
         {
             if (Type == ConnectionType.Inbound)
             {
-                foreach (var connection in Paths)
+                foreach (var path in Paths)
                 {
-                    if (connection.OutboundConnection.Type == ConnectionType.Inbound)
+                    switch (path.Connection.Type)
                     {
-                        connection.OutboundConnection = null;
-                        Debug.LogError("Can't connect to an inbound connection", gameObject);
+                        case ConnectionType.Outbound:
+                        case ConnectionType.Internal:
+                            break;
+                        default:
+                            path.Connection = null;
+                            Debug.LogError("Can't connect to an inbound connection", gameObject);
+                            break;
                     }
                 }
             }
@@ -69,7 +64,7 @@ namespace Level
 
         public void Setup(Entity parent)
         {
-            this.parentEntity = parent;
+            this.ParentEntity = parent;
             CalculateConnections();
         }
 
@@ -109,23 +104,9 @@ namespace Level
 
             ConnectsTo = EntityManager.Instance.InboundConnections.FirstOrDefault(connection =>
                 Vector3.Distance(transform.position, connection.transform.position)
-                < Mathf.Max(Grid.CELL_SIZE_X, Grid.CELL_SIZE_Z));
+                < Mathf.Max(Grid.CELL_SIZE_X / 2f, Grid.CELL_SIZE_Z / 2f));
 
-            ConnectingEntity = ConnectsTo?.Node.Entity;
-        }
-
-        private void SnapToValidPosition()
-        {
-            Vector3 closest = Vector3.positiveInfinity;
-            foreach (var point in Node.ValidConnectionPoints())
-            {
-                if (Vector3.Distance(point, transform.position) < Vector3.Distance(closest, transform.position))
-                {
-                    closest = point;
-                }
-            }
-
-            transform.position = closest;
+            ConnectingEntity = ConnectsTo?.ParentEntity;
         }
     }
 
