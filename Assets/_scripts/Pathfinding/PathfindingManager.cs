@@ -55,7 +55,7 @@ namespace Level
 
             // if the start and end connections are in the same entity, try to get a path between them
             // this covers the case where we would need to check internalPaths on the first "exploration" (done in SETUP)
-            if (start.parentEntity == end.parentEntity)
+            if (start.ParentEntity == end.ParentEntity)
             {
                 BezierCurve curve = new BezierCurve();
                 if (start.GetPathToConnection(end, out curve))
@@ -83,11 +83,11 @@ namespace Level
             foreach (Connection.ConnectionPath connectionPath in current.connection.Paths)
             {
                 // we don't care about internal connections here. See the final check in INPUT PROCESSING/VALIDATION for more info
-                if (connectionPath.OutboundConnection.Type == Connection.ConnectionType.Outbound)
+                if (connectionPath.Connection.Type == Connection.ConnectionType.Outbound)
                 {
-                    float distance = Vector3.Distance(current.connection.gameObject.transform.position, connectionPath.OutboundConnection.gameObject.transform.position);
+                    float distance = Vector3.Distance(current.connection.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position);
                     // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
-                    PathNode discoveredNode = new PathNode(connectionPath.OutboundConnection, distance, current.connection);
+                    PathNode discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
                     frontier.Add(discoveredNode);
                 }               
             }
@@ -118,7 +118,7 @@ namespace Level
                     { endConnectionDiscovered = true; break; }
 
                 // we've found a connection in the same entity as end. Search for end in the below foreach loop
-                if (current.connection.parentEntity == end.parentEntity) { inSameEntityAsEnd = true; }                    
+                if (current.connection.ParentEntity == end.ParentEntity) { inSameEntityAsEnd = true; }                    
                 else { inSameEntityAsEnd = false; }
 
                 Debug.Assert(current.connection.Type == Connection.ConnectionType.Outbound);    // we should never be processing a non-outbound connection
@@ -131,20 +131,20 @@ namespace Level
                 foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
                 {
                     // only observe outbound connections UNLESS we're in the same entity as end. Then also check internal connections for end
-                    if ((connectionPath.OutboundConnection.Type == Connection.ConnectionType.Outbound) ||
-                        ((inSameEntityAsEnd) && (connectionPath.OutboundConnection == end)))
+                    if ((connectionPath.Connection.Type == Connection.ConnectionType.Outbound) ||
+                        ((inSameEntityAsEnd) && (connectionPath.Connection == end)))
                     {
                         // only observe connections we haven't yet processed
-                        if (!processed.ContainsKey(connectionPath.OutboundConnection))
+                        if (!processed.ContainsKey(connectionPath.Connection))
                         {
                             PathNode discoveredNode;
                             bool newNodeDiscovered = true;
-                            float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.OutboundConnection.gameObject.transform.position) + current.distance;
+                            float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
                             // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
 
                             // check if this connection has already been discovered (is in the frontier)
                             foreach (PathNode node in frontier)
-                                if (node.connection == connectionPath.OutboundConnection)
+                                if (node.connection == connectionPath.Connection)
                                 {
                                     // we've already discovered this node!
                                     discoveredNode = node;
@@ -162,7 +162,7 @@ namespace Level
                             // this connection has never been discovered before. Add it to the frontier!
                             if (newNodeDiscovered)
                             {
-                                discoveredNode = new PathNode(connectionPath.OutboundConnection, distance, current.connection);
+                                discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
                                 frontier.Add(discoveredNode);
                             }
                         }

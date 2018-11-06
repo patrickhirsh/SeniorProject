@@ -21,7 +21,7 @@ namespace VehicleEntity
         protected IEnumerator Start()
         {
             yield return new WaitForSeconds(1);
-            PathToTarget(Target);
+//            PathToTarget(Target);
         }
 
         private void PathToTarget(Entity target)
@@ -64,7 +64,7 @@ namespace VehicleEntity
             for (float i = 0; i < 1; i += ticks)
             {
                 transform.position = curve.GetPointAt(i);
-                if (i <= 1f - LookAhead)
+                if (i + LookAhead <= 1f)
                 {
                     transform.LookAt(curve.GetPointAt(i + LookAhead));
                 }

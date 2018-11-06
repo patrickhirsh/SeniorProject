@@ -21,11 +21,19 @@ namespace Level
         private Dictionary<Entity, Connection> _outboundConnectingEntities;
         public Dictionary<Entity, Connection> OutboundConnectingEntities => _outboundConnectingEntities ?? (_outboundConnectingEntities = OutboundConnections.ToDictionary(connection => connection.ConnectingEntity));
 
-        private Connection[] _outboundConnections;
-        public Connection[] OutboundConnections => _outboundConnections ?? (_outboundConnections = Nodes().SelectMany(node => node.OutBoundConnections).ToArray());
-
+        #region Connections
         private Connection[] _inboundConnections;
-        public Connection[] InboundConnections => _inboundConnections ?? (_inboundConnections = Nodes().SelectMany(node => node.InboundConnections).ToArray());
+        public IEnumerable<Connection> InboundConnections => _inboundConnections ??
+                                                             (_inboundConnections = GetComponentsInChildren<Connection>()
+                                                                 .Where(connection => connection.Type == Connection.ConnectionType.Inbound)
+                                                                 .ToArray());
+
+        private Connection[] _outboundConnections;
+        public IEnumerable<Connection> OutboundConnections => _outboundConnections ?? (
+                                                                  _outboundConnections = GetComponentsInChildren<Connection>()
+                                                                      .Where(connection => connection.Type == Connection.ConnectionType.Outbound)
+                                                                      .ToArray());
+        #endregion
 
         #region Unity Methods
         protected virtual void Awake()

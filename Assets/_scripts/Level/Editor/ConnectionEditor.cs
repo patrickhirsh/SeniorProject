@@ -17,7 +17,7 @@ namespace Level
             GUI.enabled = true;
 
             myTarget.Type = (Connection.ConnectionType)EditorGUILayout.EnumPopup("Traveling", myTarget.Type);
-            if (myTarget.Type == Connection.ConnectionType.Inbound)
+            if (myTarget.Type == Connection.ConnectionType.Inbound || myTarget.Type == Connection.ConnectionType.Internal)
             {
 
                 var myIterator = serializedObject.FindProperty("Paths");
