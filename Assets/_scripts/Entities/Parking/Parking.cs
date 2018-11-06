@@ -6,7 +6,7 @@ namespace Level
 {
     public class Parking : MonoBehaviour
     {
-
+        public bool isOccupied;
     }
 }
 

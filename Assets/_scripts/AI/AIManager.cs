@@ -19,38 +19,6 @@ namespace Level
             return singleton.GetComponent<AIManager>();
         }
         #endregion
-
-        private float spawnInterval = 5f;
-
-        public GameObject redCar;
-        public GameObject greeCar;
-
-
-        // Use this for initialization
-        void Start()
-        {
-            StartCoroutine(spawnTimer());
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        private void spawnCar()
-        {
-
-        }
-
-
-        private IEnumerator spawnTimer()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(spawnInterval);
-            }
-        }
     }
 }
 
