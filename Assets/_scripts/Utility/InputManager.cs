@@ -31,15 +31,18 @@ public class InputManager : MonoBehaviour
     private bool CarSelected => _currentVehicle != null;
 
     //The list of curves used to construct a curve path
-    private List<BezierCurve> _curves;
+    private Queue<Connection> _connections;
     private List<GameObject> _indicators;
     private GameObject _currentIndicator;
+
+    private BezierCurve _drawingCurve;
 
     // Use this for initialization
     private void Start()
     {
-        _curves = new List<BezierCurve>();
+        _connections = new Queue<Connection>();
         _indicators = new List<GameObject>();
+        _drawingCurve = this.GetOrAddComponent<BezierCurve>();
     }
 
     // Update is called once per frame
@@ -49,7 +52,8 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //reset these values
-            _curves = new List<BezierCurve>();
+            _connections = new Queue<Connection>();
+            _drawingCurve.Clear();
 
             RaycastHit hitInfo;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
@@ -58,12 +62,12 @@ public class InputManager : MonoBehaviour
                 if (target != null)
                 {
                     _currentVehicle = target;
-                    _currentConnection = _currentVehicle.ClosestInbound;
+                    _currentConnection = _currentVehicle.CurrentConnection;
                     _currentVehicle.StopTraveling();
                     //curves.Add(The path the car is currently on);
                 }
             }
-        }   
+        }
 
         //get dragging movements
         if (Input.GetMouseButton(0) && CarSelected && HasCurrentConnection)
@@ -71,34 +75,76 @@ public class InputManager : MonoBehaviour
             DestroyIndicators();
             DrawIndicators();
 
-            if (_currentConnection.Type == Connection.ConnectionType.Internal) return;
 
             RaycastHit hitInfo;
             //if you hit an outbound node
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 var target = hitInfo.transform.GetComponent<Connection>();
-                if (target != null && ((target.Type == Connection.ConnectionType.Outbound && target.ConnectsTo != null) || target.Type == Connection.ConnectionType.Internal))
+                if (target != null && target.ConnectsTo != null)
                 {
                     BezierCurve curve;
                     if (_currentConnection.GetPathToConnection(target, out curve))
                     {
+                        // Update and draw UI
+                        AddToCurve(curve);
+                        DrawPath(_drawingCurve);
+
                         //then you can add the path from the previous inbound node to this outbound node to the path
-                        _curves.Add(curve);
+                        _connections.Enqueue(target);
 
                         //and then set the "currentNode" to be the inbound node that connects to the outbound node hit
-                        _currentConnection = target.Type == Connection.ConnectionType.Internal ? target : target.ConnectsTo;
+                        _currentConnection = target.ConnectsTo;
+
+                        // Set the vehicle target
+                        _currentVehicle.Target = target.ConnectsTo.ParentEntity;
                     }
                 }
             }
         }
 
         //when you stop touching, the curve is calculated and the vehicle is set to travel the path you dragged
-        if (Input.GetMouseButtonUp(0) && _curves.Any())
+        if (Input.GetMouseButtonUp(0) && _connections.Any())
         {
-            _currentVehicle.TravelPath(_curves);
+            _currentVehicle.TravelPath(_connections);
             DestroyIndicators();
+            _drawingCurve.Clear();
+            DrawPath(_drawingCurve);
         }
+    }
+
+    private void AddToCurve(BezierCurve curve)
+    {
+        foreach (var point in curve.GetAnchorPoints())
+        {
+            _drawingCurve.AddPoint(point);
+        }
+    }
+
+    private void DrawPath(BezierCurve curve)
+    {
+        var lineRenderer = this.GetOrAddComponent<LineRenderer>();
+        if (curve.GetAnchorPoints().Any())
+        {
+            int lengthOfLineRenderer = 200;
+            lineRenderer.positionCount = lengthOfLineRenderer;
+            lineRenderer.widthMultiplier = .2f;
+            lineRenderer.numCapVertices = 10;
+            lineRenderer.numCornerVertices = 10;
+            var points = new Vector3[lengthOfLineRenderer];
+            for (int i = 0; i < lengthOfLineRenderer; i++)
+            {
+                points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
+                points[i] += Vector3.up * .2f;
+            }
+
+            lineRenderer.SetPositions(points);
+        }
+        else
+        {
+            lineRenderer.positionCount = 0;
+        }
+
     }
 
     private void DestroyIndicators()
@@ -111,15 +157,12 @@ public class InputManager : MonoBehaviour
     {
         _currentIndicator = Instantiate(CurrentIndicatorPrefab, _currentConnection.transform, false);
 
-        if (_currentConnection.Type == Connection.ConnectionType.Internal) return;
-
         // TODO: Object Pooling
-        foreach (var connection in _currentConnection.ConnectedConnections())
+        foreach (var connection in _currentConnection.InnerConnections)
         {
-            if(connection.ConnectsTo != null || connection.Type == Connection.ConnectionType.Internal) {
-
+            if (connection.ConnectsTo != null)
+            {
                 _indicators.Add(Instantiate(NextIndicatorPrefab, connection.transform, false));
-
             }
         }
     }

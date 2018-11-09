@@ -12,33 +12,65 @@ public class EntityManager : MonoBehaviour
 {
     #region Singleton
     private static EntityManager _instance;
-    public static EntityManager Instance => _instance ?? (_instance = FindObjectOfType<EntityManager>());
+    public static EntityManager Instance
+    {
+        get
+        {
+            if (Application.isPlaying) return _instance ?? (_instance = Create());
+            return Create();
+        }
+    }
+
+    private static EntityManager Create()
+    {
+        GameObject singleton = FindObjectOfType<EntityManager>()?.gameObject;
+        if (singleton == null)
+        {
+            singleton = new GameObject { name = $"[{typeof(EntityManager).Name}]" };
+            singleton.AddComponent<EntityManager>();
+        }
+        return singleton.GetComponent<EntityManager>();
+    }
     #endregion
+
+    [HideInInspector]
+    public Entity[] Entities;
+    [HideInInspector]
+    public Connection[] Connections;
 
     // Indexes mapped to entities
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
     private Dictionary<CellIndex, IList<Entity>> _cellIndexToEntities = new Dictionary<CellIndex, IList<Entity>>();
 
-    public IEnumerable<Entity> Entities => _entitiesToCellIndex.Keys.ToList();
-    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
-    public IEnumerable<Connection> InboundConnections => Entities.SelectMany(entity => entity.InboundConnections);
+    //    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
+
 
     #region Unity Methods
 
     #endregion
 
+    public void Bake()
+    {
+        Entities = GetComponentsInChildren<Entity>();
+        Connections = Entities.Where(entity => entity != null).SelectMany(entity => entity.Connections).ToArray();
+        foreach (var connection in Connections)
+        {
+            connection.Bake();
+        }
+    }
+
     public void Setup()
     {
         CalculateEntities();
-        Debug.Log(InboundConnections.Count());
     }
 
     private void CalculateEntities()
     {
         // Setup all child Entities
-        foreach (Transform child in transform)
+        Debug.Assert(Entities != null, "Entities in EntityManager is null");
+        foreach (var entity in Entities)
         {
-            child.GetComponent<Entity>()?.Setup();
+            entity.Setup();
         }
     }
 
@@ -94,42 +126,4 @@ public class EntityManager : MonoBehaviour
         CalculateEntities();
     }
 
-    // TODO: This could be done in a much better way me thinks
-    /// <summary>
-    /// Computes a path for a vehicle to an entity. Returns a boolean whether the path was found.
-    /// </summary>
-    public bool FindPath(Vehicle vehicle, Entity toEntity, out List<BezierCurve> path)
-    {
-        path = new List<BezierCurve>();
-        if (toEntity == null) return false;
-
-        var startCell = vehicle.GetCellIndices().First();
-        var start = _cellIndexToEntities[startCell].FirstOrDefault(entity => entity.GetType() != typeof(Vehicle));
-        var current = start;
-
-        // Check if we can reach the destination
-        if (current == null || !current.ConnectingEntities.Contains(toEntity)) return false;
-
-        while (current != toEntity)
-        {
-            // Find the next entity
-            var next = current.NeighborEntities.First(entity => entity == toEntity || entity.ConnectingEntities.Contains(toEntity));
-
-            BezierCurve curve;
-            // From current (and the inbound connection), find a path to next
-            if (current.FindPathToEntity(current.InboundConnections.First(), next, out curve))
-            {
-                path.Add(curve);
-            }
-            else
-            {
-                return false;
-            }
-
-            current = next;
-        }
-        // path.Add(toEntity.transform.position);
-        Debug.Log(path.Count);
-        return true;
-    }
 }

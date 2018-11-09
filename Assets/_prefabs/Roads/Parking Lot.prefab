@@ -1081,7 +1081,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1540362997215174}
   m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: -4.5, y: 0, z: 0}
+  m_LocalPosition: {x: -16.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4063609596226908}
@@ -2006,17 +2006,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 0
-  ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
-  ConnectingEntity: {fileID: 0}
   Paths:
-  - Connection: {fileID: 114911144670383444}
-    Path: {fileID: 114652595596763950}
   - Connection: {fileID: 114999192762644974}
     Path: {fileID: 114560504815880158}
-  - Connection: {fileID: 114435775546888876}
-    Path: {fileID: 114322835242824308}
   - Connection: {fileID: 114511972067503900}
     Path: {fileID: 114274108714868532}
 --- !u!114 &114032418403562430
@@ -2097,17 +2089,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 0
-  ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
-  ConnectingEntity: {fileID: 0}
   Paths:
-  - Connection: {fileID: 114435775546888876}
-    Path: {fileID: 114566864961428176}
   - Connection: {fileID: 114511972067503900}
     Path: {fileID: 114141746874919340}
-  - Connection: {fileID: 114911144670383444}
-    Path: {fileID: 114204200872914106}
   - Connection: {fileID: 114999192762644974}
     Path: {fileID: 114650861052900350}
 --- !u!114 &114141746874919340
@@ -2411,10 +2395,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 2
-  ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
-  ConnectingEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114485461419891748
 MonoBehaviour:
@@ -2464,10 +2444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 1
-  ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
-  ConnectingEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114522490661214188
 MonoBehaviour:
@@ -2669,7 +2645,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc9d4f22a9e0624d8e454a145f306f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeContainer: {fileID: 4967938232632974}
+  Nodes:
+  - {fileID: 114040369297941920}
+  - {fileID: 114080858459048468}
+  - {fileID: 114357125836702338}
+  - {fileID: 114494101029039138}
+  - {fileID: 114568219892916742}
+  - {fileID: 114494269533528292}
+  Connections:
+  - {fileID: 114107192660860644}
+  - {fileID: 114019169945030696}
+  - {fileID: 114999192762644974}
+  - {fileID: 114511972067503900}
+  - {fileID: 114435775546888876}
+  - {fileID: 114911144670383444}
+  Paths:
+  - {fileID: 114566864961428176}
+  - {fileID: 114141746874919340}
+  - {fileID: 114204200872914106}
+  - {fileID: 114650861052900350}
+  - {fileID: 114652595596763950}
+  - {fileID: 114560504815880158}
+  - {fileID: 114322835242824308}
+  - {fileID: 114274108714868532}
 --- !u!114 &114892302384931582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2856,10 +2854,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 2
-  ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
-  ConnectingEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114936105021687806
 MonoBehaviour:
@@ -2887,10 +2881,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 1
-  ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
-  ConnectingEntity: {fileID: 0}
   Paths: []
 --- !u!135 &135215684399328428
 SphereCollider:

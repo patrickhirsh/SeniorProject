@@ -2,24 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Grid = Utility.Grid;
 
 namespace Level
 {
+    [ExecuteInEditMode]
     public class Connection : MonoBehaviour
     {
-        public ConnectionType Type;
-        public enum ConnectionType
-        {
-            Inbound = 0,
-            Outbound = 1,
-            Internal = 2
-        }
-        public bool OutboundOrInternal => Type == ConnectionType.Outbound || Type == ConnectionType.Internal;
-
-        public Connection ConnectsTo;
-        public Entity ParentEntity;
-        public Entity ConnectingEntity;
+        public const float CONNECTION_DISTANCE = .25f;
 
         [Serializable]
         public class ConnectionPath
@@ -28,49 +17,61 @@ namespace Level
             public BezierCurve Path;
         }
 
-        // TODO: include internal connection types for applicable entities (parking, for now)
-        // Pathfinding needs to check Paths within a Parking entity's inbound connection to find it's inbound connections
-        // NOTE: This means Paths will no longer ONLY contain associated outbound connections. It could also contain internal connections.
-        // this means Austin's path drawing probably needs an aditional if statement to make sure he's only looking at outbound connections
+        [HideInInspector]
+        [SerializeField]
+        public Connection ConnectsTo;
+
+        [HideInInspector]
+        [SerializeField]
+        public Entity ParentEntity;
+
+        [ReadOnly]
         public List<ConnectionPath> Paths = new List<ConnectionPath>();
 
         private Dictionary<Connection, BezierCurve> _connectionPaths;
         private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
-
+        public Connection[] InnerConnections => ConnectionPaths.Keys.ToArray();
         #region Unity Methods
 
-        protected void OnValidate()
+        protected virtual void OnDrawGizmosSelected()
         {
-            if (Type == ConnectionType.Inbound)
+            foreach (var connectionPath in Paths)
             {
-                foreach (var path in Paths)
+                if (Paths.Count(path => path.Connection == connectionPath.Connection) > 1)
                 {
-                    switch (path.Connection.Type)
-                    {
-                        case ConnectionType.Outbound:
-                        case ConnectionType.Internal:
-                            break;
-                        default:
-                            path.Connection = null;
-                            Debug.LogError("Can't connect to an inbound connection", gameObject);
-                            break;
-                    }
+                    Debug.LogError($"Multiple paths to a connection detected!", gameObject);
                 }
             }
-
         }
 
+        private void OnValidate()
+        {
+            foreach (var connectionPath in Paths)
+            {
+                if (Paths.Count(path => path == connectionPath) > 1)
+                {
+                    Paths.Remove(connectionPath);
+                    Debug.LogError($"Removed duplicate path on {gameObject}");
+                }
+            }
+        }
         #endregion
 
-        public void Setup(Entity parent)
+        public void Bake()
         {
-            this.ParentEntity = parent;
-            CalculateConnections();
+            ConnectsTo = EntityManager.Instance.Connections.FirstOrDefault(CanConnect);
+            ParentEntity = transform.GetComponentInParent<Entity>();
         }
 
-        public Connection[] ConnectedConnections()
+        public void Setup()
         {
-            return ConnectionPaths.Keys.ToArray();
+            ConnectsTo = EntityManager.Instance.Connections.FirstOrDefault(CanConnect);
+            ParentEntity = transform.GetComponentInParent<Entity>();
+        }
+
+        public bool CanPathToConnection(Connection connection)
+        {
+            return ConnectionPaths.ContainsKey(connection);
         }
 
         /// <summary>
@@ -84,29 +85,19 @@ namespace Level
         public bool GetPathToConnection(Connection connection, out BezierCurve path)
         {
             path = null;
-            if (connection.Type == ConnectionType.Inbound)
-            {
-                Debug.LogError("Can't get path to an inbound connection");
-                return false;
-            }
 
             // Check if we have a path to the connection
-            if (!ConnectionPaths.ContainsKey(connection)) return false;
+            if (!CanPathToConnection(connection)) return false;
 
             // Return the path to the connection
             path = ConnectionPaths[connection];
             return true;
         }
 
-        public void CalculateConnections()
+        private bool CanConnect(Connection connection)
         {
-            if (Type == ConnectionType.Inbound) return;
-
-            ConnectsTo = EntityManager.Instance.InboundConnections.FirstOrDefault(connection =>
-                Vector3.Distance(transform.position, connection.transform.position)
-                < Mathf.Max(Grid.CELL_SIZE_X / 2f, Grid.CELL_SIZE_Z / 2f));
-
-            ConnectingEntity = ConnectsTo?.ParentEntity;
+            if (connection == this || connection.ParentEntity == ParentEntity) return false;
+            return Vector3.Distance(transform.position, connection.transform.position) < CONNECTION_DISTANCE;
         }
     }
 

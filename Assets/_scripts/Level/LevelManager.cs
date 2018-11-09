@@ -17,8 +17,11 @@ public class LevelManager : MonoBehaviour
     private static LevelManager Create()
     {
         GameObject singleton = FindObjectOfType<LevelManager>()?.gameObject;
-        if (singleton == null) singleton = new GameObject { name = typeof(LevelManager).Name };
-        singleton.AddComponent<LevelManager>();
+        if (singleton == null)
+        {
+            singleton = new GameObject { name = $"[{typeof(LevelManager).Name}]" };
+            singleton.AddComponent<LevelManager>();
+        }
         return singleton.GetComponent<LevelManager>();
     }
     #endregion

@@ -6,93 +6,118 @@ using UnityEngine;
 
 namespace VehicleEntity
 {
-    public class Vehicle : Entity
+    public class Vehicle : MonoBehaviour
     {
-        public Connection ClosestInbound => EntityManager.Instance.InboundConnections
-            .OrderBy(connection => Vector3.Distance(transform.position, connection.transform.position))
-            .FirstOrDefault();
+        public Connection CurrentConnection;
         public Entity Target;
-        private float LookAhead = 1.3f;
+        public float LookAhead = .2f;
         private float Speed = 5f;
         private Coroutine _animationTween;
 
-        protected IEnumerator Start()
+        private Queue<Connection> _connectionsPath;
+
+        protected void Start()
         {
-            yield return new WaitForSeconds(1);
-            //            PathToTarget(Target);
+            // TODO: Determine the starting connection (probably on vehicle spawn).
+            CurrentConnection = EntityManager.Instance.Connections.Where(connection => connection.Paths.Any())
+                .OrderBy(connection => Vector3.Distance(transform.position, connection.transform.position))
+                .FirstOrDefault();
         }
 
-        private void PathToTarget(Entity target)
-        {
-            List<BezierCurve> curves;
-            if (EntityManager.Instance.FindPath(this, target, out curves))
-            {
-                TravelPath(curves);
-            }
-            else
-            {
-                Debug.Log("Couldn't reach path!");
-            }
-        }
+//        private void PathToTarget(Entity target)
+//        {
+//            List<BezierCurve> curves;
+//            if (EntityManager.Instance.FindPath(this, target, out curves))
+//            {
+//                TravelPath(curves);
+//            }
+//            else
+//            {
+//                Debug.Log("Couldn't reach path!");
+//            }
+//        }
 
         public void StopTraveling()
         {
             if (_animationTween != null) StopCoroutine(_animationTween);
         }
 
-        public void TravelPath(IList<BezierCurve> curves)
+        public BezierCurve SetupCurve(BezierCurve curveToTravel)
         {
             var curve = transform.GetOrAddComponent<BezierCurve>();
             curve.Clear();
 
-            foreach (var point in curves.SelectMany(b => b.GetAnchorPoints()))
+            foreach (var point in curveToTravel.GetAnchorPoints())
+            {
                 curve.AddPoint(point);
+            }
 
-            _animationTween = StartCoroutine(TravelPath(curve));
+            return curve;
         }
 
-        public IEnumerator TravelPath(BezierCurve curve)
+//        public void TravelPath(IList<BezierCurve> curves)
+//        {
+//            var curve = transform.GetOrAddComponent<BezierCurve>();
+//            curve.Clear();
+//
+//            foreach (var point in curves.SelectMany(b => b.GetAnchorPoints()))
+//                curve.AddPoint(point);
+//
+//            _animationTween = StartCoroutine(TravelPath(curve));
+//        }
+
+        public IEnumerator TravelPath(BezierCurve curve, Connection target)
         {
-            DrawPath(curve);
             float position = 0.0f;
             //float speedScale = 0.05f;
+            CurrentConnection.ParentEntity.HandleVehicleExit(this);
 
             while (position <= 1)
             {
                 position += (Speed * Time.deltaTime) / curve.length;
                 transform.position = curve.GetPointAt(position);
 
-                if (position + (LookAhead / curve.length) <= 1f)
+                if (position + LookAhead <= 1f)
                 {
-                    transform.LookAt(curve.GetPointAt(position + (LookAhead / curve.length)));
+                    transform.LookAt(curve.GetPointAt(position + LookAhead));
                 }
 
                 yield return new WaitForSeconds(0);
             }
+            // Update current to target
+            CurrentConnection = target.ConnectsTo;
+
+            Debug.Log($"Vehicle is entering {CurrentConnection.ParentEntity}", CurrentConnection.ParentEntity);
+            CurrentConnection.ParentEntity.HandleVehicleEnter(this);
 
             // Delete the drawn path
             var lineRenderer = this.GetOrAddComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
+            if (_connectionsPath.Any())
+            {
+                TravelToConnection(_connectionsPath.Dequeue());
+            }
         }
 
-        private void DrawPath(BezierCurve curve)
+        public void TravelPath(Queue<Connection> connections)
         {
-            var lineRenderer = this.GetOrAddComponent<LineRenderer>();
-            int lengthOfLineRenderer = 200;
-            lineRenderer.positionCount = lengthOfLineRenderer;
-            lineRenderer.widthMultiplier = .2f;
-            lineRenderer.numCapVertices = 10;
-            lineRenderer.numCornerVertices = 10;
-            var points = new Vector3[lengthOfLineRenderer];
+            _connectionsPath = connections;
+            TravelToConnection(_connectionsPath.Dequeue());
+        }
 
-            for (int i = 0; i < lengthOfLineRenderer; i++)
+        private void TravelToConnection(Connection target)
+        {
+            BezierCurve curve;
+            if (CurrentConnection.GetPathToConnection(target, out curve))
             {
-                points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
-                points[i] += Vector3.up * .2f;
+                var vehicleCurve = SetupCurve(curve);
+                _animationTween = StartCoroutine(TravelPath(vehicleCurve, target));
             }
-
-            lineRenderer.SetPositions(points);
+            else
+            {
+                Debug.LogWarning($"Could not find path");
+            }
         }
     }
 }
