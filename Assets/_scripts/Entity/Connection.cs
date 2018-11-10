@@ -13,7 +13,7 @@ namespace Level
         [Serializable]
         public class ConnectionPath
         {
-            public Connection Connection;       // per the spec below, this would now just be "connection"
+            public Connection Connection;
             public BezierCurve Path;
         }
 
@@ -80,7 +80,7 @@ namespace Level
         /// 
         /// This method only returns paths within the current connection's entity.
         /// If you want a path that spans entities, you're probably looking for
-        /// a function in PathfinderManager
+        /// PathfinderManager.FindPath()
         /// </summary>
         public bool GetPathToConnection(Connection connection, out BezierCurve path)
         {
