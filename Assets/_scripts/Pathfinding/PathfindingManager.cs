@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Level
 {
+    // TODO: Take a look at the way ConnectsTo is being used here. This needs to be re-evaluated...
     public class PathfindingManager : MonoBehaviour
     {
         private bool _debugMode = true;

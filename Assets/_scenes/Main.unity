@@ -1485,7 +1485,7 @@ Transform:
   - {fileID: 619676100}
   - {fileID: 18922468}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &380916660
 MonoBehaviour:
@@ -1865,7 +1865,7 @@ Transform:
   - {fileID: 1093999177}
   - {fileID: 272659662}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &406542003 stripped
 MonoBehaviour:
@@ -2708,7 +2708,7 @@ Transform:
   m_LocalScale: {x: 6.6853, y: 6.6853, z: 6.6853}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &661787601 stripped
 Transform:
@@ -2923,6 +2923,46 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1 &683115389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 683115391}
+  - component: {fileID: 683115390}
+  m_Layer: 0
+  m_Name: '[Vehicle Manager]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &683115390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 683115389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67664efdec6bcdf45b1a974308657792, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &683115391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 683115389}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.2709084, y: 2.3813343, z: -0.6020441}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &710788824 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114645211520791704, guid: 9634176cc8c86d14d8119a1eab97473b,
@@ -5445,7 +5485,7 @@ Transform:
   m_LocalScale: {x: 6.6853, y: 6.6853, z: 6.6853}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1514409324 stripped
 MonoBehaviour:
@@ -5979,7 +6019,7 @@ Transform:
   m_Children:
   - {fileID: 1395950723}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1623917949 stripped
 MonoBehaviour:
@@ -6324,7 +6364,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &1677806317 stripped
 MonoBehaviour:
@@ -7309,7 +7349,7 @@ Transform:
   m_LocalScale: {x: 6.6853, y: 6.6853, z: 6.6853}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1922956409
 Prefab:

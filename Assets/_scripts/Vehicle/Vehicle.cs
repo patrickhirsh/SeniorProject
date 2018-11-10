@@ -84,6 +84,7 @@ namespace VehicleEntity
 
                 yield return new WaitForSeconds(0);
             }
+
             // Update current to target
             CurrentConnection = target.ConnectsTo;
 
