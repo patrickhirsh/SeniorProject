@@ -12,7 +12,7 @@ public class BuildingContentPopulation : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Debug.Log("Hit this");
-        DirectoryInfo dir = new DirectoryInfo("Assets/_prefabs/Roads");
+        DirectoryInfo dir = new DirectoryInfo("Assets/_prefabs/Buildings");
         FileInfo[] info = dir.GetFiles("*.prefab");
         
         foreach(FileInfo f in info)
@@ -24,9 +24,9 @@ public class BuildingContentPopulation : MonoBehaviour {
             
             NewButton.setText(f.Name);
 
-            Debug.Log("Assets\\_prefabs\\Roads\\" + f.Name);
+            Debug.Log("Assets\\_prefabs\\Buildings\\" + f.Name);
 
-            NewButton.gameObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>NewButton.spawnTile((GameObject)Resources.Load("Assets\\_prefabs\\Roads\\" + f.Name)));
+            NewButton.gameObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>NewButton.spawnTile((GameObject)Resources.Load("Assets\\_prefabs\\Buildings\\" + f.Name)));
                 
             Debug.Log("The file is: " + NewButton.fileName);
         }
