@@ -2,7 +2,7 @@
 
 namespace Level
 {
-    public class Intersection : Entity
+    public class IntersectionEntity : Entity
     {
         public override void HandleVehicleEnter(Vehicle vehicle)
         {
