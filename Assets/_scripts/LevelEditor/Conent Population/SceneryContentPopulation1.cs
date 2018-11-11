@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public class ContentPopulation : MonoBehaviour {
+public class SceneryContentPopulation : MonoBehaviour {
 
     public GameObject content;
     public GameObject buttonPrefab;
@@ -14,11 +14,7 @@ public class ContentPopulation : MonoBehaviour {
         Debug.Log("Hit this");
         DirectoryInfo dir = new DirectoryInfo("Assets/_prefabs/Roads");
         FileInfo[] info = dir.GetFiles("*.prefab");
-        //string[] fullnames = info.Select(f => f.FullName).ToArray();
-        //foreach (string f in fullnames)
-        //{
-        //    Instantiate(Resources.Load(f), content.transform); 
-        //}
+        
         foreach(FileInfo f in info)
         {
             
