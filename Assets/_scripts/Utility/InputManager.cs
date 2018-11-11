@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VehicleEntity;
+using Level;
 
 public class InputManager : MonoBehaviour
 {
@@ -95,9 +95,6 @@ public class InputManager : MonoBehaviour
 
                         //and then set the "currentNode" to be the inbound node that connects to the outbound node hit
                         _currentConnection = target.ConnectsTo;
-
-                        // Set the vehicle target
-                        _currentVehicle.Target = target.ConnectsTo.ParentEntity;
                     }
                 }
             }
@@ -106,7 +103,7 @@ public class InputManager : MonoBehaviour
         //when you stop touching, the curve is calculated and the vehicle is set to travel the path you dragged
         if (Input.GetMouseButtonUp(0) && _connections.Any())
         {
-            _currentVehicle.TravelPath(_connections);
+            _currentVehicle.StartTraveling(_connections);
             DestroyIndicators();
             _drawingCurve.Clear();
             DrawPath(_drawingCurve);

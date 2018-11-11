@@ -9,10 +9,10 @@ namespace Level
 
         /// <summary>
         /// A SpawnDirective represents a pre-determined vehicle spawn. SpawnDirectives
-        /// should be stored in a queue within each SpawnPointEntity. These should be
+        /// are stored in a queue within each SpawnPointEntity. These are
         /// added prior to runtime (within the level editor) and will
         /// only be used if the level spawn mode is set to "pre-determined".
-        /// At runtime, these vehicles will be spawned based on the "vehicle" and "time" fields
+        /// At runtime, vehicles will be spawned based on each SpawnDirective's fields
         /// </summary>
         public class SpawnDirective
         {

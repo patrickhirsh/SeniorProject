@@ -10,10 +10,10 @@ public class DynamicButtonScript : MonoBehaviour {
     public string fileName;
 
 	// Use this for initialization
-	void Start (string input) {
-        pMenu = GameObject.Find("PrefabMenu").GetComponent<Canvas>();
+	//void Start (string input) {
+ //       pMenu = GameObject.Find("PrefabMenu").GetComponent<Canvas>();
         
-	}
+	//}
 	
 	// Update is called once per frame
 	void Update () {

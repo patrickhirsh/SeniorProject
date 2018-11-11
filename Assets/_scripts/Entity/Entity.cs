@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using Utility;
-using VehicleEntity;
+using Level;
 using Grid = Utility.Grid;
 
 namespace Level

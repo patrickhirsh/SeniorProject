@@ -33,16 +33,14 @@ namespace Level
         #endregion
 
         private List<GameObject> _spawnPoints;      // all valid spawn points in the current level
-        private List<GameObject> _vehicles;         // all valid vehicles to spawn procedurally in the current level
+        public List<Vehicle> Vehicles;             // all valid vehicles to spawn procedurally in the current level
         private SpawnState _spawnState;             // indicates how (or if) the VehicleManager should be spawning vehicles (defaults to spawningOff on startup)
 
 
         public void Start()
         {
             // spawnState is off by default (waiting for instructions...)
-            _spawnState = SpawnState.spawningOff;
-
-            
+            _spawnState = SpawnState.spawningOff;       
 
             // initialize spawnPoints list
             _spawnPoints = new List<GameObject>();
@@ -50,7 +48,7 @@ namespace Level
                 _spawnPoints.Add((GameObject)spawn);
 
             // initialize vehicles list
-            _vehicles = new List<GameObject>();
+            Vehicles = new List<Vehicle>();
             // TODO: populate this list with vehicles that should be spawned procedurally within the current level
         }
 
