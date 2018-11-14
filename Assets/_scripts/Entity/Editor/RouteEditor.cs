@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Level
@@ -17,9 +18,10 @@ namespace Level
             Route myTarget = (Route)target;
 
             EditorGUILayout.LabelField($"Stats");
-            EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
-            EditorGUILayout.LabelField($"{myTarget.VehiclePaths.Length} VehiclePaths");
             EditorGUILayout.LabelField($"{myTarget.Nodes.Length} Nodes");
+            EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
+            EditorGUILayout.LabelField($"{myTarget.VehiclePaths.Length} Vehicle Paths");
+            EditorGUILayout.LabelField($"{myTarget.Connections.SelectMany(connection => connection.PickupLocations).Count()} Pickup Locations");
             _showNeighbors = EditorGUILayout.Foldout(_showNeighbors, $"{myTarget.NeighborRoutes.Length} Neighbors");
             if (_showNeighbors)
             {

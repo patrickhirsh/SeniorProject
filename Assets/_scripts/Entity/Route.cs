@@ -87,6 +87,20 @@ namespace Level
             VehiclePaths = GetComponentsInChildren<BezierCurve>();
 
             BakePaths(Connections, VehiclePaths);
+            BakePickupLocations(Connections);
+        }
+
+        private void BakePickupLocations(Connection[] connections)
+        {
+            foreach (var connection in connections)
+            {
+                connection.PickupLocations = new List<PickupLocation>();
+            }
+            foreach (var pickupLocation in GetComponentsInChildren<PickupLocation>())
+            {
+                var connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, pickupLocation.transform.position)).FirstOrDefault();
+                if (connection != null) connection.PickupLocations.Add(pickupLocation);
+            }
         }
 
         private void BakePaths(Connection[] connections, BezierCurve[] paths)

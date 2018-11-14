@@ -62,8 +62,16 @@ namespace Level
 
         public void Setup()
         {
-            ConnectsTo = EntityManager.Instance.Connections.FirstOrDefault(CanConnect);
+            ConnectsTo = FindNeighborConnection(EntityManager.Instance.Connections);
             ParentRoute = transform.GetComponentInParent<Route>();
+        }
+
+        /// <summary>
+        /// Finds a neighbor connection given an array of connections to look from
+        /// </summary>
+        private Connection FindNeighborConnection(Connection[] connections)
+        {
+            return connections.FirstOrDefault(CanConnect);
         }
 
         public bool CanPathToConnection(Connection connection)
@@ -96,9 +104,5 @@ namespace Level
             if (connection == this || connection.ParentRoute == ParentRoute) return false;
             return Vector3.Distance(transform.position, connection.transform.position) < CONNECTION_DISTANCE;
         }
-    }
-
-    public class PickupLocation : MonoBehaviour
-    {
     }
 }
