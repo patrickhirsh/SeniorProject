@@ -1386,8 +1386,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1539209171895084}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21, y: 0, z: -3}
+  m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.7071079}
+  m_LocalPosition: {x: 0, y: 0, z: -10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4562885545263956}
@@ -2856,6 +2856,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths:
   - Connection: {fileID: 114645211520791704}
     Path: {fileID: 114788768117399354}
@@ -2998,6 +3000,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths:
   - Connection: {fileID: 114684693703696016}
     Path: {fileID: 114760958062469244}
@@ -3185,6 +3189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114335157987254132
 MonoBehaviour:
@@ -3298,6 +3304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114436548431247254
 MonoBehaviour:
@@ -3403,6 +3411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths:
   - Connection: {fileID: 114435119315997560}
     Path: {fileID: 114665392445159922}
@@ -3624,6 +3634,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114665392445159922
 MonoBehaviour:
@@ -3654,6 +3666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths: []
 --- !u!114 &114709232444637528
 MonoBehaviour:
@@ -3810,6 +3824,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths:
   - Connection: {fileID: 114323926721152608}
     Path: {fileID: 114600044802949266}
@@ -3977,7 +3993,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1152313139197808}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -3989,7 +4005,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1988276180804676}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -4001,7 +4017,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1465451777963574}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -4013,7 +4029,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1475512041264288}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -4025,7 +4041,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1549690903500724}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -4037,7 +4053,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1861936797016936}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -4049,7 +4065,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1060239883106502}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -4061,7 +4077,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1022071356458026}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Level
 {
-    [CustomEditor(typeof(Entity), true)]
+    [CustomEditor(typeof(Route), true)]
     [CanEditMultipleObjects]
-    public class EntityEditor : Editor
+    public class RouteEditor : Editor
     {
         private bool _showNeighbors;
 
@@ -14,18 +14,18 @@ namespace Level
             DrawDefaultInspector();
             EditorGUILayout.Space();
 
-            Entity myTarget = (Entity)target;
+            Route myTarget = (Route)target;
 
             EditorGUILayout.LabelField($"Stats");
             EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
-            EditorGUILayout.LabelField($"{myTarget.Paths.Length} Paths");
+            EditorGUILayout.LabelField($"{myTarget.VehiclePaths.Length} VehiclePaths");
             EditorGUILayout.LabelField($"{myTarget.Nodes.Length} Nodes");
-            _showNeighbors = EditorGUILayout.Foldout(_showNeighbors, $"{myTarget.NeighborEntities.Length} Neighbors");
+            _showNeighbors = EditorGUILayout.Foldout(_showNeighbors, $"{myTarget.NeighborRoutes.Length} Neighbors");
             if (_showNeighbors)
             {
-                for (int i = 0; i < myTarget.NeighborEntities.Length; i++)
+                for (int i = 0; i < myTarget.NeighborRoutes.Length; i++)
                 {
-                    EditorGUILayout.ObjectField($"Neighbor {i}", myTarget.NeighborEntities[i], typeof(Entity));
+                    EditorGUILayout.ObjectField($"Neighbor {i}", myTarget.NeighborRoutes[i], typeof(Entity), true);
                 }
             }
 

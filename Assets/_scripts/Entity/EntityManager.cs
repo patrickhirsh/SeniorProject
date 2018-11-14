@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Utility;
-using Level;
 
 /// <summary>
 /// Manages the state of all the entities in a level
@@ -35,8 +34,12 @@ public class EntityManager : MonoBehaviour
 
     [HideInInspector]
     public Entity[] Entities;
-    [HideInInspector]
-    public Connection[] Connections;
+
+    private Route[] _routes;
+    public Route[] Routes => _routes ?? (_routes = Entities.OfType<Route>().ToArray()); // Linq is so cool
+
+    private Connection[] _connections;
+    public Connection[] Connections => _connections ?? (_connections = Routes.SelectMany(route => route.Connections).ToArray()); // Linq is so cool
 
     // Indexes mapped to entities
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
@@ -52,11 +55,6 @@ public class EntityManager : MonoBehaviour
     public void Bake()
     {
         Entities = GetComponentsInChildren<Entity>();
-        Connections = Entities.Where(entity => entity != null).SelectMany(entity => entity.Connections).ToArray();
-        foreach (var connection in Connections)
-        {
-            connection.Bake();
-        }
     }
 
     public void Setup()

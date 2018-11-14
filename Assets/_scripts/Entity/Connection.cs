@@ -23,10 +23,13 @@ namespace Level
 
         [HideInInspector]
         [SerializeField]
-        public Entity ParentEntity;
+        public Route ParentRoute;
 
         [ReadOnly]
         public List<ConnectionPath> Paths = new List<ConnectionPath>();
+
+        [ReadOnly]
+        public List<PickupLocation> PickupLocations = new List<PickupLocation>();
 
         private Dictionary<Connection, BezierCurve> _connectionPaths;
         private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
@@ -57,16 +60,10 @@ namespace Level
         }
         #endregion
 
-        public void Bake()
-        {
-            ConnectsTo = EntityManager.Instance.Connections.FirstOrDefault(CanConnect);
-            ParentEntity = transform.GetComponentInParent<Entity>();
-        }
-
         public void Setup()
         {
             ConnectsTo = EntityManager.Instance.Connections.FirstOrDefault(CanConnect);
-            ParentEntity = transform.GetComponentInParent<Entity>();
+            ParentRoute = transform.GetComponentInParent<Route>();
         }
 
         public bool CanPathToConnection(Connection connection)
@@ -96,10 +93,12 @@ namespace Level
 
         private bool CanConnect(Connection connection)
         {
-            if (connection == this || connection.ParentEntity == ParentEntity) return false;
+            if (connection == this || connection.ParentRoute == ParentRoute) return false;
             return Vector3.Distance(transform.position, connection.transform.position) < CONNECTION_DISTANCE;
         }
     }
 
-
+    public class PickupLocation : MonoBehaviour
+    {
+    }
 }

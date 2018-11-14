@@ -15,10 +15,10 @@ namespace Level
             Connection myTarget = (Connection)target;
 
             EditorGUILayout.LabelField($"Stats");
-            EditorGUILayout.LabelField($"{myTarget.Paths.Count} Paths");
+            EditorGUILayout.LabelField($"{myTarget.Paths.Count} VehiclePaths");
 
-            EditorGUILayout.ObjectField("Connects To", myTarget.ConnectsTo, typeof(Connection));
-            EditorGUILayout.ObjectField("Parent Entity", myTarget.ParentEntity, typeof(Entity));
+            EditorGUILayout.ObjectField("Connects To", myTarget.ConnectsTo, typeof(Connection), true);
+            EditorGUILayout.ObjectField("Parent Entity", myTarget.ParentRoute, typeof(Entity), true);
         }
 
         private static void PropertyField(SerializedProperty myIterator)

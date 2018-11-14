@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelEditorController : MonoBehaviour {
 
     public int Overlapping;
-    public Canvas warningCanvas;
+    public Canvas WarningCanvas;
 
 	// Use this for initialization
 	void Start () {
@@ -16,11 +16,11 @@ public class LevelEditorController : MonoBehaviour {
 	void Update () {
 		if(Overlapping == 0)
         {
-            warningCanvas.gameObject.SetActive(false);
+            WarningCanvas.gameObject.SetActive(false);
         }
         else
         {
-            warningCanvas.gameObject.SetActive(true);
+            WarningCanvas.gameObject.SetActive(true);
         }
 	}
 }

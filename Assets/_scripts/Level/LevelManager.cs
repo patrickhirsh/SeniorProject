@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Level;
+using System;
 using UnityEngine;
-using System.Collections.Generic;
-using Level;
-using UnityEditor;
-using Utility;
 
 /// <summary>
 /// Manages construction of the level and high level state
@@ -44,8 +41,8 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel(LevelData data)
     {
-        var json = JsonUtility.ToJson(data);
-        //TODO: Write to file
+        throw new NotImplementedException();
+        // var json = JsonUtility.ToJson(data);
     }
 
     public void LoadLevel(LevelData data)

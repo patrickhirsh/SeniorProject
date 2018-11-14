@@ -6,14 +6,9 @@ namespace Level
     {
         public SceneryAssets SceneryAssets;
 
-        public override void HandleVehicleEnter(Vehicle vehicle)
+        public override void Setup()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void HandleVehicleExit(Vehicle vehicle)
-        {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

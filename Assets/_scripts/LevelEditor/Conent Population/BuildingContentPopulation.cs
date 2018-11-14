@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class BuildingContentPopulation : MonoBehaviour {
 
-    public GameObject content;
-    public GameObject buttonPrefab;
+    public GameObject Content;
+    public GameObject ButtonPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -18,17 +18,17 @@ public class BuildingContentPopulation : MonoBehaviour {
         foreach(FileInfo f in info)
         {
             
-            DynamicButtonScript NewButton = Instantiate(buttonPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, content.transform).GetComponent<DynamicButtonScript>();
+            DynamicButtonScript newButton = Instantiate(ButtonPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, Content.transform).GetComponent<DynamicButtonScript>();
             
-            NewButton.fileName = f.FullName;
+            newButton.FileName = f.FullName;
             
-            NewButton.setText(f.Name);
+            newButton.SetText(f.Name);
 
             Debug.Log("Assets\\_prefabs\\Buildings\\" + f.Name);
 
-            NewButton.gameObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>NewButton.spawnTile((GameObject)Resources.Load("Assets\\_prefabs\\Buildings\\" + f.Name)));
+            newButton.gameObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>newButton.SpawnTile((GameObject)Resources.Load("Assets\\_prefabs\\Buildings\\" + f.Name)));
                 
-            Debug.Log("The file is: " + NewButton.fileName);
+            Debug.Log("The file is: " + newButton.FileName);
         }
 
 

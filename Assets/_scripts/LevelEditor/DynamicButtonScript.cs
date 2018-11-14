@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class DynamicButtonScript : MonoBehaviour {
 
-    public Canvas pMenu;
+    public Canvas PMenu;
 
-    public string fileName;
+    public string FileName;
 
 	// Use this for initialization
 	//void Start (string input) {
@@ -20,15 +20,15 @@ public class DynamicButtonScript : MonoBehaviour {
 		
 	}
 
-    public void spawnTile(GameObject prefab)
+    public void SpawnTile(GameObject prefab)
     {
         //Close the prefab menu
-        pMenu.gameObject.SetActive(false);
+        PMenu.gameObject.SetActive(false);
         //Spawn a tile
         Instantiate(prefab, new Vector3(0,0,0), new Quaternion(0,0,0,0));
     }
 
-    internal void setText(string name)
+    internal void SetText(string name)
     {
         Debug.Log("Setting text to" + name);
         this.GetComponentInChildren<UnityEngine.UI.Text>().text = name;

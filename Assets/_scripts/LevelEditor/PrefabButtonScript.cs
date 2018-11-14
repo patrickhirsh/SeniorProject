@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class PrefabButtonScript : MonoBehaviour {
 
-    public Canvas pMenu;
+    public Canvas PMenu;
 
-    public void switchMenu()
+    public void SwitchMenu()
     {
-        if (pMenu.gameObject.activeSelf)
+        if (PMenu.gameObject.activeSelf)
         {
-            pMenu.gameObject.SetActive(false);
+            PMenu.gameObject.SetActive(false);
         }
         else
         {
-            pMenu.gameObject.SetActive(true);
+            PMenu.gameObject.SetActive(true);
         }
     }
 }

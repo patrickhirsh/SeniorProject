@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 4691163679631052}
   - component: {fileID: 114973413307102900}
   - component: {fileID: 114989767825630570}
+  - component: {fileID: 65324747804756124}
   m_Layer: 0
   m_Name: Parking Spot
   m_TagString: Untagged
@@ -227,7 +228,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4142468890321436}
   - component: {fileID: 114237092346905130}
-  - component: {fileID: 135813402300245268}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -375,7 +375,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1356990792081360}
   m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 1.5, y: 0, z: -1.5}
+  m_LocalPosition: {x: -4.5, y: 0, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4210024109991724}
@@ -385,7 +385,7 @@ Transform:
   - {fileID: 4832222111887746}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 630, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 810, z: 0}
 --- !u!4 &4773595009810210
 Transform:
   m_ObjectHideFlags: 1
@@ -514,6 +514,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1186707263070358}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65324747804756124
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1356990792081360}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 0.5, z: 1.5}
+  m_Center: {x: 0.75, y: 0.25, z: 0}
 --- !u!114 &114237092346905130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -790,7 +802,7 @@ MonoBehaviour:
   - {fileID: 114237092346905130}
   Paths:
   - {fileID: 114534172421780296}
-  isOccupied: 0
+  IsOccupied: 0
 --- !u!114 &114989767825630570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -802,15 +814,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b512e7308f5d66b47ad85a5e8f908cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &135813402300245268
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1985550516000294}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

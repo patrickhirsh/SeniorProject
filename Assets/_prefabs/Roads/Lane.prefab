@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 4172409532465272}
   - component: {fileID: 114665874453937694}
   - component: {fileID: 114477498172557300}
+  - component: {fileID: 65914841529073138}
   m_Layer: 0
   m_Name: Lane
   m_TagString: Untagged
@@ -259,7 +260,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4746961913057312}
   - component: {fileID: 114635049943636088}
-  - component: {fileID: 135987260951225094}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -292,7 +292,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4360179976877488}
   - component: {fileID: 114845394369987700}
-  - component: {fileID: 135938208141719728}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -348,7 +347,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792980702454646}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6, y: 0, z: -3}
+  m_LocalPosition: {x: 1.5, y: 0, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4893968483092824}
@@ -635,6 +634,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550782525369690}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65914841529073138
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1792980702454646}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 0.5, z: 1.5}
+  m_Center: {x: 0.75, y: 0.25, z: 0}
 --- !u!114 &114113627706720164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -888,6 +899,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths:
   - Connection: {fileID: 114845394369987700}
     Path: {fileID: 114113627706720164}
@@ -952,6 +965,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07526a061a78bea46b83154ef4576d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConnectsTo: {fileID: 0}
+  ParentEntity: {fileID: 0}
   Paths:
   - Connection: {fileID: 114635049943636088}
     Path: {fileID: 114477373574862536}
@@ -985,27 +1000,3 @@ MonoBehaviour:
   handleStyle: 2
   _handle1: {x: 0, y: 0, z: 0}
   _handle2: {x: 0, y: 0, z: 0}
---- !u!135 &135938208141719728
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1970111304776800}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &135987260951225094
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1949887133769242}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
