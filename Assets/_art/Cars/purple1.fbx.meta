@@ -1,17 +1,33 @@
 fileFormatVersion: 2
-guid: 79dfb4e7d1aceaa49a66aca0f3f08410
+guid: 38aef9166febb1c43903a70c57a5ae5d
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: window
-    2100002: gray
-    2100004: yellow
-    2100006: black
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: pCube15
+    100000: carBox
+    100002: carBox1
+    100004: carBoxBackL
+    100006: carBoxFrontL
+    100008: //RootNode
+    100010: transform1
+    100012: transform2
+    100014: transform3
+    400000: carBox
+    400002: carBox1
+    400004: carBoxBackL
+    400006: carBoxFrontL
+    400008: //RootNode
+    400010: transform1
+    400012: transform2
+    400014: transform3
+    2100000: purple
+    2100002: yellow
+    2100004: white1
+    2100006: black2
+    2100008: red
+    2100010: lambert7
+    2300000: carBox1
+    3300000: carBox1
+    4300000: carBox1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -84,7 +100,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
