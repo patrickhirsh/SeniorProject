@@ -1,17 +1,23 @@
 fileFormatVersion: 2
-guid: 79dfb4e7d1aceaa49a66aca0f3f08410
+guid: 2ce9f6889bf738048a7793511c22d06a
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: window
-    2100002: gray
-    2100004: yellow
-    2100006: black
+    2100000: black
+    2100002: brown
+    2100004: whitefixed
+    2100006: restWindow
+    2100008: rooffixed
+    2100010: groundRest
+    2100012: restWhite
+    2100014: red
     2300000: //RootNode
     3300000: //RootNode
-    4300000: pCube15
+    4300000: pCylinder6
+    7400000: Take 001
+    9500000: //RootNode
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -63,8 +69,8 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -84,12 +90,11 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
