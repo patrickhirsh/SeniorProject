@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a3bdb2cd68f901469e7cc149151eb49, type: 3}
-  m_Name: CCdemo
+  m_Name: New Post-Processing Profile
   m_EditorClassIdentifier: 
   debugViews:
     m_Enabled: 1
@@ -40,10 +40,10 @@ MonoBehaviour:
         stationaryBlending: 0.95
         motionBlending: 0.85
   ambientOcclusion:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       intensity: 1.5
-      radius: 0.2
+      radius: 0.3
       sampleCount: 10
       downsampling: 1
       forceForwardCompatibility: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
         intensity: 0.05
         threshold: 1.5
         softKnee: 0.5
-        radius: 4
+        radius: 2.72
         antiFlicker: 0
       lensDirt:
         texture: {fileID: 0}
@@ -124,8 +124,8 @@ MonoBehaviour:
         temperature: 0
         tint: 0
         hueShift: 0
-        saturation: 1.61
-        contrast: 1
+        saturation: 1.8
+        contrast: 1.02
       channelMixer:
         red: {x: 1, y: 0, z: 0}
         green: {x: 0, y: 1, z: 0}
@@ -308,12 +308,12 @@ MonoBehaviour:
     m_Enabled: 0
     m_Settings:
       spectralTexture: {fileID: 0}
-      intensity: 0.1
+      intensity: 1
   grain:
     m_Enabled: 0
     m_Settings:
       colored: 1
-      intensity: 0.28
+      intensity: 0.5
       size: 1
       luminanceContribution: 0.8
   vignette:
@@ -322,8 +322,8 @@ MonoBehaviour:
       mode: 0
       color: {r: 0, g: 0, b: 0, a: 1}
       center: {x: 0.5, y: 0.5}
-      intensity: 0.45
-      smoothness: 0.2
+      intensity: 0.372
+      smoothness: 0.347
       roundness: 1
       mask: {fileID: 0}
       opacity: 1
