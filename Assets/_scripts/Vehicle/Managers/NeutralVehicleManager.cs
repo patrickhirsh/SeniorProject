@@ -33,9 +33,9 @@ namespace Level
         #endregion
 
         public bool debugMode = true;
-        public List<Vehicle> Vehicles;             // all valid vehicles to spawn procedurally in the current level
-        private List<GameObject> _spawnPoints;     // all valid spawn points in the current level
-        private SpawnState _spawnState;            // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
+        public List<Vehicle> Vehicles;                  // all valid vehicles to spawn procedurally in the current level
+        public List<SpawnPointEntity> _spawnPoints;     // all valid spawn points in the current level // TODO: this really shouldn't be public...
+        private SpawnState _spawnState;                 // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
 
 
         public void Start()
@@ -44,9 +44,9 @@ namespace Level
             _spawnState = SpawnState.spawningOff;       
 
             // initialize spawnPoints list
-            _spawnPoints = new List<GameObject>();
-            foreach (Object spawn in Object.FindObjectsOfType<SpawnPointEntity>())
-                _spawnPoints.Add((GameObject)spawn);
+            _spawnPoints = new List<SpawnPointEntity>();
+            foreach (SpawnPointEntity spawn in Object.FindObjectsOfType<SpawnPointEntity>())
+                _spawnPoints.Add(spawn);
 
             // initialize vehicles list
             Vehicles = new List<Vehicle>();
@@ -104,8 +104,8 @@ namespace Level
         }
 
 
-        // given a spawn point and a vehicle prefab, spawns a new instance of vehiclePrefab at spawnPoint
-        private void SpawnVehicle(GameObject spawnPoint, GameObject vehiclePrefab)
+        // given a spawn point and a vehicle prefab, spawns a new instance of vehiclePrefab at "spawnPoint" with "destination"
+        private void SpawnVehicle(GameObject spawnPoint, GameObject destination, GameObject vehiclePrefab)
         {
             GameObject vehicle = Instantiate(vehiclePrefab, this.transform);
             vehicle.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);

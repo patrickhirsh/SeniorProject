@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Level
 {
     /// <summary>
-    /// Task type represent the precedence of a recieved task. Each type starting at the top and
+    /// Task type represent the precedence of a received task. Each type starting at the top and
     /// moving in descending order takes precedence over all tasks below it. (lower value = higher precedence).
     /// Typically, vehicles controlled by player/ai only recieve tasks marked within their category, and neutral
     /// vehicles only ever recieve a neutralPathing task. That said, this task precedence system allows for
