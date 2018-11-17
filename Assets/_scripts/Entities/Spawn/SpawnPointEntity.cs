@@ -135,6 +135,7 @@ namespace Level
         /// </summary>
         private void exploreSpawnNodes()
         {
+            /*
             foreach (Connection connection in )
 
             foreach (SpawnPointEntity spawn in NeutralVehicleManager.Instance._spawnPoints)
@@ -142,6 +143,7 @@ namespace Level
                 
                 PathfindingManager.Instance.GetPath()
             }
+            */
         }
 
         
