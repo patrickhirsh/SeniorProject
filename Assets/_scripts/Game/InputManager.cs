@@ -62,7 +62,7 @@ public class InputManager : MonoBehaviour
                 {
                     _currentVehicle = target;
                     _currentConnection = _currentVehicle.CurrentConnection;
-                    _currentVehicle.StopTraveling();
+                    _currentVehicle.HaltCurrentTask();
                     //curves.Add(The path the car is currently on);
                 }
             }
@@ -102,7 +102,8 @@ public class InputManager : MonoBehaviour
         //when you stop touching, the curve is calculated and the vehicle is set to travel the path you dragged
         if (Input.GetMouseButtonUp(0) && _connections.Any())
         {
-            _currentVehicle.StartTraveling(_connections);
+            // TODO: When this class is refactored (and a new PlayerInput class of some kind is created that implements the abstract classVehicleManager),
+            // call _currentVehicle.AssignTask() with the calculated path.
             DestroyIndicators();
             _drawingCurve.Clear();
             DrawPath(_drawingCurve);
