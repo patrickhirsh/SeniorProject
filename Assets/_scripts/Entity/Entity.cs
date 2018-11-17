@@ -42,8 +42,6 @@ namespace Level
         }
         #endregion
 
-        public abstract void Setup();
-
         /// <summary>
         /// Returns the indexes that the entity contains
         /// </summary>

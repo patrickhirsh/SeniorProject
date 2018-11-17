@@ -52,24 +52,15 @@ public class EntityManager : MonoBehaviour
 
     #endregion
 
+    public void Initialize()
+    {
+        Debug.Log("Initialize EntityManager");
+        Broadcaster.Instance.Broadcast(GameState.SetupConnection);
+    }
+
     public void Bake()
     {
         Entities = GetComponentsInChildren<Entity>();
-    }
-
-    public void Setup()
-    {
-        CalculateEntities();
-    }
-
-    private void CalculateEntities()
-    {
-        // Setup all child Entities
-        Debug.Assert(Entities != null, "Entities in EntityManager is null");
-        foreach (var entity in Entities)
-        {
-            entity.Setup();
-        }
     }
 
     /// <summary>
@@ -121,7 +112,5 @@ public class EntityManager : MonoBehaviour
         // This could be optimized more, but will probably do fine
         RemoveEntity(entity);
         AddEntity(entity);
-        CalculateEntities();
     }
-
 }

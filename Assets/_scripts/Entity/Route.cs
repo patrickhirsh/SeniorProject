@@ -136,17 +136,6 @@ namespace Level
             }
         }
 
-        /// <summary>
-        /// Called after all entities have registered with the EntityManager
-        /// </summary>
-        public override void Setup()
-        {
-            foreach (var connection in Connections)
-            {
-                connection.Setup();
-            }
-        }
-
         public bool FindPathToEntity(Connection inboundConnection, Entity target, out BezierCurve path)
         {
             path = null;

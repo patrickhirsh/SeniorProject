@@ -36,6 +36,11 @@ namespace Level
         public Connection[] InnerConnections => ConnectionPaths.Keys.ToArray();
         #region Unity Methods
 
+        private void Awake()
+        {
+            Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
+        }
+
         protected virtual void OnDrawGizmosSelected()
         {
             foreach (var connectionPath in Paths)
@@ -60,7 +65,7 @@ namespace Level
         }
         #endregion
 
-        public void Setup()
+        protected void Initialize(GameState gameState)
         {
             ConnectsTo = FindNeighborConnection(EntityManager.Instance.Connections);
             ParentRoute = transform.GetComponentInParent<Route>();

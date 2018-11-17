@@ -28,11 +28,14 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        EntityManager.Instance.Setup();
     }
 
     #endregion
 
+    public void Initialize()
+    {
+        EntityManager.Instance.Initialize();
+    }
 
     public void GenerateLevel(LevelData data)
     {
@@ -50,4 +53,6 @@ public class LevelManager : MonoBehaviour
         var level = JsonUtility.FromJson<LevelData>("{}");
         GenerateLevel(level);
     }
+
+
 }
