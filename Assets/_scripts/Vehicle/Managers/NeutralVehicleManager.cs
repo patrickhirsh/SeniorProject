@@ -89,7 +89,7 @@ namespace Level
         /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
         /// when it reaches it's destination. If this task is interrupted, unexpected behavior is occuring.
         /// </summary>
-        public override void vehicleTaskCallback(taskType type, Vehicle vehicle, bool exitStatus)
+        public override void vehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
         {
             // the neutral vehicle reached it's destination spawn point.
             if (exitStatus)
@@ -98,8 +98,8 @@ namespace Level
             // log unexpected behavior
             else
             {
-                if (debugMode && (type != taskType.neutralAI)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
-                if (debugMode && (type == taskType.neutralAI)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
+                if (debugMode && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
+                if (debugMode && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
             } 
         }
 

@@ -6,22 +6,22 @@ using UnityEngine;
 namespace Level
 {
     /// <summary>
-    /// Task type represent the precedence of a recieved task. Each type starting at the top and
+    /// Task type represent the precedence of a received task. Each type starting at the top and
     /// moving in descending order takes precedence over all tasks below it. (lower value = higher precedence).
-    /// Typically, vehicles controlled by player/ai only recieve tasks marked within their category, and neutral
-    /// vehicles only ever recieve a neutralPathing task. That said, this task precedence system allows for
+    /// Typically, vehicles controlled by player/ai only receive tasks marked within their category, and neutral
+    /// vehicles only ever receive a neutralPathing task. That said, this task precedence system allows for
     /// task assignment of any type to any vehicle.
     /// </summary>
-    public enum taskType
+    public enum TaskType
     {
         // PLAYER/AI VEHICLES
-        activePlayer = 0,       // directive from a player system
-        activeAI = 1,           // directive from an AI system
-        passivePlayer = 2,      // directive from player system with no current instructions
-        passiveAI = 3,          // directive from AI systems with no current instructions
+        ActivePlayer = 0,       // directive from a player system
+        ActiveAi = 1,           // directive from an AI system
+        PassivePlayer = 2,      // directive from player system with no current instructions
+        PassiveAi = 3,          // directive from AI systems with no current instructions
 
         // NEUTRAL VEHICLES
-        neutralAI = 4           // directive from the neutralVehicleManager
+        NeutralAi = 4           // directive from the neutralVehicleManager
     }
 
     /// <summary>
@@ -30,15 +30,15 @@ namespace Level
     /// </summary>
     public class VehicleTask
     {
-        public taskType type { get; private set; }                  // task type determines vehicle control precedence
-        public Queue<Connection> path;                              // pathing directive for this task
-        public System.Action<taskType, Vehicle, bool> callback;     // called upon task completiton (true) or task inturruption (false)
+        public TaskType Type { get; private set; }                  // task type determines vehicle control precedence
+        public Queue<Connection> Path;                              // pathing directive for this task
+        public System.Action<TaskType, Vehicle, bool> Callback;     // called upon task completiton (true) or task inturruption (false)
 
-        public VehicleTask(taskType type, Queue<Connection> path, System.Action<taskType, Vehicle, bool> callback)
+        public VehicleTask(TaskType type, Queue<Connection> path, System.Action<TaskType, Vehicle, bool> callback)
         {
-            this.type = type;
-            this.path = path;
-            this.callback = callback;
+            Type = type;
+            Path = path;
+            Callback = callback;
         }
     }
 
@@ -83,7 +83,7 @@ namespace Level
         /// </summary>
         public void Initialize(Connection currentConection)
         {
-            this.CurrentConnection = currentConection;
+            CurrentConnection = currentConection;
         }
 
 
@@ -104,16 +104,16 @@ namespace Level
                     .FirstOrDefault();
 
             // check if the given task takes higher (or equal) precedence to the current task
-            if ((_currentTask == null) || ((int)task.type <= (int)_currentTask.type))
+            if ((_currentTask == null) || ((int)task.Type <= (int)_currentTask.Type))
             {
                 // notify the task's source that the task was terminated prematurely
                 if (_currentTask != null)
-                    _currentTask.callback(_currentTask.type, this, false);
+                    _currentTask.Callback(_currentTask.Type, this, false);
 
                 // give control to the new task
                 StopTraveling();
                 _currentTask = task;
-                StartTraveling(task.path);
+                StartTraveling(task.Path);
                 return true;
             }
 
