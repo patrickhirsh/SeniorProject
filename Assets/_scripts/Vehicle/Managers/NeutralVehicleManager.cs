@@ -15,7 +15,7 @@ namespace Level
     /// spawningHybrid =         vehicles will be spawned based on SpawnDirectives within SpawnPointEntities. Spawning is set to spawningProcedurally when all vehicles are spawned
     /// spawningProcedurally =   vehicles will be spawned procedurally using vehicles marked valid for the level (_vehicles)
     /// </summary>
-    public enum SpawnState : byte { spawningOff, spawningPreDefined, spawningHybrid, spawningProcedurally }
+    public enum SpawnState : byte { SpawningOff, SpawningPreDefined, SpawningHybrid, SpawningProcedurally }
 
     public class NeutralVehicleManager : VehicleManager
     {
@@ -32,7 +32,7 @@ namespace Level
         }
         #endregion
 
-        public bool debugMode = true;
+        public bool DebugMode = true;
         public List<Vehicle> Vehicles;             // all valid vehicles to spawn procedurally in the current level
         private List<GameObject> _spawnPoints;     // all valid spawn points in the current level
         private SpawnState _spawnState;            // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
@@ -41,7 +41,7 @@ namespace Level
         public void Start()
         {
             // spawnState is off by default (waiting for instructions...)
-            _spawnState = SpawnState.spawningOff;       
+            _spawnState = SpawnState.SpawningOff;       
 
             // initialize spawnPoints list
             _spawnPoints = new List<GameObject>();
@@ -58,16 +58,16 @@ namespace Level
         {
             switch (_spawnState)
             {
-                case SpawnState.spawningOff:
+                case SpawnState.SpawningOff:
                     break;
 
-                case SpawnState.spawningPreDefined:
+                case SpawnState.SpawningPreDefined:
                     break;
 
-                case SpawnState.spawningHybrid:
+                case SpawnState.SpawningHybrid:
                     break;
 
-                case SpawnState.spawningProcedurally:
+                case SpawnState.SpawningProcedurally:
                     break;
             }
         }
@@ -89,7 +89,7 @@ namespace Level
         /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
         /// when it reaches it's destination. If this task is interrupted, unexpected behavior is occuring.
         /// </summary>
-        public override void vehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
+        public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
         {
             // the neutral vehicle reached it's destination spawn point.
             if (exitStatus)
@@ -98,8 +98,8 @@ namespace Level
             // log unexpected behavior
             else
             {
-                if (debugMode && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
-                if (debugMode && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
+                if (DebugMode && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
+                if (DebugMode && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
             } 
         }
 

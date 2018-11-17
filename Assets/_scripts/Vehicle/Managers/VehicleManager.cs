@@ -16,7 +16,7 @@ namespace Level
         /// <param name="type"> the taskType of the task that was terminated</param>
         /// <param name="vehicle"> the vehicle associated with the task </param>
         /// <param name="exitStatus"> true if the vehicle completed it's task. False if the task was interrupted </param>
-        public abstract void vehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus);
+        public abstract void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus);
     }
 }
 
