@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Utility;
 
 namespace Level
 {
@@ -58,8 +59,6 @@ namespace Level
     /// </summary>
     public class Vehicle : MonoBehaviour
     {
-        public bool DebugMode;
-
         public Connection CurrentConnection;    // the connection this vehicle is currently on
         public float LookAhead = .2f;           // used to create more natural turn animations
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
@@ -73,6 +72,11 @@ namespace Level
             // on startup, vehicle is in a "waiting for tasks" state
             _currentTask = null;
             _animationTween = null;
+
+            if (Debugger.Instance.Profile.DebugVehicle)
+            {
+                Debug.Log("YES");
+            }
         }
 
 
@@ -176,7 +180,7 @@ namespace Level
                         vehicleCurve.AddPoint(point);
 
                 // no path between two adjacent connections in the queue
-                else if (DebugMode) { Debug.LogWarning($"Could not find path"); }
+                else if (Debugger.Instance.Profile.DebugVehicle) { Debug.LogWarning($"Could not find path"); }
 
                 current = target.ConnectsTo;
             }
