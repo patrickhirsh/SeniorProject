@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Manages the state of the game like transition between levels or menus
@@ -17,6 +18,11 @@ public class GameManager : MonoBehaviour
         singleton.AddComponent<GameManager>();
         return singleton.GetComponent<GameManager>();
     }
+
     #endregion
 
+    private void Start()
+    {
+        LevelManager.Instance.Initialize();
+    }
 }
