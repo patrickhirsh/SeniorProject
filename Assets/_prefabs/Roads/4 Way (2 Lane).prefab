@@ -713,6 +713,7 @@ GameObject:
   - component: {fileID: 4003886531566754}
   - component: {fileID: 114644598919847438}
   - component: {fileID: 114291890613305684}
+  - component: {fileID: 65920065993891780}
   m_Layer: 0
   m_Name: 4 Way (2 Lane)
   m_TagString: Untagged
@@ -1387,7 +1388,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1539209171895084}
   m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.7071079}
-  m_LocalPosition: {x: 0, y: 0, z: -10.5}
+  m_LocalPosition: {x: 67.5, y: 28, z: -33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4562885545263956}
@@ -2737,6 +2738,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1795887558784536}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65920065993891780
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1539209171895084}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.04, y: 1, z: 2.99}
+  m_Center: {x: 0.76, y: -0.09, z: -0.75}
 --- !u!114 &114001790567548538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2857,7 +2870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114645211520791704}
     Path: {fileID: 114788768117399354}
@@ -2867,6 +2880,7 @@ MonoBehaviour:
     Path: {fileID: 114596433007867892}
   - Connection: {fileID: 114435119315997560}
     Path: {fileID: 114160631776343942}
+  PickupLocations: []
 --- !u!114 &114074531810136308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3001,7 +3015,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114684693703696016}
     Path: {fileID: 114760958062469244}
@@ -3011,6 +3025,7 @@ MonoBehaviour:
     Path: {fileID: 114755065166676728}
   - Connection: {fileID: 114323926721152608}
     Path: {fileID: 114037018731798456}
+  PickupLocations: []
 --- !u!114 &114204670082343774
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3190,8 +3205,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths: []
+  PickupLocations: []
 --- !u!114 &114335157987254132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3305,8 +3321,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths: []
+  PickupLocations: []
 --- !u!114 &114436548431247254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3412,7 +3429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114435119315997560}
     Path: {fileID: 114665392445159922}
@@ -3422,6 +3439,7 @@ MonoBehaviour:
     Path: {fileID: 114616543686164388}
   - Connection: {fileID: 114684693703696016}
     Path: {fileID: 114496394425101694}
+  PickupLocations: []
 --- !u!114 &114528861914790432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3606,23 +3624,7 @@ MonoBehaviour:
   - {fileID: 114323926721152608}
   - {fileID: 114183154851041252}
   - {fileID: 114044760372052928}
-  Paths:
-  - {fileID: 114788768117399354}
-  - {fileID: 114080849371885886}
-  - {fileID: 114596433007867892}
-  - {fileID: 114160631776343942}
-  - {fileID: 114760958062469244}
-  - {fileID: 114979271548549442}
-  - {fileID: 114755065166676728}
-  - {fileID: 114037018731798456}
-  - {fileID: 114600044802949266}
-  - {fileID: 114995164151430078}
-  - {fileID: 114858940995565996}
-  - {fileID: 114308480800566332}
-  - {fileID: 114665392445159922}
-  - {fileID: 114293395582413740}
-  - {fileID: 114616543686164388}
-  - {fileID: 114496394425101694}
+  VehiclePaths: []
 --- !u!114 &114645211520791704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3635,8 +3637,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths: []
+  PickupLocations: []
 --- !u!114 &114665392445159922
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3667,8 +3670,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths: []
+  PickupLocations: []
 --- !u!114 &114709232444637528
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3825,7 +3829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114323926721152608}
     Path: {fileID: 114600044802949266}
@@ -3835,6 +3839,7 @@ MonoBehaviour:
     Path: {fileID: 114858940995565996}
   - Connection: {fileID: 114645211520791704}
     Path: {fileID: 114308480800566332}
+  PickupLocations: []
 --- !u!114 &114797742076538548
 MonoBehaviour:
   m_ObjectHideFlags: 1

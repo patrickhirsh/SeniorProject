@@ -62,6 +62,7 @@ namespace Level
         public Connection CurrentConnection;    // the connection this vehicle is currently on
         public float LookAhead = .2f;           // used to create more natural turn animations
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
+        public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;       // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
@@ -214,5 +215,25 @@ namespace Level
         }
 
         #endregion
+        
+        /// <summary>
+        /// Slow the car down if another car is in front
+        /// </summary>
+        /// <param name="other">Other.</param>
+        private void OnTriggerStay(Collider other)
+        {
+            if(other.gameObject.CompareTag("Car"))
+            {
+                Speed = Mathf.Lerp(Speed,0,.25f);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.CompareTag("Car"))
+            {
+                Speed = BaseSpeed;
+            }
+        }
     }
 }
