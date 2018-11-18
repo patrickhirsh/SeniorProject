@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Level
 {
-    public class SpawnPointEntity : MonoBehaviour
+    public class SpawnPointEntity : Route
     {
 
         /// <summary>
@@ -16,13 +16,22 @@ namespace Level
         /// </summary>
         public class SpawnDirective
         {
-            public GameObject vehicle;     // The template vehicle used to instantiate the new vehicle
-            public float time;             // Time in seconds after the start of the game that the vehicle should spawn
+            public GameObject vehicle { get; private set; }             // The template vehicle used to instantiate the new vehicle
+            public GameObject destination { get; private set; }         // The spawned vehicle's destination. Must have a SpawnPointEntity component
+            public float time { get; private set;}                      // Time in seconds after the start of the game that the vehicle should spawn
 
-            public SpawnDirective(GameObject vehicleTemplate, float time)
+
+            public SpawnDirective(GameObject vehicleTemplate, GameObject destination, float time)
             {
                 this.vehicle = vehicleTemplate;
                 this.time = time;
+                this.destination = destination;
+
+                if (vehicle.GetComponent<Vehicle>() == null)
+                    Debug.LogWarning("SpawnDirective created with a vehicleTemplate that doesn't have a Vehicle Component (vehicleTemplate must be a vehicle)");
+
+                if (destination.GetComponent<SpawnPointEntity>() == null)
+                    Debug.LogWarning("SpawnDirective created with a destination that isn't a SpawnNodeEntity (destination must be another SpawnNodeEntity)");
             }
         }
 
@@ -45,13 +54,34 @@ namespace Level
             }
         }
 
+
+        private List<SpawnPointEntity> reachableSpawnPoints;                                            // All SpawnPoints reachable from this SpawnPoint
+        private List<SpawnPointEntity> reachingSpawnPoints;                                             // All SpawnPoints that can reach this SpawnPoint
         private static SpawnDirectiveComparer spawnDirectiveComparer = new SpawnDirectiveComparer();    // used to sort _spawnQueue
         private List<SpawnDirective> _spawnQueue;                                                       // keeps a sorted record of SpawnDirectives (lowest time -> highest time) for non-procedural spawning
 
 
         public void Start()
         {
-            _spawnQueue = new List<SpawnDirective>();
+            Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
+            Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);
+        }
+
+        /// <summary>
+        /// based on broadcasted GameEvents, 
+        /// </summary>
+        public void Initialize(GameState gameEvent)
+        {
+            switch (gameEvent)
+            {
+                case GameState.SetupConnection:
+                    _spawnQueue = new List<SpawnDirective>();
+                    break;
+
+                case GameState.SetupBakedPaths:
+                    exploreSpawnNodes();
+                    break;
+            }
         }
 
 
@@ -61,12 +91,12 @@ namespace Level
         /// The vehicle will be spawned (time) seconds into the game.
         /// Returns true if the SpawnDirective was added successfully or false if invalid parameters were given
         /// </summary>
-        public bool AddSpawnDirective(GameObject vehicleTemplate, float time)
+        public bool AddSpawnDirective(GameObject vehicleTemplate, GameObject destination, float time)
         {
             if (time < 0) { return false; }
             if (vehicleTemplate == null) { return false; }
 
-            _spawnQueue.Add(new SpawnDirective(vehicleTemplate, time));
+            _spawnQueue.Add(new SpawnDirective(vehicleTemplate, destination, time));
             _spawnQueue.Sort(spawnDirectiveComparer);
             return true;
         }
@@ -82,10 +112,54 @@ namespace Level
             if (_spawnQueue.Count < 1)
                 return null;
 
-            SpawnDirective next = new SpawnDirective(_spawnQueue[0].vehicle, _spawnQueue[0].time);
+            SpawnDirective next = new SpawnDirective(_spawnQueue[0].vehicle, _spawnQueue[0].destination, _spawnQueue[0].time);
             _spawnQueue.RemoveAt(0);
             return next;
         }
+
+
+        /// <summary>
+        /// Calling this method indicates that the caller has reached this node. The caller
+        /// will then be added as a "reaching" node within this node's reachingSpawnPoints list.
+        /// </summary>
+        public void addReachingSpawnNode(SpawnPointEntity reachingSpawnNode)
+        {
+            if (!this.reachingSpawnPoints.Contains(reachingSpawnNode))
+                this.reachingSpawnPoints.Add(reachingSpawnNode);
+        }
+
+
+        public override void HandleVehicleEnter(Vehicle vehicle)
+        {
+            return;
+        }
+
+        public override void HandleVehicleExit(Vehicle vehicle)
+        {
+            return;
+        }
+
+
+
+
+        /// <summary>
+        /// Find all reachable nodes from this node. Upon discovering a node add that node as "reachable" from this
+        /// node, then add this node as "reaching" within that node.
+        /// </summary>
+        private void exploreSpawnNodes()
+        {
+            /*
+            foreach (Connection connection in )
+
+            foreach (SpawnPointEntity spawn in NeutralVehicleManager.Instance._spawnPoints)
+            {
+                
+                PathfindingManager.Instance.GetPath()
+            }
+            */
+        }
+
+        
     }
 }
 
