@@ -67,7 +67,7 @@ public class PlayerVehicleManager : VehicleManager
         if (_currentIntersection == intersection)
         {
             Debug.Log($"{_selectedVehicle}", _selectedVehicle.gameObject);
-            Debug.Log($"{_finalPath.Count}");
+            Debug.Log($"{_finalPath.Count}" + "FINAL PATH HIT");
             _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, new Queue<Connection>(_finalPath), VehicleTaskCallback));
             Deselect();
         }
