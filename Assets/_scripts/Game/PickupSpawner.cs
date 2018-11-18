@@ -30,7 +30,6 @@ public class PickupSpawner : MonoBehaviour {
                 _Pickups.Add(location);
             }
         }
-
 	}
 	
 	// Update is called once per frame

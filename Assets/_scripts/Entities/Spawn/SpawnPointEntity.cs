@@ -61,14 +61,27 @@ namespace Level
         private List<SpawnDirective> _spawnQueue;                                                       // keeps a sorted record of SpawnDirectives (lowest time -> highest time) for non-procedural spawning
 
 
-        public void Setup1()
+        public void Start()
         {
-            _spawnQueue = new List<SpawnDirective>();
+            Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
+            Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);
         }
 
-        public void Setup2()
+        /// <summary>
+        /// based on broadcasted GameEvents, 
+        /// </summary>
+        public void Initialize(GameState gameEvent)
         {
-            exploreSpawnNodes();
+            switch (gameEvent)
+            {
+                case GameState.SetupConnection:
+                    _spawnQueue = new List<SpawnDirective>();
+                    break;
+
+                case GameState.SetupBakedPaths:
+                    exploreSpawnNodes();
+                    break;
+            }
         }
 
 
