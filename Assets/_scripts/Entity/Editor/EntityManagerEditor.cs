@@ -15,8 +15,8 @@ namespace Level
             EntityManager myTarget = (EntityManager)target;
 
             EditorGUILayout.LabelField($"Stats");
-            EditorGUILayout.LabelField($"{myTarget.Entities.Length} Entities");
-            EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
+            if (myTarget.Entities != null) EditorGUILayout.LabelField($"{myTarget.Entities.Length} Entities");
+            if (myTarget.Connections != null) EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
 
             EditorGUILayout.Space();
             if (GUILayout.Button("Bake Level"))

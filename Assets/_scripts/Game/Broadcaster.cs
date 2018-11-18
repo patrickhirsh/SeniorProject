@@ -14,7 +14,7 @@ public class Broadcaster : MonoBehaviour
     {
         GameObject singleton = FindObjectOfType<Broadcaster>()?.gameObject;
         if (singleton == null) singleton = new GameObject { name = typeof(Broadcaster).Name };
-        singleton.AddComponent<Broadcaster>();
+        if (singleton.GetComponent<Broadcaster>() == null) singleton.AddComponent<Broadcaster>();
         return singleton.GetComponent<Broadcaster>();
     }
 

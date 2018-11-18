@@ -9,7 +9,7 @@ namespace Level
     {
         private void Update()
         {
-            if (transform.hasChanged && !Input.GetMouseButton(0))
+            if (!Application.isPlaying && transform.hasChanged && !Input.GetMouseButton(0))
             {
                 transform.SnapToGrid();
             }

@@ -155,6 +155,7 @@ namespace Level
         /// </summary>
         private void StartTraveling(Queue<Connection> connections)
         {
+            Debug.Assert(connections.Any(), "No connections to path");
             var vehicleCurve = GeneratePath(connections);
             _animationTween = StartCoroutine(TravelPath(vehicleCurve));
         }

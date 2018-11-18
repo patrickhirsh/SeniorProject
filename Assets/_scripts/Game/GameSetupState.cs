@@ -1,4 +1,5 @@
 ﻿public enum GameState
 {
-    SetupConnection
+    SetupConnection,
+    SetupBakedPaths
 }

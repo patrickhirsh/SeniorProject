@@ -8,7 +8,7 @@ namespace Level
     [ExecuteInEditMode]
     public class Connection : MonoBehaviour
     {
-        public const float CONNECTION_DISTANCE = .25f;
+        public const float CONNECTION_DISTANCE = .5f;
 
         [Serializable]
         public class ConnectionPath
@@ -30,6 +30,15 @@ namespace Level
 
         [ReadOnly]
         public List<PickupLocation> PickupLocations = new List<PickupLocation>();
+
+        public int PathCount
+        {
+            get
+            {
+                Debug.Assert(ConnectionPaths != null, "ConnectionPaths is null!");
+                return ConnectionPaths.Count;
+            }
+        }
 
         private Dictionary<Connection, BezierCurve> _connectionPaths;
         private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Utility;
+using Grid = Utility.Grid;
 
 /// <summary>
 /// Manages the state of all the entities in a level
@@ -47,6 +48,7 @@ public class EntityManager : MonoBehaviour
 
     //    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
 
+    public GameObject LevelPrefab;
 
     #region Unity Methods
 
@@ -54,7 +56,8 @@ public class EntityManager : MonoBehaviour
 
     public void Initialize()
     {
-        Debug.Log("Initialize EntityManager");
+        Debug.Log("Initialize EntityManager", gameObject);
+        Entities = GetComponentsInChildren<Entity>();
         Broadcaster.Instance.Broadcast(GameState.SetupConnection);
     }
 
@@ -112,5 +115,13 @@ public class EntityManager : MonoBehaviour
         // This could be optimized more, but will probably do fine
         RemoveEntity(entity);
         AddEntity(entity);
+    }
+
+    public void SpawnLevel(Vector3 pos, Vector3 scale)
+    {
+        transform.position = Grid.GetCellIndex(pos).GetPosition();
+//        var spawnedLevel = Instantiate(LevelPrefab, pos, Quaternion.identity, transform);
+//        spawnedLevel.transform.localScale = scale;
+        Initialize();
     }
 }

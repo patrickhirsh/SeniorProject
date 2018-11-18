@@ -3,73 +3,110 @@ using UnityEngine;
 using UnityEngine.Experimental.XR;
 using UnityEngine.XR.ARFoundation;
 
-[RequireComponent(typeof(ARSessionOrigin))]
-public class ARInputManager : MonoBehaviour
+public class ArInputManager : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
 
-    public PlayerVehicleManager playerVehicleManager;
-    public GameManager gameManager;
-
-
-    GameObject m_PlacedPrefab;
-    public ARPlaneManager RPlaneMan, ager;
-    public GameObject prefab2;
-    private bool placed;
-    private bool VehicleSelected;
-    public float abovePlane;
-    public float scaleFloat;
+    public Camera Camera;
+    public PlayerVehicleManager PlayerVehicleManager;
+    public ARPlaneManager RPlaneManager;
+    private bool _placed;
+    private bool _vehicleSelected;
+    public float AbovePlane;
+    public float ScaleFloat;
 
     /// <summary>
     /// The prefab to instantiate on touch.
     /// </summary>
-    public GameObject placedPrefab
-    {
-        get { return m_PlacedPrefab; }
-        set { m_PlacedPrefab = value; }
-    }
+    public GameObject PlacedPrefab;
 
     /// <summary>
     /// The object instantiated as a result of a successful raycast intersection with a plane.
     /// </summary>
-    public GameObject spawnedObject { get; private set; }
+    public GameObject SpawnedObject { get; private set; }
 
-    ARSessionOrigin m_SessionOrigin;
+    public ARSessionOrigin SessionOrigin;
 
-    static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
+    static List<ARRaycastHit> _sHits = new List<ARRaycastHit>();
 
     private void Awake()
     {
-
-        m_SessionOrigin = GetComponent<ARSessionOrigin>();
+        _placed = false;
     }
 
     void Update()
     {
-        if (Input.touchCount > 0)
+#if UNITY_ANDROID || UNITY_IOS
+        HandleMobileInput();
+#else
+        HandleDesktopInput();
+#endif
+    }
+
+    private void HandleDesktopInput()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            Touch touch = Input.GetTouch(0);
             //If the level has been placed
-            if (placed)
+            if (_placed)
             {
                 RaycastHit hitInfo;
                 //If raycast hits an object
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), out hitInfo))
+                var ray = Camera.ScreenPointToRay(Input.mousePosition);
+                Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
+                Debug.Log("RAYCAST");
+                if (Physics.Raycast(ray, out hitInfo))
                 {
-                    playerVehicleManager.TakeInput(hitInfo);
+                    PlayerVehicleManager.HandleHit(hitInfo);
+                }
+                else
+                {
+                    PlayerVehicleManager.HandleNotHit();
                 }
             }
             //If the level hasn't been placed
             else
             {
-                if (m_SessionOrigin.Raycast(touch.position, s_Hits, TrackableType.PlaneWithinPolygon))
+                if (SessionOrigin.Raycast(Input.mousePosition, _sHits, TrackableType.PlaneWithinPolygon))
                 {
-                    Pose hitPose = s_Hits[0].pose;
-                    spawnedObject = Instantiate(m_PlacedPrefab, new Vector3(hitPose.position.x, hitPose.position.y + abovePlane, hitPose.position.z), hitPose.rotation);
-                    spawnedObject.transform.localScale = new Vector3(scaleFloat, scaleFloat, scaleFloat);
+                    Pose hitPose = _sHits[0].pose;
+                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z), new Vector3(ScaleFloat, ScaleFloat, ScaleFloat));
                     //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
-                    placed = true;
+                    _placed = true;
+                }
+            }
+        }
+    }
+
+    private void HandleMobileInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            Debug.Log("LETS GO");
+            Touch touch = Input.GetTouch(0);
+            //If the level has been placed
+            if (_placed)
+            {
+                RaycastHit hitInfo;
+                //If raycast hits an object
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), out hitInfo))
+                {
+                    PlayerVehicleManager.HandleHit(hitInfo);
+                }
+                else
+                {
+                    PlayerVehicleManager.HandleNotHit();
+                }
+            }
+            //If the level hasn't been placed
+            else
+            {
+                if (SessionOrigin.Raycast(touch.position, _sHits, TrackableType.PlaneWithinPolygon))
+                {
+                    Pose hitPose = _sHits[0].pose;
+                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z), new Vector3(ScaleFloat, ScaleFloat, ScaleFloat));
+                    _placed = true;
                 }
             }
         }
