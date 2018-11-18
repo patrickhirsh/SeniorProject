@@ -64,11 +64,10 @@ namespace Level
         public void Start()
         {
             Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
-            Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);
         }
 
         /// <summary>
-        /// based on broadcasted GameEvents, 
+        /// Handles all GameEvent Broadcasts
         /// </summary>
         public void Initialize(GameState gameEvent)
         {
@@ -76,10 +75,6 @@ namespace Level
             {
                 case GameState.SetupConnection:
                     _spawnQueue = new List<SpawnDirective>();
-                    break;
-
-                case GameState.SetupBakedPaths:
-                    exploreSpawnNodes();
                     break;
             }
         }
@@ -118,17 +113,6 @@ namespace Level
         }
 
 
-        /// <summary>
-        /// Calling this method indicates that the caller has reached this node. The caller
-        /// will then be added as a "reaching" node within this node's reachingSpawnPoints list.
-        /// </summary>
-        public void addReachingSpawnNode(SpawnPointEntity reachingSpawnNode)
-        {
-            if (!this.reachingSpawnPoints.Contains(reachingSpawnNode))
-                this.reachingSpawnPoints.Add(reachingSpawnNode);
-        }
-
-
         public override void HandleVehicleEnter(Vehicle vehicle)
         {
             return;
@@ -138,28 +122,6 @@ namespace Level
         {
             return;
         }
-
-
-
-
-        /// <summary>
-        /// Find all reachable nodes from this node. Upon discovering a node add that node as "reachable" from this
-        /// node, then add this node as "reaching" within that node.
-        /// </summary>
-        private void exploreSpawnNodes()
-        {
-            /*
-            foreach (Connection connection in )
-
-            foreach (SpawnPointEntity spawn in NeutralVehicleManager.Instance._spawnPoints)
-            {
-                
-                PathfindingManager.Instance.GetPath()
-            }
-            */
-        }
-
-        
     }
 }
 
