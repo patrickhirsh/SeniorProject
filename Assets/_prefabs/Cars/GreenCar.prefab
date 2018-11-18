@@ -810,12 +810,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1980774230632596}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae848ed26bf065b41957917384b45cac, type: 3}
+  m_Script: {fileID: 11500000, guid: 6db6f6dca30fbe34eb6b8f5edb92f82e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PathNodes: []
-  CarSpeed: 3
-  SpeedCap: 6
-  RotSpeed: 9
-  Front: {fileID: 4367540828162106}
-  CastDistance: 1
+  DebugMode: 0
+  CurrentConnection: {fileID: 0}
+  LookAhead: 0.2
+  Speed: 5

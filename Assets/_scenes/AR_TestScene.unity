@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45003504, g: 0.5000877, b: 0.57549655, a: 1}
+  m_IndirectSpecularColor: {r: 0.45003462, g: 0.500087, b: 0.5754965, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 589885273}
   m_Layer: 0
   m_Name: AR Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -421,8 +421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec5d1d869dae3440a3f4a00cf008b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlacedPrefab: {fileID: 1580514573212326, guid: e369343f2843fa340b45375e56a5fcf5,
+  m_PlacedPrefab: {fileID: 1524994137266068, guid: e67880b6b52824f099d997f850cf7388,
     type: 2}
   RPlaneManager: {fileID: 1427475269}
-  prefab2: {fileID: 1585201990951412, guid: 5fb926cea469d2f4eb783d1a5bd6f00e, type: 2}
+  prefab2: {fileID: 1980774230632596, guid: 77ac2236f04ad724ca7925bb0015e547, type: 2}
   abovePlane: 0.2
+  scaleFloat: 0.02
