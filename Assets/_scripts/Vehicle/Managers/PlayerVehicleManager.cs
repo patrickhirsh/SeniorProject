@@ -103,16 +103,19 @@ public class PlayerVehicleManager : VehicleManager
             var current = nextConnection.ConnectsTo;
             Debug.Log("NEXT", current);
 
-            while (current != null && current.PathCount <= 1)
+            while (current != null && current.ParentRoute.GetType() == typeof(Intersection))
             {
                 connections.Add(current);
-                current = current.Paths.First().Connection.ConnectsTo;
+                var next = current.Paths.First().Connection;
+                connections.Add(next);
+                current = next.ConnectsTo;
                 Debug.Assert(current != null, "Current is null!");
+
             }
 
             if (current != null)
             {
-                connections.Add(current);
+                //connections.Add(current);
 
                 var route = current.ParentRoute;
                 Debug.Assert(route != null, "Route cannot be null");
