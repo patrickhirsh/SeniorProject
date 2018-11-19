@@ -177,6 +177,185 @@ namespace Level
 
             #endregion
         }
+
+
+        public bool GetPath(Route start, Queue<Intersection> intersections, Route end, out Queue<Connection> path)
+        {
+            // get all valid starting connections based on the "start" Route's connections
+            List<Connection> startingConnections = new List<Connection>();
+            foreach (Connection connection in start.Connections)
+                if (connection.Paths.Count == 0)
+                    if (connection.ConnectsTo != null)
+                        startingConnections.Add(connection.ConnectsTo);
+
+            Dictionary<Connection, List<AmbiguousPath>> bestPaths = new Dictionary<Connection, List<AmbiguousPath>>();
+
+            foreach (Intersection intersection in intersections)
+            {
+
+                // TODO:
+                /*
+                 * - within the below foreach loop, pop the associated KeyValuePair<Connection, List<AmbiguousPath>> from bestPaths
+                 *   and merge it with all paths returned from Explore. Add these paths back into bestPaths under the same Connection key
+                 * 
+                 * - do this for all startingConnections. Keep in mind, a startingConnection can be associated with the end of multiple existing bestPaths...
+                 *   maybe cache these and add them all at once so we can keep the original state of bestPaths while we need it?
+                 * 
+                 * - once all merged varients have been added, call the in-place selectBestPaths() to remove all but the best paths
+                 * 
+                 * - set starting connections to all reachable connections from the keys in bestPaths. Maybe cache which connection goes where, or something,
+                 *   so it's easier to find out which startingConnection is associated with which Connection key in bestPath?
+                 *   
+                 *   
+                 *   after we've iterated through all intersections...
+                 * 
+                 * - design some kind of special case function for finding the last Route object (if it's an intersection, we can just do the same thing, maybe?
+                 * 
+                 * - if bestPaths is ever empty, there isn't a route to end (I think?)
+                 */
+
+
+                Dictionary<Connection, List<AmbiguousPath>> allPaths = new Dictionary<Connection, List<AmbiguousPath>>();
+
+                // find the best path from each startingConnection to each intersection connection reachable from that startingConnection
+                foreach (Connection startingConnection in startingConnections)
+                {
+                    // get all best paths
+                    Dictionary<Connection, AmbiguousPath> pathsFromStartingConnection = new Dictionary<Connection, AmbiguousPath>();
+                    pathsFromStartingConnection = Explore(startingConnection, intersection);
+
+                    // add each path to allPaths, mapped by the intersection connection they connect to
+                    foreach (KeyValuePair<Connection, AmbiguousPath> pathFromStartingConnection in pathsFromStartingConnection)
+                        allPaths[pathFromStartingConnection.Key].Add(pathFromStartingConnection.Value);
+                }
+
+                
+            }
+            return true;
+            
+            
+        }
+
+
+        /// <summary>
+        /// Given a starting connection and a target intersection, Explore returns a dictionary that maps
+        /// each reachable connection in the targetIntersection to its best AmbiguousPath.
+        /// </summary>
+        private Dictionary<Connection, AmbiguousPath> Explore(Connection startingConnection, Intersection targetIntersection)
+        {
+            // all paths that reach the targetIntersection, mapped to the connection on the targetIntersection that they're reaching
+            // value is stored as a List<AP> because a split in the ambiguous path could cause two different paths to reach the same connection in the target
+            Dictionary<Connection, List<AmbiguousPath>> allPaths = new Dictionary<Connection, List<AmbiguousPath>>();
+
+            AmbiguousPath potentialPath = new AmbiguousPath();      // the ambiguous path we're currently constructing
+            Connection currentConnection = startingConnection;      // the connection we're currently evaluating. (potentialPath's last connection).ConnectsTo
+            bool reachedIntersection = false;
+
+            while (true)
+            {
+                // we've reached an intersection! break and check below if it's our target intersection
+                if (currentConnection.ParentRoute.GetType() == typeof(Intersection))
+                {
+                    reachedIntersection = true;
+                    break;
+                }                  
+
+                // we've reached a non-intersection connection that has more than one path leaving it (ie. 2 adjacent lanes with a lane change possibility)
+                if (currentConnection.Paths.Count > 1)
+                {
+                    // will populate with the best APs from all paths in currentConnection.Paths
+                    Dictionary<Connection, List<AmbiguousPath>> bestAPsFromPaths = new Dictionary<Connection, List<AmbiguousPath>>();
+
+                    // recursively explore currentConnection's paths
+                    foreach (var path in currentConnection.Paths)
+                    {
+                        // explore path's connections and get the best APs to all reachable connection on the targetIntersection
+                        Dictionary<Connection, AmbiguousPath> bestAPsFromPath = new Dictionary<Connection, AmbiguousPath>();
+                        bestAPsFromPath =  Explore(path.Connection.ConnectsTo, targetIntersection);
+
+                        // apply the weight from the current connection to each of the start connections in these paths
+                        foreach (KeyValuePair<Connection, AmbiguousPath> bestPath in bestAPsFromPath)
+                            bestPath.Value.weight += Vector3.Distance(currentConnection.transform.position, bestPath.Value.path[0].transform.position);
+
+                        // merge each of these paths with the path in progress. Since these paths all reach targetIntersection, we're done!
+                        foreach (KeyValuePair<Connection, AmbiguousPath> mergedPath in AmbiguousPath.MergePaths(potentialPath, bestAPsFromPath))
+                            allPaths[mergedPath.Key].Add(mergedPath.Value);
+
+                        break;
+                    }
+                }
+
+                // we've reached a non-intersection connection that has 0 or 1 paths
+                else
+                {
+                    // currentConnection does not have any paths leaving it
+                    if (currentConnection.Paths.Count <= 0)
+                    {
+                        // this is a dead end... It shouldn't ever happen, but if it does, don't consider this path (break immediately)
+                        reachedIntersection = false;
+                        break;
+                    }
+
+                    // exactly one path is leaving this connection. Add its weight, traverse forward, and keep searching
+                    potentialPath.weight += Vector3.Distance(potentialPath.path[potentialPath.path.Count - 1].transform.position, currentConnection.transform.position);
+                    potentialPath.path.Add(currentConnection);
+                    currentConnection = currentConnection.Paths[0].Connection.ConnectsTo;
+                }
+            }
+
+            // we've found an intersection. Check if this intersection is the target intersection
+            if (reachedIntersection)
+            {
+                // we found the target!
+                if (currentConnection.ParentRoute == targetIntersection)
+                {
+                    // add the weight of the final connection, add that connection to the potentialPath, and add the potentialPath to the Dictionary of valid paths!
+                    potentialPath.weight += Vector3.Distance(potentialPath.path[potentialPath.path.Count - 1].transform.position, currentConnection.transform.position);
+                    potentialPath.path.Add(currentConnection);
+                    allPaths[startingConnection].Add(potentialPath);
+                }
+            }
+
+            // find the best path that leads to each reachable connection in the targetIntersection from startingConnection and remove the rest
+            return selectBestPaths(allPaths);
+        }
+
+
+        /// <summary>
+        /// Given a dictionary with multiple AmbiguousPaths to each end connection, selectBestPaths()
+        /// removes all AmbiguousPaths that lead to the same connection except for the one with the lowest weight.
+        /// </summary>
+        public Dictionary<Connection, AmbiguousPath> selectBestPaths(Dictionary<Connection, List<AmbiguousPath>> paths)
+        {
+            Dictionary<Connection, AmbiguousPath> output = new Dictionary<Connection, AmbiguousPath>();
+            AmbiguousPathComparer comparer = new AmbiguousPathComparer();
+
+            foreach (KeyValuePair<Connection, List<AmbiguousPath>> pathsToConnection in paths)
+            {
+                pathsToConnection.Value.Sort(comparer);
+                output.Add(pathsToConnection.Key, pathsToConnection.Value[0]);
+            }
+
+            return output;
+        }
+
+
+        /// <summary>
+        /// Given a dictionary with multiple AmbiguousPaths to each end connection, selectBestPaths()
+        /// removes all AmbiguousPaths that lead to the same connection except for the one with the lowest weight.
+        /// This varient of selectBestPaths performs the operation in-place
+        /// </summary>
+        public void selectBestPaths(ref Dictionary<Connection, List<AmbiguousPath>> paths)
+        {
+            AmbiguousPathComparer comparer = new AmbiguousPathComparer();
+
+            foreach (KeyValuePair<Connection, List<AmbiguousPath>> pathsToConnection in paths)
+            {
+                pathsToConnection.Value.Sort(comparer);
+                for (int i = pathsToConnection.Value.Count - 1; i > 0; i--)
+                    pathsToConnection.Value.RemoveAt(i);
+            }
+        }
     }
 }
 
