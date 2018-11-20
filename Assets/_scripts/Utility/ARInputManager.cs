@@ -55,7 +55,7 @@ public class ARInputManager : MonoBehaviour
                 //If raycast hits an object
                 var ray = Camera.ScreenPointToRay(Input.mousePosition);
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
-                Debug.Log("RAYCAST");
+
                 if (Physics.Raycast(ray, out hitInfo))
                 {
                     PlayerVehicleManager.HandleHit(hitInfo);
