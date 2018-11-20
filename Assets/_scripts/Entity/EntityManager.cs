@@ -122,6 +122,6 @@ public class EntityManager : MonoBehaviour
         transform.position = Grid.GetCellIndex(pos).GetPosition();
 //        var spawnedLevel = Instantiate(LevelPrefab, pos, Quaternion.identity, transform);
 //        spawnedLevel.transform.localScale = scale;
-        Initialize();
+//        Initialize();
     }
 }

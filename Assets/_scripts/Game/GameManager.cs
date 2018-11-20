@@ -15,11 +15,13 @@ public class GameManager : MonoBehaviour
     private static GameManager Create()
     {
         GameObject singleton = FindObjectOfType<GameManager>()?.gameObject;
-        if (singleton == null) singleton = new GameObject { name = typeof(GameManager).Name };
-        singleton.AddComponent<GameManager>();
+        if (singleton == null)
+        {
+            singleton = new GameObject { name = $"[{typeof(GameManager).Name}]" };
+            singleton.AddComponent<GameManager>();
+        }
         return singleton.GetComponent<GameManager>();
     }
-
     #endregion
 
     private void Start()
