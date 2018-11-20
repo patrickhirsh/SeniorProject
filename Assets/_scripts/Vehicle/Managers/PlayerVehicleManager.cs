@@ -17,6 +17,11 @@ public class PlayerVehicleManager : VehicleManager
 
     private bool VehicleSelected => _selectedVehicle != null;
 
+    public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
+    {
+
+    }
+
     #region Unity
 
     private void OnDrawGizmos()
@@ -33,10 +38,28 @@ public class PlayerVehicleManager : VehicleManager
 
     #endregion
 
-    public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
-    {
+    #region UserInterface
 
+    public GameObject DestinationReticle;
+    private List<GameObject> _destinationReticles = new List<GameObject>();
+
+    private void DrawDestinations()
+    {
+        _destinationReticles.ForEach(Destroy);
+
+        if (_destinationables != null)
+        {
+            foreach (var destinationable in _destinationables)
+            {
+                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + Vector3.up, Quaternion.identity);
+                _destinationReticles.Add(reticle);
+            }
+        }
     }
+
+    #endregion
+
+    #region Selection & Destination Search
 
     internal void HandleHit(RaycastHit hitInfo)
     {
@@ -65,11 +88,14 @@ public class PlayerVehicleManager : VehicleManager
         {
             _previousSelectedRoute = route;
         }
+
+        DrawDestinations();
     }
 
     public void HandleNotHit()
     {
         Deselect();
+        DrawDestinations();
     }
 
     private void Deselect()
@@ -154,4 +180,6 @@ public class PlayerVehicleManager : VehicleManager
             }
         }
     }
+
+    #endregion
 }
