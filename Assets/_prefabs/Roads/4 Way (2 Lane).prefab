@@ -1380,7 +1380,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1539209171895084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15, y: 0, z: 12}
+  m_LocalPosition: {x: 27, y: 0, z: 21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4562885545263956}
@@ -1465,7 +1465,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1576484785142514}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6062012, y: 0, z: -0.060424805}
+  m_LocalPosition: {x: 0.602, y: 0, z: -0.134}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4756168912522270}
@@ -1672,7 +1672,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1995066268927592}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.6582832, y: -0.015726328, z: -0.48205677}
+  m_LocalPosition: {x: -1.69, y: -0.015726328, z: -0.676}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4573145823264612}
@@ -2866,12 +2866,6 @@ MonoBehaviour:
   Paths:
   - Connection: {fileID: 114645211520791704}
     Path: {fileID: 114788768117399354}
-  - Connection: {fileID: 114323926721152608}
-    Path: {fileID: 114080849371885886}
-  - Connection: {fileID: 114684693703696016}
-    Path: {fileID: 114596433007867892}
-  - Connection: {fileID: 114435119315997560}
-    Path: {fileID: 114160631776343942}
   PickupLocations: []
 --- !u!114 &114074531810136308
 MonoBehaviour:
@@ -2934,8 +2928,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _curve: {fileID: 114760958062469244}
   handleStyle: 0
-  _handle1: {x: -0.14440918, y: -0.04284668, z: 0.063964844}
-  _handle2: {x: 0.14440918, y: 0.04284668, z: -0.063964844}
+  _handle1: {x: -0.11316502, y: 0, z: 0.12936805}
+  _handle2: {x: 0.11316502, y: -0, z: -0.12936805}
 --- !u!114 &114114780494123794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3008,15 +3002,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
   ParentRoute: {fileID: 0}
-  Paths:
-  - Connection: {fileID: 114684693703696016}
-    Path: {fileID: 114760958062469244}
-  - Connection: {fileID: 114435119315997560}
-    Path: {fileID: 114979271548549442}
-  - Connection: {fileID: 114645211520791704}
-    Path: {fileID: 114755065166676728}
-  - Connection: {fileID: 114323926721152608}
-    Path: {fileID: 114037018731798456}
+  Paths: []
   PickupLocations: []
 --- !u!114 &114204670082343774
 MonoBehaviour:
@@ -3425,8 +3411,6 @@ MonoBehaviour:
   Paths:
   - Connection: {fileID: 114435119315997560}
     Path: {fileID: 114665392445159922}
-  - Connection: {fileID: 114645211520791704}
-    Path: {fileID: 114293395582413740}
   - Connection: {fileID: 114323926721152608}
     Path: {fileID: 114616543686164388}
   - Connection: {fileID: 114684693703696016}
@@ -3460,8 +3444,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _curve: {fileID: 114596433007867892}
   handleStyle: 0
-  _handle1: {x: 0.50579834, y: 0.0021972656, z: 0.26159668}
-  _handle2: {x: -0.50579834, y: -0.0021972656, z: -0.26159668}
+  _handle1: {x: 0.5056367, y: -0.015610695, z: 0.33042786}
+  _handle2: {x: -0.5056367, y: 0.015610695, z: -0.33042786}
 --- !u!114 &114533260258802276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3616,7 +3600,23 @@ MonoBehaviour:
   - {fileID: 114323926721152608}
   - {fileID: 114183154851041252}
   - {fileID: 114044760372052928}
-  VehiclePaths: []
+  VehiclePaths:
+  - {fileID: 114788768117399354}
+  - {fileID: 114080849371885886}
+  - {fileID: 114596433007867892}
+  - {fileID: 114160631776343942}
+  - {fileID: 114760958062469244}
+  - {fileID: 114979271548549442}
+  - {fileID: 114755065166676728}
+  - {fileID: 114037018731798456}
+  - {fileID: 114600044802949266}
+  - {fileID: 114995164151430078}
+  - {fileID: 114858940995565996}
+  - {fileID: 114308480800566332}
+  - {fileID: 114665392445159922}
+  - {fileID: 114293395582413740}
+  - {fileID: 114616543686164388}
+  - {fileID: 114496394425101694}
 --- !u!114 &114645211520791704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3678,7 +3678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _curve: {fileID: 114596433007867892}
   handleStyle: 1
-  _handle1: {x: 0.07116699, y: 0, z: 1.3391114}
+  _handle1: {x: 0.04725027, y: 0.0803144, z: 1.0286559}
   _handle2: {x: -0.1, y: 0, z: 0}
 --- !u!114 &114755065166676728
 MonoBehaviour:
