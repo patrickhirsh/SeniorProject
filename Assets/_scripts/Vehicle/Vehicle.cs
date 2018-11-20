@@ -270,26 +270,6 @@ namespace Level
 
         #endregion
 
-        /// <summary>
-        /// Slow the car down if another car is in front
-        /// </summary>
-        /// <param name="other">Other.</param>
-        private void OnTriggerStay(Collider other)
-        {
-            if (other.gameObject.CompareTag("Car"))
-            {
-                Speed = Mathf.Lerp(Speed, 0, .25f);
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.CompareTag("Car"))
-            {
-                Speed = BaseSpeed;
-            }
-        }
-
         public void SetCurrentRoute(Route route)
         {
             CurrentRoute = route;
