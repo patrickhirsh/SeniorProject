@@ -179,6 +179,253 @@ namespace Level
         }
 
 
+        /// <summary>
+        /// GetPath is used to obtain the best path between two Routes with the
+        /// requirement that the path must go through the intersections in "intersections"
+        /// (and ONLY these intersections). This method currently doesn't support a series
+        /// of intersections that loop in a circle.
+        /// </summary>
+        public bool GetPath(Route start, Queue<Intersection> intersections, Route end, out Queue<Connection> path)
+        {
+            #region INPUT PROCESSING/VALIDATION
+
+            path = new Queue<Connection>();
+
+            // The given routes must not be null
+            if ((start == null) || (end == null))
+            {
+                Debug.LogError("PathfindingManager.GetPath() was given a null connection");
+                return false;
+            }
+
+            // If the routes are equivalent, there is no path to give
+            // return true, but give an empty path
+            if (start == end) return true;
+
+            #endregion
+
+
+            #region SETUP
+
+            PathNodeComparer pathNodeComparer = new PathNodeComparer();                                 // used to compare the weights of PathNodes when sorting the frontier
+            Dictionary<Connection, PathNode> processed = new Dictionary<Connection, PathNode>();        // all processed nodes. used to check if a connection has been processed already
+            List<PathNode> frontier = new List<PathNode>();                                             // queue of nearby unprocessed nodes, sorted after each processing step. NOTE: stores "outbound" connections
+
+            // TODO: Don't consider all paths here... only the paths leaving the source Route?
+            // get all valid starting connections based on the "start" Route's connections and add to frontier
+            foreach (Connection connection in start.Connections)
+                if (connection.ConnectsTo != null)
+                    frontier.Add(new PathNode(connection, 0, null));
+
+
+            PathNode current = frontier[0];
+
+            #endregion
+
+
+            #region CORE ALGORITHM
+
+            bool lookForEnd = false;                                        // indicates we've gone through all intersections and are now looking for "end"
+            Intersection intersection = new Intersection();                 // the current intersection we're looking for (if we aren't looking for "end")
+            List<PathNode> destinationPathnodes = new List<PathNode>();     // stores a list of all connections we've tried to process (reached) within the current destination
+
+            while (true)
+            {
+                // are we looking for an intersection, or the end route?
+                if (intersections.Count > 0)
+                    intersection = intersections.Dequeue();
+                else
+                    lookForEnd = true;
+
+                // we may not want to process a connection for multiple reasons: it's in "intersection"/"end", it doesn't have a ConnectsTo, it doesn't have paths leaving it, etc..
+                bool processNode = true;
+
+                // reset list of all connections we've tried to process (reached) within the current destination
+                destinationPathnodes = new List<PathNode>();
+
+                // upon moving to the next intersection, we didn't find any new connections to explore
+                // a path does not exist through the given intersections. Return false
+                if (frontier.Count == 0)
+                {
+                    if (_debugMode) { Debug.LogError("PathfindingManager.GetPath() could not determine a path (unreachable)"); }
+                    return false;
+                }
+
+                // Begin exploring the frontier. When the frontier is empty, we've processed all reachable connections.
+                // These are the voyages of the Starship Enterprise...
+                while (frontier.Count > 0)
+                {
+                    // lowest weight PathNode in Frontier is next to be evaluated
+                    frontier.Sort(pathNodeComparer);
+                    current = frontier[0];
+                    frontier.Remove(current);
+                    processNode = true;
+
+
+                    // CHECK THE NODE WE'RE PROCESSING
+
+                    // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
+                    if (current.connection.ConnectsTo == null)
+                    {
+                        processNode = false;
+                        processed.Add(current.connection, current);
+                    }                       
+
+                    // search for the next "destination". if we find it, don't process it, but store it in "destinationPathnodes"
+                    if (!lookForEnd)
+                    {
+                        // we're looking for "intersection"
+                        if (current.connection.ConnectsTo.ParentRoute == intersection)
+                        {
+                            processNode = false;
+                            destinationPathnodes.Add(current);
+                            processed.Add(current.connection, current);
+                        }
+                    }
+
+                    else
+                    {
+                        // we're looking for "end"
+                        if (current.connection.ConnectsTo.ParentRoute == end)
+                        {
+                            processNode = false;
+                            destinationPathnodes.Add(current);
+                            processed.Add(current.connection, current);
+                        }
+                    }                   
+                    
+                    // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
+                    if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(Intersection)) && (current.connection.ConnectsTo.ParentRoute != end))
+                    {
+                        processNode = false;
+                        processed.Add(current.connection, current);
+                    }
+
+
+                    // BEGIN PROCESSING
+
+                    if (processNode)
+                    {
+                        // explore the (current connection => linked inbound connection)'s outbound connections.
+                        foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
+                        {
+                            // only observe connections we haven't yet processed
+                            if (!processed.ContainsKey(connectionPath.Connection))
+                            {
+                                PathNode discoveredNode;
+                                bool newNodeDiscovered = true;
+                                float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                                // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
+
+                                // check if this connection has already been discovered (is in the frontier)
+                                foreach (PathNode node in frontier)
+                                    if (node.connection == connectionPath.Connection)
+                                    {
+                                        // we've already discovered this node!
+                                        discoveredNode = node;
+                                        newNodeDiscovered = false;
+
+                                        // is this path better than its current path? If so, change its best path to this one. If not, move on
+                                        if (discoveredNode.distance > distance)
+                                        {
+                                            discoveredNode.distance = distance;
+                                            discoveredNode.prevConnection = current.connection;
+                                        }
+                                        break;
+                                    }
+
+                                // this connection has never been discovered before. Add it to the frontier!
+                                if (newNodeDiscovered)
+                                {
+                                    discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
+                                    frontier.Add(discoveredNode);
+                                }
+                            }
+                        }
+
+                        // processing for this connection is complete. Add to processed and continue
+                        processed.Add(current.connection, current);
+                    }
+                }
+
+
+                // TRANSITION TO NEXT DESTINATION
+
+                // was the destination == "end" && we found paths to it? if so, we're done!
+                if (lookForEnd && (destinationPathnodes.Count > 0))
+                    break;
+
+                // we couldn't find a path to the next destination
+                if (destinationPathnodes.Count == 0)
+                {
+                    if (_debugMode) { Debug.LogError("PathfindingManager.GetPath() could not determine a path (unreachable)"); }
+                    return false;
+                }
+
+                // evaluate the best paths to each reachableOutbound connection in intersection
+                else
+                {
+                    // store and update all reachableOutbound connections within the intersection here.
+                    Dictionary<Connection, PathNode> reachableOutbound = new Dictionary<Connection, PathNode>();
+
+                    // note that inbound is actually holding the outbound connection outside the target. Use ConnectsTo to find paths
+                    foreach (PathNode inbound in destinationPathnodes)
+                    {
+                        foreach (var pathsTo in inbound.connection.ConnectsTo.Paths)
+                        {
+                            // if we've already added a "path", see if this inbound gets there in a shorter path. If so, replace it with this one
+                            float distance = Vector3.Distance(inbound.connection.ConnectsTo.transform.position, pathsTo.Connection.transform.position) + inbound.distance;
+                            if (reachableOutbound.ContainsKey(pathsTo.Connection))
+                                if (reachableOutbound[pathsTo.Connection].distance > distance)
+                                {
+                                    reachableOutbound.Remove(pathsTo.Connection);
+                                    reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection.ConnectsTo));
+                                }
+
+                            // otherwise, this is the first inbound that reaches this outbound. Add the path
+                            else
+                                reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection));
+                        }
+                    }
+
+                    // add these new "starting points" to the frontier
+                    foreach (PathNode outboundConnection in reachableOutbound.Values)
+                        frontier.Add(outboundConnection);
+                }                                             
+            }
+
+            #endregion
+
+
+            #region PATH CONSTRUCTION
+
+            // sort the destinationPathnodes by best weight. This "best path" is the output
+            destinationPathnodes.Sort(pathNodeComparer);
+            current = destinationPathnodes[0];
+
+            // temporarily store the reversed path
+            List<Connection> reversePath = new List<Connection>();
+            reversePath.Add(current.connection);
+
+            // traverse backwards through the best path (using prevConnection) to construct the path
+            while (current.prevConnection != null)
+            {
+                reversePath.Add(current.prevConnection);
+                current = processed[current.prevConnection];
+            }
+
+            // add all final connections to the queue in the proper order
+            for (int i = reversePath.Count - 1; i >= 0; i--)
+                path.Enqueue(reversePath[i]);
+
+            return true;
+
+            #endregion
+        }
+
+
+        #region AMBIGUOUS PATHFINDING
+        /*
         public bool GetPath(Route start, Queue<Intersection> intersections, Route end, out Queue<Connection> path)
         {
             // get all valid starting connections based on the "start" Route's connections
@@ -212,7 +459,7 @@ namespace Level
                  * - design some kind of special case function for finding the last Route object (if it's an intersection, we can just do the same thing, maybe?
                  * 
                  * - if bestPaths is ever empty, there isn't a route to end (I think?)
-                 */
+                 
 
 
                 Dictionary<Connection, List<AmbiguousPath>> allPaths = new Dictionary<Connection, List<AmbiguousPath>>();
@@ -356,6 +603,9 @@ namespace Level
                     pathsToConnection.Value.RemoveAt(i);
             }
         }
+
+        */
+        #endregion
     }
 }
 

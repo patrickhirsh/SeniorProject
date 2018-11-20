@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Experimental.XR;
 using UnityEngine.XR.ARFoundation;
 
-public class ArInputManager : MonoBehaviour
+public class ARInputManager : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
