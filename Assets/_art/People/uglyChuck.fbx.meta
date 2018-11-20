@@ -1,17 +1,38 @@
 fileFormatVersion: 2
-guid: 4fae155a631572b46944e364959b3710
+guid: 60db22856118943429c992163a739de2
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: PrototypeLevelConcept_Cream
-    2100002: GreenLight
-    2100004: lambert1
-    2100006: White
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Curb
+    100000: arms
+    100002: flare1Handle
+    100004: head
+    100006: legs
+    100008: torso
+    100010: //RootNode
+    400000: arms
+    400002: flare1Handle
+    400004: head
+    400006: legs
+    400008: torso
+    400010: //RootNode
+    2100000: Red
+    2100002: Black
+    2100004: Yellow
+    2100006: Pink
+    2100008: GreenLight
+    2100010: Blue
+    2300000: arms
+    2300002: head
+    2300004: legs
+    2300006: torso
+    3300000: arms
+    3300002: head
+    3300004: legs
+    3300006: torso
+    4300000: torso
+    4300002: head
+    4300004: arms
+    4300006: legs
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -66,8 +87,8 @@ ModelImporter:
     previousCalculatedGlobalScale: 1
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
+    normalSmoothAngle: 30
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
   importAnimation: 1
