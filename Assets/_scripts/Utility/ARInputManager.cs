@@ -90,7 +90,10 @@ public class ARInputManager : MonoBehaviour
             {
                 RaycastHit hitInfo;
                 //If raycast hits an object
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(touch.position), out hitInfo))
+                var ray = Camera.ScreenPointToRay(touch.position);
+                Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
+
+                if (Physics.Raycast(ray, out hitInfo))
                 {
                     PlayerVehicleManager.HandleHit(hitInfo);
                 }
@@ -106,6 +109,7 @@ public class ARInputManager : MonoBehaviour
                 {
                     Pose hitPose = _sHits[0].pose;
                     EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z), new Vector3(ScaleFloat, ScaleFloat, ScaleFloat));
+                    //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
                     _placed = true;
                 }
             }
