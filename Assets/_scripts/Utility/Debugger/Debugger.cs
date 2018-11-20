@@ -27,7 +27,7 @@ namespace Utility
         }
         #endregion
 
-        public string ProfilePath = "Debugging/Debugging.asset";
-        public DebuggingProfile Profile => Resources.Load<DebuggingProfile>(ProfilePath) ?? ScriptableObject.CreateInstance<DebuggingProfile>();
+        public const string PROFILE_PATH = "Debugging/Debugging.asset";
+        public static DebuggingProfile Profile => Resources.Load<DebuggingProfile>(PROFILE_PATH) ?? ScriptableObject.CreateInstance<DebuggingProfile>();
     }
 }

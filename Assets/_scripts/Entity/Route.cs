@@ -35,6 +35,8 @@ namespace Level
             }
         }
 
+        public abstract bool Destinationable { get; }
+
         #region Unity Methods
 
         private void OnTriggerEnter(Collider other)
@@ -42,6 +44,7 @@ namespace Level
             var target = other.GetComponent<Vehicle>();
             if (target != null)
             {
+                target.SetCurrentRoute(this);
                 HandleVehicleEnter(target);
             }
         }

@@ -217,7 +217,6 @@ namespace Level
                 if (connection.ConnectsTo != null)
                     frontier.Add(new PathNode(connection, 0, null));
 
-
             PathNode current = frontier[0];
 
             #endregion
@@ -225,6 +224,8 @@ namespace Level
 
             #region CORE ALGORITHM
 
+
+            // TODO: Don't initalize monobehavior Intersection like this...
             bool lookForEnd = false;                                        // indicates we've gone through all intersections and are now looking for "end"
             Intersection intersection = new Intersection();                 // the current intersection we're looking for (if we aren't looking for "end")
             List<PathNode> destinationPathnodes = new List<PathNode>();     // stores a list of all connections we've tried to process (reached) within the current destination
@@ -269,37 +270,43 @@ namespace Level
                     {
                         processNode = false;
                         processed.Add(current.connection, current);
-                    }                       
-
-                    // search for the next "destination". if we find it, don't process it, but store it in "destinationPathnodes"
-                    if (!lookForEnd)
-                    {
-                        // we're looking for "intersection"
-                        if (current.connection.ConnectsTo.ParentRoute == intersection)
-                        {
-                            processNode = false;
-                            destinationPathnodes.Add(current);
-                            processed.Add(current.connection, current);
-                        }
                     }
 
                     else
                     {
-                        // we're looking for "end"
-                        if (current.connection.ConnectsTo.ParentRoute == end)
+                        // search for the next "destination". if we find it, don't process it, but store it in "destinationPathnodes"
+                        if (!lookForEnd)
+                        {
+                            // we're looking for "intersection"
+                            if (current.connection.ConnectsTo.ParentRoute == intersection)
+                            {
+                                processNode = false;
+                                destinationPathnodes.Add(current);
+                                processed.Add(current.connection, current);
+                            }
+                        }
+
+                        else
+                        {
+                            // we're looking for "end"
+                            if (current.connection.ConnectsTo.ParentRoute == end)
+                            {
+                                processNode = false;
+                                destinationPathnodes.Add(current);
+                                processed.Add(current.connection, current);
+                            }
+                        }
+
+                        // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
+                        if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(Intersection)) && (current.connection.ConnectsTo.ParentRoute != end) &&
+                            (current.connection.ConnectsTo.ParentRoute != intersection))
                         {
                             processNode = false;
-                            destinationPathnodes.Add(current);
                             processed.Add(current.connection, current);
                         }
-                    }                   
-                    
-                    // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
-                    if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(Intersection)) && (current.connection.ConnectsTo.ParentRoute != end))
-                    {
-                        processNode = false;
-                        processed.Add(current.connection, current);
                     }
+
+                    
 
 
                     // BEGIN PROCESSING
@@ -376,11 +383,13 @@ namespace Level
                             // if we've already added a "path", see if this inbound gets there in a shorter path. If so, replace it with this one
                             float distance = Vector3.Distance(inbound.connection.ConnectsTo.transform.position, pathsTo.Connection.transform.position) + inbound.distance;
                             if (reachableOutbound.ContainsKey(pathsTo.Connection))
+                            {
                                 if (reachableOutbound[pathsTo.Connection].distance > distance)
                                 {
                                     reachableOutbound.Remove(pathsTo.Connection);
                                     reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection.ConnectsTo));
                                 }
+                            }                                
 
                             // otherwise, this is the first inbound that reaches this outbound. Add the path
                             else
