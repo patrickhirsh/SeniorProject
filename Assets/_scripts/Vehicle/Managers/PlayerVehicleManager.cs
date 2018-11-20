@@ -52,7 +52,7 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + Vector3.up, Quaternion.identity);
+                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + (Vector3.up * GameManager.Instance.Scale), Quaternion.identity);
                 reticle.transform.localScale *= GameManager.Instance.Scale;
                 _destinationReticles.Add(reticle);
             }
