@@ -32,14 +32,20 @@ namespace Level
     public class VehicleTask
     {
         public TaskType Type { get; private set; }                  // task type determines vehicle control precedence
-        public Queue<Connection> Path;                              // pathing directive for this task
+        public Queue<Intersection> Path;                              // pathing directive for this task
         public System.Action<TaskType, Vehicle, bool> Callback;     // called upon task completiton (true) or task inturruption (false)
+        public Route startRoute;
+        public Route endRoute;
+        
 
-        public VehicleTask(TaskType type, Queue<Connection> path, System.Action<TaskType, Vehicle, bool> callback)
+        public VehicleTask(TaskType type, Route StartRouteInput, Queue<Intersection> path, Route EndRouteInput, System.Action<TaskType, Vehicle, bool> callback)
         {
             Type = type;
             Path = path;
             Callback = callback;
+            startRoute = StartRouteInput;
+            endRoute = EndRouteInput;   
+            
         }
     }
 
@@ -67,6 +73,7 @@ namespace Level
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;       // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
 
+        private Connection endPathConnection;
 
         protected void Start()
         {
@@ -118,7 +125,7 @@ namespace Level
                 // give control to the new task
                 StopTraveling();
                 _currentTask = task;
-                StartTraveling(task.Path);
+                StartTraveling(task.startRoute, task.Path, task.endRoute);
                 return true;
             }
 
@@ -154,10 +161,13 @@ namespace Level
         /// Moves this vehicle along the given path of connections.
         /// traversing it by starting the TravelPath() coroutine.
         /// </summary>
-        private void StartTraveling(Queue<Connection> connections)
+        private void StartTraveling(Route start, Queue<Intersection> intersections, Route end)
         {
-            Debug.Assert(connections.Any(), "No connections to path");
-            var vehicleCurve = GeneratePath(connections);
+            Debug.Assert(intersections.Any(), "No connections to path");
+            Queue<Connection> connectQ = new Queue<Connection>();
+            PathfindingManager pathfindingManager = new PathfindingManager();
+            pathfindingManager.GetPath(start, intersections, end, out connectQ);
+            var vehicleCurve = GeneratePath(connectQ);
             _animationTween = StartCoroutine(TravelPath(vehicleCurve));
         }
 
@@ -169,12 +179,12 @@ namespace Level
         {
             BezierCurve vehicleCurve = gameObject.AddComponent<BezierCurve>();
             Connection current = CurrentConnection;
-            
+            Connection target = new Connection();
             // traverse each path in _connectionsPath
             while (connections.Count > 0)
             {
                 BezierCurve curve;
-                Connection target = connections.Dequeue();
+                 target = connections.Dequeue();
 
                 // get path between this connection and the next connection
                 if (current.GetPathToConnection(target, out curve))
@@ -184,8 +194,9 @@ namespace Level
                 // no path between two adjacent connections in the queue
                 else if (Debugger.Instance.Profile.DebugVehicle) { Debug.LogWarning($"Could not find path"); }
 
-                current = target.ConnectsTo;
+                current = target;
             }
+            endPathConnection = target;
             return vehicleCurve;
         }
 
@@ -207,9 +218,10 @@ namespace Level
                     transform.LookAt(vehicleCurve.GetPointAt(position + LookAhead));
                     Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(position + LookAhead), Color.cyan, .5f);
 
+                
                 yield return null;
             }
-
+            CurrentConnection = endPathConnection;
             // Remove the curve
             Destroy(vehicleCurve);
         }

@@ -101,9 +101,18 @@ namespace Level
             return connections.FirstOrDefault(CanConnect);
         }
 
-        public bool CanPathToConnection(Connection connection)
+        public bool CanPathToConnection(Connection targetConnection, out Connection foundConnection)
         {
-            return ConnectionPaths.ContainsKey(connection);
+            foreach(Connection x in ConnectionPaths.Keys)
+            {
+                if (x.ConnectsTo == targetConnection)
+                {
+                    foundConnection = x;
+                    return true;
+                }
+            }
+            foundConnection = null;
+            return false;
         }
 
         /// <summary>
@@ -118,11 +127,13 @@ namespace Level
         {
             path = null;
 
+            Connection correspondingConnection;
+
             // Check if we have a path to the connection
-            if (!CanPathToConnection(connection)) return false;
+            if (!CanPathToConnection(connection, out correspondingConnection)) return false;
 
             // Return the path to the connection
-            path = ConnectionPaths[connection];
+            path = ConnectionPaths[correspondingConnection];
             return true;
         }
 
