@@ -82,14 +82,24 @@ public class PlayerVehicleManager : VehicleManager
             Debug.Assert(_end != null, "End is not defined.");
 
             Queue<Connection> connections;
-            PathfindingManager.Instance.GetPath(_start, _intersections, _end, out connections);
-            _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
+            if (PathfindingManager.Instance.GetPath(_start, _intersections, _end, out connections))
+            {
+                _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
+            }
+            else
+            {
+                Debug.LogWarning("Could not find a path for player input");
+            }
 
             Deselect();
         }
         else if (_destinationables != null && _destinationables.Contains(intersection))
         {
             _intersections.Enqueue(intersection);
+
+            _destinationables = new List<Route>();
+            HashSet<Route> frontier = new HashSet<Route>();
+            GetNextDestinationables(intersection, _destinationables, frontier);
         }
     }
 
