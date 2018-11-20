@@ -127,7 +127,7 @@ public class PlayerVehicleManager : VehicleManager
             Debug.Assert(_end != null, "End is not defined.");
 
             Queue<Connection> connections;
-            Queue<Intersection> intersections = new Queue<Intersection>(_intersections);
+            var intersections = new Queue<Intersection>(_intersections.Reverse());
             if (PathfindingManager.Instance.GetPath(_start, intersections, _end, out connections))
             {
                 _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
