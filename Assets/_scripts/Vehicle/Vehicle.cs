@@ -166,8 +166,18 @@ namespace Level
 
             // begin traveling the new path
             var firstConnection = connections.Peek();
+            _animationTween = StartCoroutine(Travel(connections, firstConnection));
+        }
+
+        private IEnumerator Travel(Queue<Connection> connections, Connection firstConnection)
+        {
+            // if the last call to StartTraveling was inturrupted, recover the vehicle
+            if (CurrentConnection == null)
+                yield return resolveLostVehicle(firstConnection);
+
             var vehicleCurve = GeneratePath(connections);
-            _animationTween = StartCoroutine(TravelPath(vehicleCurve, firstConnection));
+
+            yield return StartCoroutine(TravelPath(vehicleCurve, firstConnection));
         }
 
 
@@ -197,6 +207,9 @@ namespace Level
                 BezierCurve curve;
                 Connection target = connections.Dequeue();
 
+                Debug.Assert(current != null, "Current is null");
+                Debug.Assert(target != null, "Target is null");
+
                 // get path between this connection and the next connection
                 if (current.GetPathToConnection(target, out curve))
                     foreach (var point in curve.GetAnchorPoints())
@@ -218,9 +231,6 @@ namespace Level
         /// </summary>
         private IEnumerator TravelPath(BezierCurve vehicleCurve, Connection startConnection)
         {
-            // if the last call to StartTraveling was inturrupted, recover the vehicle
-            if (CurrentConnection == null)
-                yield return resolveLostVehicle(startConnection);
 
             // traverse the path
             float position = 0.0f;

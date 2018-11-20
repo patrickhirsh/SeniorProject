@@ -9,7 +9,7 @@ public class PlayerVehicleManager : VehicleManager
     private Vehicle _selectedVehicle;
 
     private Route _start;
-    private Queue<Intersection> _intersections;
+    private Stack<Intersection> _intersections;
     private Route _end;
 
     private Route _previousSelectedRoute;
@@ -105,6 +105,7 @@ public class PlayerVehicleManager : VehicleManager
         _previousSelectedRoute = null;
         _start = null;
         _end = null;
+        _destinationables = null;
     }
 
     //process a tap on a pickup location
@@ -119,13 +120,14 @@ public class PlayerVehicleManager : VehicleManager
         if (_previousSelectedRoute == intersection)
         {
             // We assume that the intersection is the last in the queue if we double click it
-            _end = _intersections.Dequeue();
+            _end = _intersections.Pop();
 
             Debug.Assert(_start != null, "Start is not defined.");
             Debug.Assert(_end != null, "End is not defined.");
 
             Queue<Connection> connections;
-            if (PathfindingManager.Instance.GetPath(_start, _intersections, _end, out connections))
+            Queue<Intersection> intersections = new Queue<Intersection>(_intersections);
+            if (PathfindingManager.Instance.GetPath(_start, intersections, _end, out connections))
             {
                 _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
             }
@@ -138,7 +140,7 @@ public class PlayerVehicleManager : VehicleManager
         }
         else if (_destinationables != null && _destinationables.Contains(intersection))
         {
-            _intersections.Enqueue(intersection);
+            _intersections.Push(intersection);
             DestinationableSearch(intersection);
         }
     }
@@ -148,7 +150,7 @@ public class PlayerVehicleManager : VehicleManager
         //Pick a new vehicle to control
         _selectedVehicle = vehicle;
         _start = _selectedVehicle.CurrentRoute;
-        _intersections = new Queue<Intersection>();
+        _intersections = new Stack<Intersection>();
 
         DestinationableSearch(_start);
     }
