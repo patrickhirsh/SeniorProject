@@ -10,7 +10,7 @@ public class Scaler : MonoBehaviour
 
     /* Next values must be the same min and max values of
      * the Slider to change the scale */
-    private float m_maxScaleValue = 100f;
+    private float m_maxScaleValue = 150f;
     private float m_minScaleValue = 0.0f;
     private float m_defaultScaleValue = 5.0f;
 
