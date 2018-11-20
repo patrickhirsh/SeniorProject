@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utility;
-using Grid = Utility.Grid;
 
 namespace Level
 {
@@ -38,6 +36,33 @@ namespace Level
         public abstract bool Destinationable { get; }
 
         #region Unity Methods
+
+        protected virtual void Start()
+        {
+            foreach (var curve in VehiclePaths)
+            {
+                if (curve.GetAnchorPoints().Any())
+                {
+                    var child = new GameObject("Line");
+                    child.transform.SetParent(transform);
+                    var lineRenderer = child.AddComponent<LineRenderer>();
+                    int lengthOfLineRenderer = 10;
+                    lineRenderer.material = GameManager.Instance.TempMaterial;
+                    lineRenderer.positionCount = lengthOfLineRenderer;
+                    lineRenderer.widthMultiplier = .05f;
+                    lineRenderer.numCapVertices = 2;
+                    lineRenderer.numCornerVertices = 2;
+                    var points = new Vector3[lengthOfLineRenderer];
+                    for (int i = 0; i < lengthOfLineRenderer; i++)
+                    {
+                        points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
+//                        points[i] += Vector3.up * .2f;
+                    }
+
+                    lineRenderer.SetPositions(points);
+                }
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {

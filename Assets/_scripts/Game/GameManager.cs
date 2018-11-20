@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     #region Singleton
     private static GameManager _instance;
+    public Material TempMaterial;
     public static GameManager Instance => _instance ?? (_instance = Create());
 
     private static GameManager Create()

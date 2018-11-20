@@ -914,7 +914,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1865258779714218}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalPosition: {x: 15, y: 0, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4808936232278160}
@@ -1726,7 +1726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114665995717551274}
     Path: {fileID: 114523941485367230}
@@ -1734,6 +1734,7 @@ MonoBehaviour:
     Path: {fileID: 114383777459889466}
   - Connection: {fileID: 114758212322699572}
     Path: {fileID: 114818845209989474}
+  PickupLocations: []
 --- !u!114 &114075116607162170
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1994,7 +1995,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114031690178358270}
     Path: {fileID: 114737161891774030}
@@ -2002,6 +2003,7 @@ MonoBehaviour:
     Path: {fileID: 114650867377776196}
   - Connection: {fileID: 114665995717551274}
     Path: {fileID: 114831510531224074}
+  PickupLocations: []
 --- !u!114 &114420705067618244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2225,7 +2227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114758212322699572}
     Path: {fileID: 114773376662079502}
@@ -2233,6 +2235,7 @@ MonoBehaviour:
     Path: {fileID: 114865143814329432}
   - Connection: {fileID: 114413231985095952}
     Path: {fileID: 114304482419477366}
+  PickupLocations: []
 --- !u!114 &114673283039377836
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2353,7 +2356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentEntity: {fileID: 0}
+  ParentRoute: {fileID: 0}
   Paths:
   - Connection: {fileID: 114413231985095952}
     Path: {fileID: 114586591541844696}
@@ -2361,6 +2364,7 @@ MonoBehaviour:
     Path: {fileID: 114333028913671494}
   - Connection: {fileID: 114031690178358270}
     Path: {fileID: 114774146459329344}
+  PickupLocations: []
 --- !u!114 &114773376662079502
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2538,7 +2542,7 @@ MonoBehaviour:
   - {fileID: 114413231985095952}
   - {fileID: 114031690178358270}
   - {fileID: 114758212322699572}
-  Paths:
+  VehiclePaths:
   - {fileID: 114773376662079502}
   - {fileID: 114865143814329432}
   - {fileID: 114304482419477366}
