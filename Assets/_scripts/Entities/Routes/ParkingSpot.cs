@@ -9,6 +9,8 @@ namespace Level
     {
         public bool IsOccupied;
 
+        public override bool Destinationable => false;
+
         public override void HandleVehicleEnter(Vehicle vehicle)
         {
             IsOccupied = true;

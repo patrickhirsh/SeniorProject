@@ -6,6 +6,7 @@ namespace Level
 {
     public class SpawnPointEntity : Route
     {
+        public override bool Destinationable => false;
 
         /// <summary>
         /// A SpawnDirective represents a pre-determined vehicle spawn. SpawnDirectives
@@ -111,6 +112,7 @@ namespace Level
             _spawnQueue.RemoveAt(0);
             return next;
         }
+
 
 
         public override void HandleVehicleEnter(Vehicle vehicle)

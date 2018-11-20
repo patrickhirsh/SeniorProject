@@ -59,7 +59,7 @@ namespace Level
     /// </summary>
     public class Vehicle : MonoBehaviour
     {
-        public Connection CurrentConnection;    // the connection this vehicle is currently on
+        public Route CurrentRoute;    // the connection this vehicle is currently on
         public float LookAhead = .2f;           // used to create more natural turn animations
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
@@ -74,23 +74,11 @@ namespace Level
             _currentTask = null;
             _animationTween = null;
 
-            if (Debugger.Instance.Profile.DebugVehicle)
+            if (Debugger.Profile.DebugVehicle)
             {
                 Debug.Log("YES");
             }
         }
-
-
-        /// <summary>
-        /// Should be called immediately after instantiating a new vehicle. This method need not
-        /// be called for vehicles placed in the editor. Simply avoids expensive auto-generation
-        /// of starting data by assigning explicit known values from the object that created this vehicle
-        /// </summary>
-        public void Initialize(Connection currentConection)
-        {
-            CurrentConnection = currentConection;
-        }
-
 
         /// <summary>
         /// tries to assign a new task to the current vehicle.
@@ -101,13 +89,6 @@ namespace Level
         /// <returns></returns>
         public bool AssignTask(VehicleTask task)
         {
-            // if a current connection wasn't assigned to this vehicle, find the nearest connection and assign it
-            // this is somewhat expensive. Vehicles should have their starting connections assinged through Initialize() on instantiation
-            if (CurrentConnection == null)
-                CurrentConnection = EntityManager.Instance.Connections.Where(connection => connection.Paths.Any())
-                    .OrderBy(connection => Vector3.Distance(transform.position, connection.transform.position))
-                    .FirstOrDefault();
-
             // check if the given task takes higher (or equal) precedence to the current task
             if ((_currentTask == null) || ((int)task.Type <= (int)_currentTask.Type))
             {
@@ -167,8 +148,10 @@ namespace Level
         /// <returns>A BezierCurve component</returns>
         private BezierCurve GeneratePath(Queue<Connection> connections)
         {
+            Debug.Assert(connections.Any(), "Can't build a path with no connections");
+
             BezierCurve vehicleCurve = gameObject.AddComponent<BezierCurve>();
-            Connection current = CurrentConnection;
+            Connection current = connections.First();
             
             // traverse each path in _connectionsPath
             while (connections.Count > 0)
@@ -182,7 +165,7 @@ namespace Level
                         vehicleCurve.AddPoint(point);
 
                 // no path between two adjacent connections in the queue
-                else if (Debugger.Instance.Profile.DebugVehicle) { Debug.LogWarning($"Could not find path"); }
+                else if (Debugger.Profile.DebugVehicle) { Debug.LogWarning($"Could not find path"); }
 
                 current = target.ConnectsTo;
             }
@@ -234,6 +217,11 @@ namespace Level
             {
                 Speed = BaseSpeed;
             }
+        }
+
+        public void SetCurrentRoute(Route route)
+        {
+            CurrentRoute = route;
         }
     }
 }

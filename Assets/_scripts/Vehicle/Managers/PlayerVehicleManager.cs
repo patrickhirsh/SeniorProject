@@ -8,10 +8,13 @@ using Connection = Level.Connection;
 public class PlayerVehicleManager : VehicleManager
 {
     private Vehicle _selectedVehicle;
-    private Connection[] _nextValidConnections;
-    private Intersection _currentIntersection;
-    private Queue<Intersection> _finalPath;
-    private Dictionary<Route, IList<Connection>> _validPaths;
+
+    private Route _start;
+    private Queue<Intersection> _intersections;
+    private Route _end;
+
+    private Route _previousSelectedRoute;
+    private List<Route> _destinationables;
 
     private bool VehicleSelected => _selectedVehicle != null;
 
@@ -22,7 +25,6 @@ public class PlayerVehicleManager : VehicleManager
 
     internal void HandleHit(RaycastHit hitInfo)
     {
-        Debug.Log("HIT", hitInfo.transform);
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var intersection = hitInfo.transform.GetComponent<Intersection>();
         var pickupLocation = hitInfo.transform.GetComponent<PickupLocation>();
@@ -40,6 +42,12 @@ public class PlayerVehicleManager : VehicleManager
         {
             PickupSelection(pickupLocation);
         }
+
+        var route = hitInfo.transform.GetComponent<Route>();
+        if (route != null)
+        {
+            _previousSelectedRoute = route;
+        }
     }
 
     public void HandleNotHit()
@@ -51,8 +59,9 @@ public class PlayerVehicleManager : VehicleManager
     {
         Debug.Log("DESELECT");
         _selectedVehicle = null;
-        _finalPath?.Clear();
-        _currentIntersection = null;
+        _previousSelectedRoute = null;
+        _start = null;
+        _end = null;
     }
 
     //process a tap on a pickup location
@@ -64,136 +73,52 @@ public class PlayerVehicleManager : VehicleManager
     //process a tap on an intersection
     private void IntersectionSelection(Intersection intersection)
     {
-        if (_currentIntersection != null)
-            Debug.Log("Current intersection: " + _currentIntersection.name);
-        Debug.Log($"{intersection} selected", intersection);
-
-        if (_currentIntersection == intersection)
+        if (_previousSelectedRoute == intersection)
         {
-            Debug.Log($"{_finalPath.Count}" + "  Intersections in final path");
-            Queue<Connection> path = new Queue<Connection>();
-            PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection.ParentRoute, _finalPath, intersection.Connections[0].ParentRoute, out path);
-            _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, path, VehicleTaskCallback));
+            // We assume that the intersection is the last in the queue if we double click it
+            _end = _intersections.Dequeue();
+
+            Debug.Assert(_start != null, "Start is not defined.");
+            Debug.Assert(_end != null, "End is not defined.");
+
+            Queue<Connection> connections;
+            PathfindingManager.Instance.GetPath(_start, _intersections, _end, out connections);
+            _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
+
             Deselect();
         }
-        else if (_validPaths != null && _validPaths.ContainsKey(intersection))
+        else if (_destinationables != null && _destinationables.Contains(intersection))
         {
-            //Add the task of navigating to this intersection to the que of things to do
-
-            Debug.Log("Added to final path " + intersection.Connections[0].ParentRoute.name);
-
-            if (_currentIntersection != null)
-                _finalPath.Enqueue(_currentIntersection);
-
-            //Debug.Log("FINAL Q LAST: " + _finalPath.Last().name);
-
-            GetNextValidIntersections(intersection);
-
-            _currentIntersection = intersection;
+            _intersections.Enqueue(intersection);
         }
-
-
     }
-    //process a tap on a car
+
     private void CarSelection(Vehicle vehicle)
     {
-        Debug.Log("VEHICLE SELECTED");
         //Pick a new vehicle to control
         _selectedVehicle = vehicle;
-        _finalPath = new Queue<Intersection>();
-        _currentIntersection = null;
-        GetNextValidIntersectionsBegin(vehicle.CurrentConnection);
+        _start = _selectedVehicle.CurrentRoute;
+        _intersections = new Queue<Intersection>();
+
+        _destinationables = new List<Route>();
+        HashSet<Route> frontier = new HashSet<Route>();
+        GetNextDestinationables(_start, _destinationables, frontier);
     }
 
-    //This function gets all the valid intersections to navigate to from the first connection
-    private void GetNextValidIntersectionsBegin(Connection currentConnection)
+    private void GetNextDestinationables(Route start, IList<Route> destinations, HashSet<Route> frontier)
     {
-        //Rest valid paths
-        _validPaths = new Dictionary<Route, IList<Connection>>();
-        //fore each connection coming out of the current route
-        //for each connection path in that route
-        foreach (var nextConnection in currentConnection.Paths.Select(path => path.Connection))
+        foreach (var route in start.NeighborRoutes)
         {
-            //New list of connectiosn
-            var connectionsList = new List<Connection>();
-            //Follow the path from the starting connection in the route to the 
-            var current = nextConnection.ConnectsTo;
-
-            while (current != null && current.ParentRoute.GetType() != typeof(Intersection))
+            if (frontier.Contains(route)) return;
+            frontier.Add(route);
+            if (route.Destinationable)
             {
-                connectionsList.Add(current);
-                var next = current.Paths.First().Connection;
-                connectionsList.Add(next);
-                current = next.ConnectsTo;
-                Debug.Assert(current != null, "Current is null!");
-
+                destinations.Add(route);
             }
-
-            if (current != null)
+            else
             {
-                //connections.Add(current);
-
-                var route = current.ParentRoute;
-                Debug.Assert(route != null, "Route cannot be null");
-                if (!_validPaths.ContainsKey(route))
-                {
-                    Debug.Log($"{route} Added to Valid Paths", route);
-                    _validPaths.Add(route, connectionsList);
-                }
+                GetNextDestinationables(route, destinations, frontier);
             }
         }
-    }
-
-
-
-    //This gets all the valid intersections to navigate to 
-    private void GetNextValidIntersections(Intersection currentIntersection)
-    {
-        //Rest valid paths
-        _validPaths = new Dictionary<Route, IList<Connection>>();
-        //fore each connection coming out of the current Intersection
-        foreach (Connection connection in currentIntersection.Connections)
-        {
-            //for each connection path in that route
-            foreach (var nextConnection in connection.Paths.Select(path => path.Connection))
-            {
-                //New list of connectiosn
-                var connectionsList = new List<Connection>();
-                //Follow the path from the starting connection in the route to the 
-                var current = nextConnection.ConnectsTo;
-
-                while (current != null && current.ParentRoute.GetType() != typeof(Intersection) && current.ParentRoute.GetType() != typeof(ParkingSpot))
-                {
-                    connectionsList.Add(current);
-                    var next = current.Paths.First().Connection;
-                    connectionsList.Add(next);
-                    current = next.ConnectsTo;
-                    //Debug.Assert(current != null, "Current is null!");
-
-                }
-
-                if (current != null && current.ParentRoute != currentIntersection && current.ParentRoute.GetType() != typeof(ParkingSpot))
-                {
-                    //connections.Add(current);
-
-                    var route = current.ParentRoute;
-                    Debug.Assert(route != null, "Route cannot be null");
-                    if (!_validPaths.ContainsKey(route))
-                    {
-                        Debug.Log($"{route} Added to list of valid connections", route);
-                        _validPaths.Add(route, connectionsList);
-                    }
-                }
-            }
-        }
-    }
-
-    private static Connection GetClosestConnection(Vehicle vehicle)
-    {
-        Connection returnConnection = new Connection();
-
-        //In here we somehow need to find the closest distance wise connection, or the last passed over one. 
-
-        return returnConnection;
     }
 }
