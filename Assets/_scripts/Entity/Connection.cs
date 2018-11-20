@@ -8,7 +8,7 @@ namespace Level
     [ExecuteInEditMode]
     public class Connection : MonoBehaviour
     {
-        public const float CONNECTION_DISTANCE = .5f;
+        public const float CONNECTION_DISTANCE = .025f;
 
         [Serializable]
         public class ConnectionPath

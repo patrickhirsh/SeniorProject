@@ -75,10 +75,10 @@ namespace Level
             _currentTask = null;
             _animationTween = null;
 
-            if (Debugger.Profile.DebugVehicle)
-            {
-                Debug.Log("YES");
-            }
+            Speed *= GameManager.Instance.Scale;
+            LookAhead *= GameManager.Instance.Scale;
+            RecoverySpeed *= GameManager.Instance.Scale;
+            BaseSpeed *= GameManager.Instance.Scale;
         }
 
         /// <summary>

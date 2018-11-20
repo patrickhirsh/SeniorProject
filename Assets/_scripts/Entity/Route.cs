@@ -46,12 +46,13 @@ namespace Level
                     var child = new GameObject("Line");
                     child.transform.SetParent(transform);
                     var lineRenderer = child.AddComponent<LineRenderer>();
-                    int lengthOfLineRenderer = 10;
+                    int lengthOfLineRenderer = 20;
                     lineRenderer.material = GameManager.Instance.TempMaterial;
                     lineRenderer.positionCount = lengthOfLineRenderer;
-                    lineRenderer.widthMultiplier = .05f;
+                    lineRenderer.widthMultiplier = .05f * GameManager.Instance.Scale;
                     lineRenderer.numCapVertices = 2;
                     lineRenderer.numCornerVertices = 2;
+                    lineRenderer.useWorldSpace = false;
                     var points = new Vector3[lengthOfLineRenderer];
                     for (int i = 0; i < lengthOfLineRenderer; i++)
                     {
