@@ -88,19 +88,23 @@ public class ARInputManager : MonoBehaviour
             //If the level has been placed
             if (_placed)
             {
-                RaycastHit hitInfo;
-                //If raycast hits an object
-                var ray = Camera.ScreenPointToRay(touch.position);
-                Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
+                if (Input.GetTouch(0).phase == TouchPhase.Began)
+                {
+                    RaycastHit hitInfo;
+                    //If raycast hits an object
+                    var ray = Camera.ScreenPointToRay(touch.position);
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
 
-                if (Physics.Raycast(ray, out hitInfo))
-                {
-                    PlayerVehicleManager.HandleHit(hitInfo);
+                    if (Physics.Raycast(ray, out hitInfo))
+                    {
+                        PlayerVehicleManager.HandleHit(hitInfo);
+                    }
+                    else
+                    {
+                        PlayerVehicleManager.HandleNotHit();
+                    }
                 }
-                else
-                {
-                    PlayerVehicleManager.HandleNotHit();
-                }
+
             }
             //If the level hasn't been placed
             else
