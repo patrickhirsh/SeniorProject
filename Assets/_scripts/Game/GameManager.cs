@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 /// <summary>
 /// Manages the state of the game like transition between levels or menus
@@ -11,6 +9,9 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public Material TempMaterial;
     public static GameManager Instance => _instance ?? (_instance = Create());
+
+    [Range(0.001f, 1f)]
+    public float Scale = 1f;
 
     private static GameManager Create()
     {
@@ -28,4 +29,5 @@ public class GameManager : MonoBehaviour
     {
         LevelManager.Instance.Initialize();
     }
+
 }

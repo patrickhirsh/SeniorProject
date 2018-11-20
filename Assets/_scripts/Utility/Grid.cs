@@ -4,13 +4,13 @@ namespace Utility
 {
     public static class Grid
     {
-        public const float CELL_SIZE_X = 1.5f;
-        public const float CELL_SIZE_Y = 1;
-        public const float CELL_SIZE_Z = 1.5f;
+        public static float CELL_SIZE_X = 1.5f * GameManager.Instance.Scale;
+        public static float CELL_SIZE_Y = 1 * GameManager.Instance.Scale;
+        public static float CELL_SIZE_Z = 1.5f * GameManager.Instance.Scale;
 
-        public const float CELL_HALF_X = CELL_SIZE_X / 2f;
-        public const float CELL_HALF_Y = CELL_SIZE_Y / 2f;
-        public const float CELL_HALF_Z = CELL_SIZE_Z / 2f;
+        public static float CELL_HALF_X = CELL_SIZE_X / 2f;
+        public static float CELL_HALF_Y = CELL_SIZE_Y / 2f;
+        public static float CELL_HALF_Z = CELL_SIZE_Z / 2f;
 
         public static CellIndex CellSize => new CellIndex(CELL_SIZE_X, CELL_SIZE_Y, CELL_SIZE_Z);
 
