@@ -49,7 +49,11 @@ namespace Level
                     int lengthOfLineRenderer = 20;
                     lineRenderer.material = GameManager.Instance.TempMaterial;
                     lineRenderer.positionCount = lengthOfLineRenderer;
-                    lineRenderer.widthMultiplier = .15f * GameManager.Instance.Scale;
+                    lineRenderer.widthMultiplier = .06f;
+//                    GameManager.Instance.OnScaleChangeEvent.AddListener(val =>
+//                    {
+//                        lineRenderer.widthMultiplier = .06f * val;
+//                    });
                     lineRenderer.numCapVertices = 2;
                     lineRenderer.numCornerVertices = 2;
                     lineRenderer.useWorldSpace = false;

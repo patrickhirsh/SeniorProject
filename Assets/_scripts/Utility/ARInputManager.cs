@@ -14,7 +14,6 @@ public class ARInputManager : MonoBehaviour
     private bool _placed;
     private bool _vehicleSelected;
     public float AbovePlane;
-    public float ScaleFloat;
 
     /// <summary>
     /// The prefab to instantiate on touch.
@@ -71,7 +70,8 @@ public class ARInputManager : MonoBehaviour
                 if (SessionOrigin.Raycast(Input.mousePosition, _sHits, TrackableType.PlaneWithinPolygon))
                 {
                     Pose hitPose = _sHits[0].pose;
-                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z), new Vector3(ScaleFloat, ScaleFloat, ScaleFloat));
+                    Debug.Log($"Placing Level at ${hitPose.position}");
+                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z));
                     //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
                     _placed = true;
                 }
@@ -112,7 +112,7 @@ public class ARInputManager : MonoBehaviour
                 if (SessionOrigin.Raycast(touch.position, _sHits, TrackableType.PlaneWithinPolygon))
                 {
                     Pose hitPose = _sHits[0].pose;
-                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z), new Vector3(ScaleFloat, ScaleFloat, ScaleFloat));
+                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z));
                     //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
                     _placed = true;
                 }

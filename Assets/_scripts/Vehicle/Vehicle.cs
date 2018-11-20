@@ -74,11 +74,6 @@ namespace Level
             // on startup, vehicle is in a "waiting for tasks" state
             _currentTask = null;
             _animationTween = null;
-
-            Speed *= GameManager.Instance.Scale;
-            LookAhead *= GameManager.Instance.Scale;
-            RecoverySpeed *= GameManager.Instance.Scale;
-            BaseSpeed *= GameManager.Instance.Scale;
         }
 
         /// <summary>

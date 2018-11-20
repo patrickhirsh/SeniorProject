@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Manages the state of the game like transition between levels or menus
@@ -10,8 +12,16 @@ public class GameManager : MonoBehaviour
     public Material TempMaterial;
     public static GameManager Instance => _instance ?? (_instance = Create());
 
-    [Range(0.001f, 1f)]
-    public float Scale = 1f;
+    public float Scale
+    {
+        get { return Application.isPlaying ? _scale : _scale = 1f; }
+        private set { _scale = value; }
+    }
+
+    [Serializable]
+    public class ScaleEvent : UnityEvent<float> { }
+    public ScaleEvent OnScaleChangeEvent = new ScaleEvent();
+    private float _scale;
 
     private static GameManager Create()
     {
@@ -30,4 +40,9 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.Initialize();
     }
 
+    public void SetScale(float scaleValue)
+    {
+        Scale = scaleValue;
+        OnScaleChangeEvent?.Invoke(scaleValue);
+    }
 }

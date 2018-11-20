@@ -53,7 +53,8 @@ public class PlayerVehicleManager : VehicleManager
             foreach (var destinationable in _destinationables)
             {
                 var reticle = Instantiate(DestinationReticle, destinationable.transform.position + (Vector3.up * GameManager.Instance.Scale), Quaternion.identity);
-                reticle.transform.localScale *= GameManager.Instance.Scale;
+//                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
+//                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
                 _destinationReticles.Add(reticle);
             }
         }
@@ -153,7 +154,7 @@ public class PlayerVehicleManager : VehicleManager
         _selectedVehicle = vehicle;
         _start = _selectedVehicle.CurrentRoute;
         _intersections = new Stack<Intersection>();
-        
+
         _selectedVehicle.HaltCurrentTask();
         DestinationableSearch(_start);
     }
@@ -174,7 +175,7 @@ public class PlayerVehicleManager : VehicleManager
             if (frontier.Contains(route) || route == start) continue;
             frontier.Add(route);
             if (route.Destinationable)
-            {   
+            {
                 if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
                 destinations.Add(route);
             }

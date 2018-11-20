@@ -117,9 +117,9 @@ public class EntityManager : MonoBehaviour
         AddEntity(entity);
     }
 
-    public void SpawnLevel(Vector3 pos, Vector3 scale)
+    public void SpawnLevel(Vector3 pos)
     {
-        transform.position = Grid.GetCellIndex(pos).GetPosition();
+        transform.position = pos;
 //        var spawnedLevel = Instantiate(LevelPrefab, pos, Quaternion.identity, transform);
 //        spawnedLevel.transform.localScale = scale;
 //        Initialize();
