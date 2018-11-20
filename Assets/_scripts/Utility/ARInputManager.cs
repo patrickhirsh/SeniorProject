@@ -15,15 +15,7 @@ public class ARInputManager : MonoBehaviour
     private bool _vehicleSelected;
     public float AbovePlane;
 
-    /// <summary>
-    /// The prefab to instantiate on touch.
-    /// </summary>
-    public GameObject PlacedPrefab;
-
-    /// <summary>
-    /// The object instantiated as a result of a successful raycast intersection with a plane.
-    /// </summary>
-    public GameObject SpawnedObject { get; private set; }
+    public GameObject Level;
 
     public ARSessionOrigin SessionOrigin;
 
@@ -70,8 +62,9 @@ public class ARInputManager : MonoBehaviour
                 if (SessionOrigin.Raycast(Input.mousePosition, _sHits, TrackableType.PlaneWithinPolygon))
                 {
                     Pose hitPose = _sHits[0].pose;
-                    Debug.Log($"Placing Level at ${hitPose.position}");
-                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z));
+                    var position = new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z);
+                    Debug.Log($"Placing Level at ${position}");
+                    SetupLevel(position);
                     //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
                     _placed = true;
                 }
@@ -112,11 +105,19 @@ public class ARInputManager : MonoBehaviour
                 if (SessionOrigin.Raycast(touch.position, _sHits, TrackableType.PlaneWithinPolygon))
                 {
                     Pose hitPose = _sHits[0].pose;
-                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z));
-                    //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
-                    _placed = true;
+                    var position = new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z);
+                    Debug.Log($"Placing Level at ${position}");
+                    SetupLevel(position);
                 }
             }
         }
+    }
+
+    private void SetupLevel(Vector3 position)
+    {
+        Level.transform.position = position;
+        //                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z));
+        //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
+        _placed = true;
     }
 }
