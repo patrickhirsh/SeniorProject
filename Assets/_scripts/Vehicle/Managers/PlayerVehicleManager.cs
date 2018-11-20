@@ -1,5 +1,6 @@
 ﻿using Level;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utility;
 using Connection = Level.Connection;
@@ -117,7 +118,7 @@ public class PlayerVehicleManager : VehicleManager
     //process a tap on an intersection
     private void IntersectionSelection(Intersection intersection)
     {
-        if (_previousSelectedRoute == intersection)
+        if (_previousSelectedRoute == intersection && _intersections.Any())
         {
             // We assume that the intersection is the last in the queue if we double click it
             _end = _intersections.Pop();
@@ -151,7 +152,8 @@ public class PlayerVehicleManager : VehicleManager
         _selectedVehicle = vehicle;
         _start = _selectedVehicle.CurrentRoute;
         _intersections = new Stack<Intersection>();
-
+        
+        _selectedVehicle.HaltCurrentTask();
         DestinationableSearch(_start);
     }
 
@@ -166,13 +168,12 @@ public class PlayerVehicleManager : VehicleManager
 
     private void GetNextDestinationables(Route start, IList<Route> destinations, HashSet<Route> frontier)
     {
-
         foreach (var route in start.NeighborRoutes)
         {
-            if (frontier.Contains(route)) return;
+            if (frontier.Contains(route) || route == start) continue;
             frontier.Add(route);
             if (route.Destinationable)
-            {
+            {   
                 if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
                 destinations.Add(route);
             }
