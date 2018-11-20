@@ -217,7 +217,6 @@ namespace Level
                 if (connection.ConnectsTo != null)
                     frontier.Add(new PathNode(connection, 0, null));
 
-
             PathNode current = frontier[0];
 
             #endregion
