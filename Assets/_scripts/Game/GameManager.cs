@@ -12,17 +12,6 @@ public class GameManager : MonoBehaviour
     public Material TempMaterial;
     public static GameManager Instance => _instance ?? (_instance = Create());
 
-    public float Scale
-    {
-        get { return Application.isPlaying ? _scale : _scale = 1f; }
-        private set { _scale = value; }
-    }
-
-    [Serializable]
-    public class ScaleEvent : UnityEvent<float> { }
-    public ScaleEvent OnScaleChangeEvent = new ScaleEvent();
-    private float _scale;
-
     private static GameManager Create()
     {
         GameObject singleton = FindObjectOfType<GameManager>()?.gameObject;
@@ -40,9 +29,4 @@ public class GameManager : MonoBehaviour
         LevelManager.Instance.Initialize();
     }
 
-    public void SetScale(float scaleValue)
-    {
-        Scale = scaleValue;
-        OnScaleChangeEvent?.Invoke(scaleValue);
-    }
 }

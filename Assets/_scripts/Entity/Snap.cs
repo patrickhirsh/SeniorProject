@@ -11,7 +11,7 @@ namespace Level
         {
             if (!Application.isPlaying && transform.hasChanged && !Input.GetMouseButton(0))
             {
-//                transform.SnapToGrid();
+                transform.SnapToGrid();
             }
         }
 

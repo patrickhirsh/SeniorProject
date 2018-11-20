@@ -31,7 +31,7 @@ public class Scaler : MonoBehaviour
 
         float scaleValue = Mathf.Clamp(value, m_minScaleValue, m_maxScaleValue);
         t.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
-        GameManager.Instance.SetScale(value / 100);
+
     }
 
     private void Start()

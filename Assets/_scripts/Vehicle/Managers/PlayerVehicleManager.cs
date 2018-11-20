@@ -32,7 +32,7 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                Gizmos.DrawSphere(destinationable.transform.position + Vector3.up, .25f * GameManager.Instance.Scale);
+                Gizmos.DrawSphere(destinationable.transform.position + Vector3.up, .25f);
             }
         }
     }
@@ -52,7 +52,7 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + (Vector3.up * GameManager.Instance.Scale), Quaternion.identity);
+                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + Vector3.up, Quaternion.identity);
 //                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
 //                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
                 _destinationReticles.Add(reticle);
