@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Level;
 using System.Collections.Generic;
-using System.Linq;
-using Level;
 using UnityEngine;
+using Utility;
 using Connection = Level.Connection;
 
 public class PlayerVehicleManager : VehicleManager
@@ -18,6 +17,22 @@ public class PlayerVehicleManager : VehicleManager
 
     private bool VehicleSelected => _selectedVehicle != null;
 
+    #region Unity
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        if (_destinationables != null)
+        {
+            foreach (var destinationable in _destinationables)
+            {
+                Gizmos.DrawSphere(destinationable.transform.position + Vector3.up, .25f);
+            }
+        }
+    }
+
+    #endregion
+
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
 
@@ -25,6 +40,8 @@ public class PlayerVehicleManager : VehicleManager
 
     internal void HandleHit(RaycastHit hitInfo)
     {
+        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
+
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var intersection = hitInfo.transform.GetComponent<Intersection>();
         var pickupLocation = hitInfo.transform.GetComponent<PickupLocation>();
@@ -96,10 +113,7 @@ public class PlayerVehicleManager : VehicleManager
         else if (_destinationables != null && _destinationables.Contains(intersection))
         {
             _intersections.Enqueue(intersection);
-
-            _destinationables = new List<Route>();
-            HashSet<Route> frontier = new HashSet<Route>();
-            GetNextDestinationables(intersection, _destinationables, frontier);
+            DestinationableSearch(intersection);
         }
     }
 
@@ -110,19 +124,28 @@ public class PlayerVehicleManager : VehicleManager
         _start = _selectedVehicle.CurrentRoute;
         _intersections = new Queue<Intersection>();
 
+        DestinationableSearch(_start);
+    }
+
+    private void DestinationableSearch(Route start)
+    {
+        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Get next destinationables from {start}", start);
+
         _destinationables = new List<Route>();
         HashSet<Route> frontier = new HashSet<Route>();
-        GetNextDestinationables(_start, _destinationables, frontier);
+        GetNextDestinationables(start, _destinationables, frontier);
     }
 
     private void GetNextDestinationables(Route start, IList<Route> destinations, HashSet<Route> frontier)
     {
+
         foreach (var route in start.NeighborRoutes)
         {
             if (frontier.Contains(route)) return;
             frontier.Add(route);
             if (route.Destinationable)
             {
+                if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
                 destinations.Add(route);
             }
             else

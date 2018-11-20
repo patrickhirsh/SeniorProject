@@ -8,5 +8,6 @@ namespace Utility
     public class DebuggingProfile : ScriptableObject
     {
         public bool DebugVehicle;
+        public bool DebugPlayerVehicleManager;
     }
 }
