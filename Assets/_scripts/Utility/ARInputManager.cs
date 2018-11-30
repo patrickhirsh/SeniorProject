@@ -37,8 +37,10 @@ public class ARInputManager : MonoBehaviour
 
     private void HandleDesktopInput()
     {
+        
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Got some input");
             //If the level has been placed
             if (_placed)
             {
@@ -65,15 +67,18 @@ public class ARInputManager : MonoBehaviour
                     var position = new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z);
                     Debug.Log($"Placing Level at ${position}");
                     SetupLevel(position);
-                    //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
-                    _placed = true;
+
+                    TurnOffDebugPlanes();
                 }
             }
         }
     }
 
+
+
     private void HandleMobileInput()
     {
+        Debug.Log("Got some input 2");
         if (Input.touchCount > 0)
         {
             Debug.Log("LETS GO");
@@ -108,6 +113,8 @@ public class ARInputManager : MonoBehaviour
                     var position = new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z);
                     Debug.Log($"Placing Level at ${position}");
                     SetupLevel(position);
+
+                    TurnOffDebugPlanes();
                 }
             }
         }
@@ -118,6 +125,17 @@ public class ARInputManager : MonoBehaviour
         Level.transform.position = position;
         //                    EntityManager.Instance.SpawnLevel(new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z));
         //m_SessionOrigin.gameObject.GetComponent<ARPlaneManager>().enabled = false;
+        _placed = true;
+    }
+
+    private void TurnOffDebugPlanes()
+    {
+        ARPlaneMeshVisualizer[] toDisable = SessionOrigin.trackablesParent.GetComponentsInChildren<ARPlaneMeshVisualizer>();
+        foreach (ARPlaneMeshVisualizer x in toDisable)
+        {
+            x.gameObject.SetActive(false);
+        }
+        //SessionOrigin.GetComponent<ARPointCloud>().gameObject.SetActive(false);
         _placed = true;
     }
 }

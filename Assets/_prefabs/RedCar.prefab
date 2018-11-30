@@ -252,15 +252,15 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1667412018430948}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: 5.5, y: 0, z: -3}
+  m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: -0.7071069}
+  m_LocalPosition: {x: -26.25, y: 0, z: 11.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4876875689409500}
   - {fileID: 4688031468213774}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 450, z: 0}
 --- !u!4 &4067392289637810
 Transform:
   m_ObjectHideFlags: 1
@@ -902,8 +902,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.75, z: 1.5}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 1.3908085, y: 0.97418475, z: 1.7063402}
+  m_Center: {x: -0.012519598, y: 0.6120924, z: -0.07212448}
 --- !u!114 &114867229838792336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -933,6 +933,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vehicle: {fileID: 114867229838792336}
+  GodModeWait: 5
+  GodModeDuration: 2
 --- !u!120 &120809127824822306
 LineRenderer:
   m_ObjectHideFlags: 1
