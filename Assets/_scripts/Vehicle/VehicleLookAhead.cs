@@ -32,7 +32,7 @@ namespace Level
         private void OnTriggerStay(Collider other)
         {
             var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null && !_IsInGodMode)
+            if (vehicle != null && !_IsInGodMode && vehicle != Vehicle)
             {
                 Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, 0, .25f);
 
@@ -56,7 +56,7 @@ namespace Level
         private void OnTriggerExit(Collider other)
         {
             var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null)
+            if (vehicle != null && vehicle != Vehicle)
             {
                 Vehicle.Speed = Vehicle.BaseSpeed;
                 _GodModeTimer = 0;
