@@ -21731,7 +21731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DestinationReticle: {fileID: 1667464610071288, guid: e62dad9fb72c7e347b75ef1f9e5df277,
     type: 2}
-  adjustmentVector: {x: 2, y: 0, z: 0.5}
+  adjustmentVector: {x: 2, y: 0.1, z: 0.5}
 --- !u!4 &1067143647
 Transform:
   m_ObjectHideFlags: 0
@@ -43104,15 +43104,6 @@ Prefab:
     - target: {fileID: 4066096448770726, guid: 4d610ac64402d5a45820ad34b6352224, type: 2}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 4d610ac64402d5a45820ad34b6352224,
-        type: 2}
-      propertyPath: CurrentConnection
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4066096448770726, guid: 4d610ac64402d5a45820ad34b6352224, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 450
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d610ac64402d5a45820ad34b6352224, type: 2}
