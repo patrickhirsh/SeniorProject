@@ -9,10 +9,12 @@ namespace Level
 
         public override void HandleVehicleEnter(Vehicle vehicle)
         {
+
         }
 
         public override void HandleVehicleExit(Vehicle vehicle)
         {
+
         }
     }
 }
