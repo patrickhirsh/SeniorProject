@@ -20,7 +20,10 @@ public class PlayerVehicleManager : VehicleManager
 
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
-
+        if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
+        {
+            vehicle.AddPassenger(vehicle.CurrentRoute.Terminals.Select(terminal => terminal.Passenger).FirstOrDefault());
+        }
     }
 
     #region Unity
@@ -72,7 +75,7 @@ public class PlayerVehicleManager : VehicleManager
 
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var intersection = hitInfo.transform.GetComponent<Intersection>();
-        var pickupLocation = hitInfo.transform.GetComponent<PickupLocation>();
+        var route = hitInfo.transform.GetComponent<Route>();
 
         if (vehicle)
         {
@@ -83,12 +86,11 @@ public class PlayerVehicleManager : VehicleManager
         {
             IntersectionSelection(intersection);
         }
-        else if (pickupLocation)
+        else if (route && route.Destinationable)
         {
-            PickupSelection(pickupLocation);
+            RouteSelection(route);
         }
 
-        var route = hitInfo.transform.GetComponent<Route>();
         if (route != null)
         {
             _previousSelectedRoute = route;
@@ -114,9 +116,18 @@ public class PlayerVehicleManager : VehicleManager
     }
 
     //process a tap on a pickup location
-    private void PickupSelection(PickupLocation pickupLocation)
+    private void RouteSelection(Route route)
     {
-
+        Queue<Connection> connections;
+        var intersections = new Queue<Intersection>(_intersections.Reverse());
+        if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
+        {
+            _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
+        }
+        else
+        {
+            Debug.LogWarning("Could not find a path for player input");
+        }
     }
 
     //process a tap on an intersection
@@ -180,6 +191,10 @@ public class PlayerVehicleManager : VehicleManager
             {
                 if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
                 destinations.Add(route);
+                if (route.GetType() != typeof(Intersection))
+                {
+                    GetNextDestinationables(route, destinations, frontier);
+                }
             }
             else
             {

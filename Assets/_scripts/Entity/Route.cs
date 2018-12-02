@@ -8,6 +8,7 @@ namespace Level
     {
         [ReadOnly] public Connection[] Connections;
         [ReadOnly] public BezierCurve[] VehiclePaths;
+        public Terminal[] Terminals => Connections.SelectMany(connection => connection.Terminals).ToArray();
 
         // An array of all entities this entity can reach
         private Route[] _connectingRoutes;
@@ -34,6 +35,7 @@ namespace Level
         }
 
         public abstract bool Destinationable { get; }
+        public bool HasTerminals => Terminals.Length > 0;
 
         #region Unity Methods
 
@@ -50,10 +52,7 @@ namespace Level
                     lineRenderer.material = GameManager.Instance.TempMaterial;
                     lineRenderer.positionCount = lengthOfLineRenderer;
                     lineRenderer.widthMultiplier = .06f;
-//                    GameManager.Instance.OnScaleChangeEvent.AddListener(val =>
-//                    {
-//                        lineRenderer.widthMultiplier = .06f * val;
-//                    });
+
                     lineRenderer.numCapVertices = 2;
                     lineRenderer.numCornerVertices = 2;
                     lineRenderer.useWorldSpace = false;
@@ -61,7 +60,6 @@ namespace Level
                     for (int i = 0; i < lengthOfLineRenderer; i++)
                     {
                         points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
-//                        points[i] += Vector3.up * .2f;
                     }
 
                     lineRenderer.SetPositions(points);
@@ -127,12 +125,12 @@ namespace Level
         {
             foreach (var connection in connections)
             {
-                connection.PickupLocations = new List<PickupLocation>();
+                connection.Terminals = new List<Terminal>();
             }
-            foreach (var pickupLocation in GetComponentsInChildren<PickupLocation>())
+            foreach (var pickupLocation in GetComponentsInChildren<Terminal>())
             {
                 var connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, pickupLocation.transform.position)).FirstOrDefault();
-                if (connection != null) connection.PickupLocations.Add(pickupLocation);
+                if (connection != null) connection.Terminals.Add(pickupLocation);
             }
         }
 

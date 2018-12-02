@@ -29,7 +29,7 @@ namespace Level
         public List<ConnectionPath> Paths = new List<ConnectionPath>();
 
         [ReadOnly]
-        public List<PickupLocation> PickupLocations = new List<PickupLocation>();
+        public List<Terminal> Terminals = new List<Terminal>();
 
         public int PathCount
         {
@@ -45,6 +45,7 @@ namespace Level
 
         private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
         public Connection[] InnerConnections => ConnectionPaths.Keys.ToArray();
+        
         #region Unity Methods
 
         private void Awake()

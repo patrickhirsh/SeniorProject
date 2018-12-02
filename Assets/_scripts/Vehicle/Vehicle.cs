@@ -69,6 +69,9 @@ namespace Level
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;       // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
 
+        public Passenger Passenger;
+        public bool HasPassenger => Passenger != null;
+
         protected void Start()
         {
             // on startup, vehicle is in a "waiting for tasks" state
@@ -229,6 +232,7 @@ namespace Level
                 yield return null;
             }
 
+            _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
             // Remove the curve
             Destroy(vehicleCurve);
         }
@@ -261,6 +265,13 @@ namespace Level
         public void SetCurrentRoute(Route route)
         {
             CurrentRoute = route;
+        }
+
+        public void AddPassenger(Passenger passenger)
+        {
+            Passenger = passenger;
+            passenger.transform.parent = transform;
+            passenger.transform.localPosition = Vector3.zero;
         }
     }
 }
