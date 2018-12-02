@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
 namespace Level
@@ -32,10 +33,15 @@ namespace Level
         }
         #endregion
 
+        private static float AVG_SPAWN_TIMER = 5f;
+        private static float SPAWN_TIMER_VARIANCE = 1f;
+
         public bool DebugMode = true;
-        public List<Vehicle> Vehicles;                  // all valid vehicles to spawn procedurally in the current level
-        public List<SpawnPointEntity> _spawnPoints;     // all valid spawn points in the current level // TODO: this really shouldn't be public...
-        private SpawnState _spawnState;                 // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
+
+        private List<GameObject> _neutralVehiclePrefabs;    // all neutral vehicle prefabs valid for this scene
+        private List<SpawnRoute> _spawnPoints;              // all valid spawn points in the current level
+        private SpawnState _spawnState;                     // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
+        private float proceduralSpawnTimer = 0f;            // timer used for procedural spawning
 
         /// <summary>
         /// _reachableSpawnPointConnections keeps a 2D dictionary that maps any SpawnPointEntity connection to a dictionary
@@ -66,14 +72,12 @@ namespace Level
                     _spawnState = SpawnState.SpawningOff;
 
                     // initialize spawnPoints list
-                    _spawnPoints = new List<SpawnPointEntity>();
-                    foreach (SpawnPointEntity spawn in Object.FindObjectsOfType<SpawnPointEntity>())
+                    _spawnPoints = new List<SpawnRoute>();
+                    foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
                         _spawnPoints.Add(spawn);
 
-                    // initialize vehicles list
-                    Vehicles = new List<Vehicle>();
-                    // TODO: populate this list with vehicles that should be spawned procedurally within the current level
-
+                    // populate vehicle prefabs list
+                    populateNeutralVehiclePrefabs();
                     break;
 
 
@@ -99,6 +103,7 @@ namespace Level
                     break;
 
                 case SpawnState.SpawningProcedurally:
+                    //handleProceduralSpawning();
                     break;
             }
         }
@@ -149,10 +154,29 @@ namespace Level
         /// <summary>
         /// given a spawn point and a vehicle prefab, spawns a new instance of vehiclePrefab at "spawnPoint" with "destination"
         /// </summary>
-        private void SpawnVehicle(GameObject spawnPoint, GameObject destination, GameObject vehiclePrefab)
+        private void SpawnVehicle(Connection spawnPoint, Connection destination, GameObject vehiclePrefab)
         {
             GameObject vehicle = Instantiate(vehiclePrefab, this.transform);
             vehicle.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);
+
+            List<BezierCurve> path;
+            PathfindingManager.Instance.GetPath(spawnPoint, destination, out path);
+            //vehicle.GetComponent<Vehicle>().AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback))
+
+            // TODO: Shit's broke. Gotta re-write GetPath() such that it returns a Queue<Connection>
+        }
+
+
+        private void handleProceduralSpawning()
+        {
+            proceduralSpawnTimer -= Time.deltaTime;
+
+            if (proceduralSpawnTimer < 0)
+            {
+                proceduralSpawnTimer = AVG_SPAWN_TIMER + Random.Range(SPAWN_TIMER_VARIANCE * -1, SPAWN_TIMER_VARIANCE);
+
+                //SpawnVehicle()
+            }
         }
 
 
@@ -165,13 +189,13 @@ namespace Level
         private void populateSpawnPointReachabilityPaths()
         {
             // base dictionary should hold a connection key for every single connection in every single SpawnPointConnection
-            foreach (SpawnPointEntity spawn1 in _spawnPoints)
+            foreach (SpawnRoute spawn1 in _spawnPoints)
                 foreach (Connection connection1 in spawn1.Connections)
                     _reachableSpawnPointConnections.Add(connection1, new Dictionary<Connection, List<BezierCurve>>());
 
             // for each of these connections, check if a path exists between this connection and EVERY OTHER connection
             foreach (Connection connection1 in _reachableSpawnPointConnections.Keys)
-                foreach (SpawnPointEntity spawn2 in _spawnPoints)
+                foreach (SpawnRoute spawn2 in _spawnPoints)
                     foreach (Connection connection2 in spawn2.Connections)
                     {
                         // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
@@ -210,6 +234,18 @@ namespace Level
                     if (!connectionLocated)
                         _reachableSpawnPointConnections.Remove(connection1);
                 }
+        }
+
+        /// <summary>
+        /// Retrieves all vehicle prefabs located at "_prefabs/Vehicles/Neutral Vehicles" and stores them
+        /// for neutral vehicle spawning
+        /// </summary>
+        private void populateNeutralVehiclePrefabs()
+        {
+            _neutralVehiclePrefabs = new List<GameObject>();
+            IEnumerable<GameObject> vehicles = Resources.LoadAll("_prefabs/Vehicles/Neutral Vehicles", typeof(GameObject)).Cast<GameObject>();
+            foreach (GameObject vehicle in vehicles)
+                _neutralVehiclePrefabs.Add(vehicle);
         }
     }
 }

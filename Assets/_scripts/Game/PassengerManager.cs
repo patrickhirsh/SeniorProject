@@ -32,9 +32,6 @@ public class PassengerManager : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        //Set the timer
-        _timer = SpawnTime;
-
         // Populate the Pickups list with every pickup in the scene
         _terminals = EntityManager.Instance.Routes.SelectMany(route => route.Terminals).ToArray();
     }
@@ -55,7 +52,8 @@ public class PassengerManager : MonoBehaviour
 
     private void SpawnPassenger()
     {
-        int index = Random.Range(0, _terminals.Length);
+        int index = Random.Range(0, _terminals.Length - 1);
+        Debug.Log(_terminals.Length);
         _terminals[index].SpawnPassenger(PassengerPrefab);
     }
 }

@@ -23,7 +23,7 @@ namespace Level
 
         public void SpawnPassenger(Passenger prefab)
         {
-            Passenger = Instantiate(prefab, transform.position, Quaternion.identity);
+            Passenger = Instantiate(prefab, transform.position, Quaternion.identity, transform);
             Passenger.StartTerminal = this;
         }
     }

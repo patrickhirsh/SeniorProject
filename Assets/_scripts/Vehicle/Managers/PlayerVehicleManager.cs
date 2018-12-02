@@ -10,7 +10,7 @@ public class PlayerVehicleManager : VehicleManager
     private Vehicle _selectedVehicle;
 
     private Route _start;
-    private Stack<Intersection> _intersections;
+    private Stack<IntersectionRoute> _intersections;
     private Route _end;
 
     private Route _previousSelectedRoute;
@@ -74,7 +74,7 @@ public class PlayerVehicleManager : VehicleManager
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
 
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
-        var intersection = hitInfo.transform.GetComponent<Intersection>();
+        var intersection = hitInfo.transform.GetComponent<IntersectionRoute>();
         var route = hitInfo.transform.GetComponent<Route>();
 
         if (vehicle)
@@ -119,7 +119,7 @@ public class PlayerVehicleManager : VehicleManager
     private void RouteSelection(Route route)
     {
         Queue<Connection> connections;
-        var intersections = new Queue<Intersection>(_intersections.Reverse());
+        var intersections = new Queue<IntersectionRoute>(_intersections.Reverse());
         if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
         {
             _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
@@ -131,7 +131,7 @@ public class PlayerVehicleManager : VehicleManager
     }
 
     //process a tap on an intersection
-    private void IntersectionSelection(Intersection intersection)
+    private void IntersectionSelection(IntersectionRoute intersection)
     {
         if (_previousSelectedRoute == intersection && _intersections.Any())
         {
@@ -142,7 +142,7 @@ public class PlayerVehicleManager : VehicleManager
             Debug.Assert(_end != null, "End is not defined.");
 
             Queue<Connection> connections;
-            var intersections = new Queue<Intersection>(_intersections.Reverse());
+            var intersections = new Queue<IntersectionRoute>(_intersections.Reverse());
             if (PathfindingManager.Instance.GetPath(_start, intersections, _end, out connections))
             {
                 _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
@@ -166,7 +166,7 @@ public class PlayerVehicleManager : VehicleManager
         //Pick a new vehicle to control
         _selectedVehicle = vehicle;
         _start = _selectedVehicle.CurrentRoute;
-        _intersections = new Stack<Intersection>();
+        _intersections = new Stack<IntersectionRoute>();
 
         _selectedVehicle.HaltCurrentTask();
         DestinationableSearch(_start);
@@ -191,7 +191,7 @@ public class PlayerVehicleManager : VehicleManager
             {
                 if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
                 destinations.Add(route);
-                if (route.GetType() != typeof(Intersection))
+                if (route.GetType() != typeof(IntersectionRoute))
                 {
                     GetNextDestinationables(route, destinations, frontier);
                 }
