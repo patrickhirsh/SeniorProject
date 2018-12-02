@@ -34,7 +34,7 @@ namespace Level
 
         public bool DebugMode = true;
         public List<Vehicle> Vehicles;                  // all valid vehicles to spawn procedurally in the current level
-        public List<SpawnPointEntity> _spawnPoints;     // all valid spawn points in the current level // TODO: this really shouldn't be public...
+        public List<SpawnRoute> _spawnPoints;     // all valid spawn points in the current level // TODO: this really shouldn't be public...
         private SpawnState _spawnState;                 // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace Level
                     _spawnState = SpawnState.SpawningOff;
 
                     // initialize spawnPoints list
-                    _spawnPoints = new List<SpawnPointEntity>();
-                    foreach (SpawnPointEntity spawn in Object.FindObjectsOfType<SpawnPointEntity>())
+                    _spawnPoints = new List<SpawnRoute>();
+                    foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
                         _spawnPoints.Add(spawn);
 
                     // initialize vehicles list
@@ -165,13 +165,13 @@ namespace Level
         private void populateSpawnPointReachabilityPaths()
         {
             // base dictionary should hold a connection key for every single connection in every single SpawnPointConnection
-            foreach (SpawnPointEntity spawn1 in _spawnPoints)
+            foreach (SpawnRoute spawn1 in _spawnPoints)
                 foreach (Connection connection1 in spawn1.Connections)
                     _reachableSpawnPointConnections.Add(connection1, new Dictionary<Connection, List<BezierCurve>>());
 
             // for each of these connections, check if a path exists between this connection and EVERY OTHER connection
             foreach (Connection connection1 in _reachableSpawnPointConnections.Keys)
-                foreach (SpawnPointEntity spawn2 in _spawnPoints)
+                foreach (SpawnRoute spawn2 in _spawnPoints)
                     foreach (Connection connection2 in spawn2.Connections)
                     {
                         // look for path. If the path exists, add connection2 as a reachable connection (and add its path)

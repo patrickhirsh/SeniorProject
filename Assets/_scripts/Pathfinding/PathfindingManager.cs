@@ -185,7 +185,7 @@ namespace Level
         /// (and ONLY these intersections). This method currently doesn't support a series
         /// of intersections that loop in a circle.
         /// </summary>
-        public bool GetPath(Route start, Queue<Intersection> intersections, Route end, out Queue<Connection> path)
+        public bool GetPath(Route start, Queue<IntersectionRoute> intersections, Route end, out Queue<Connection> path)
         {
             #region INPUT PROCESSING/VALIDATION
 
@@ -227,7 +227,7 @@ namespace Level
 
             // TODO: Don't initalize monobehavior Intersection like this...
             bool lookForEnd = false;                                        // indicates we've gone through all intersections and are now looking for "end"
-            Intersection intersection = new Intersection();                 // the current intersection we're looking for (if we aren't looking for "end")
+            IntersectionRoute intersection = new IntersectionRoute();                 // the current intersection we're looking for (if we aren't looking for "end")
             List<PathNode> destinationPathnodes = new List<PathNode>();     // stores a list of all connections we've tried to process (reached) within the current destination
 
             while (true)
@@ -298,7 +298,7 @@ namespace Level
                         }
 
                         // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
-                        if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(Intersection)) && (current.connection.ConnectsTo.ParentRoute != end) &&
+                        if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(IntersectionRoute)) && (current.connection.ConnectsTo.ParentRoute != end) &&
                             (current.connection.ConnectsTo.ParentRoute != intersection))
                         {
                             processNode = false;

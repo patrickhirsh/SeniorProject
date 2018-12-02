@@ -5,7 +5,7 @@ using Level;
 
 namespace Level
 {
-    public class ParkingSpot : Route
+    public class ParkingRoute : Route
     {
         public bool IsOccupied;
 

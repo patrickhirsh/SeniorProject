@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Level
 {
-    public class SpawnPointEntity : Route
+    public class SpawnRoute : Route
     {
         public override bool Destinationable => false;
 
@@ -31,7 +31,7 @@ namespace Level
                 if (vehicle.GetComponent<Vehicle>() == null)
                     Debug.LogWarning("SpawnDirective created with a vehicleTemplate that doesn't have a Vehicle Component (vehicleTemplate must be a vehicle)");
 
-                if (destination.GetComponent<SpawnPointEntity>() == null)
+                if (destination.GetComponent<SpawnRoute>() == null)
                     Debug.LogWarning("SpawnDirective created with a destination that isn't a SpawnNodeEntity (destination must be another SpawnNodeEntity)");
             }
         }
@@ -56,8 +56,8 @@ namespace Level
         }
 
 
-        private List<SpawnPointEntity> reachableSpawnPoints;                                            // All SpawnPoints reachable from this SpawnPoint
-        private List<SpawnPointEntity> reachingSpawnPoints;                                             // All SpawnPoints that can reach this SpawnPoint
+        private List<SpawnRoute> reachableSpawnPoints;                                            // All SpawnPoints reachable from this SpawnPoint
+        private List<SpawnRoute> reachingSpawnPoints;                                             // All SpawnPoints that can reach this SpawnPoint
         private static SpawnDirectiveComparer spawnDirectiveComparer = new SpawnDirectiveComparer();    // used to sort _spawnQueue
         private List<SpawnDirective> _spawnQueue;                                                       // keeps a sorted record of SpawnDirectives (lowest time -> highest time) for non-procedural spawning
 
