@@ -62,8 +62,9 @@ namespace Level
         private List<SpawnDirective> _spawnQueue;                                                       // keeps a sorted record of SpawnDirectives (lowest time -> highest time) for non-procedural spawning
 
 
-        public void Start()
+        protected override void Start()
         {
+            base.Start();
             Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
         }
 
