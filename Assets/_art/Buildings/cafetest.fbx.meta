@@ -1,57 +1,38 @@
 fileFormatVersion: 2
-guid: 96fce71687acfdf4c9f61374402d74a2
+guid: 3658837492cdac04ca7e48c4b33d235b
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: pPlane1
-    100004: pPlane2
-    100006: pPlane3
-    100008: pPlane4
-    100010: pPlane5
-    100012: pPlane6
-    100014: pPlane7
-    100016: pPlane8
-    100018: pPlane9
+    100002: pCylinder6
+    100004: polySurface1
+    100006: polySurface2
+    100008: polySurface5
+    100010: polySurface6
+    100012: polySurface6 1
+    100014: transform1
+    100016: transform2
+    100018: transform3
+    100020: transform4
+    100022: transform5
     400000: //RootNode
-    400002: pPlane1
-    400004: pPlane2
-    400006: pPlane3
-    400008: pPlane4
-    400010: pPlane5
-    400012: pPlane6
-    400014: pPlane7
-    400016: pPlane8
-    400018: pPlane9
-    2100000: PrototypeLevelConcept_Green
-    2100002: Green
-    2300000: pPlane1
-    2300002: pPlane2
-    2300004: pPlane3
-    2300006: pPlane4
-    2300008: pPlane5
-    2300010: pPlane6
-    2300012: pPlane7
-    2300014: pPlane8
-    2300016: pPlane9
-    3300000: pPlane1
-    3300002: pPlane2
-    3300004: pPlane3
-    3300006: pPlane4
-    3300008: pPlane5
-    3300010: pPlane6
-    3300012: pPlane7
-    3300014: pPlane8
-    3300016: pPlane9
-    4300000: pPlane9
-    4300002: pPlane8
-    4300004: pPlane7
-    4300006: pPlane6
-    4300008: pPlane5
-    4300010: pPlane4
-    4300012: pPlane3
-    4300014: pPlane2
-    4300016: pPlane1
+    400002: pCylinder6
+    400004: polySurface1
+    400006: polySurface2
+    400008: polySurface5
+    400010: polySurface6
+    400012: polySurface6 1
+    400014: transform1
+    400016: transform2
+    400018: transform3
+    400020: transform4
+    400022: transform5
+    2100000: restWhite
+    2300000: polySurface6
+    3300000: polySurface6
+    4300000: polySurface6
+    7400000: Take 001
+    9500000: //RootNode
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -103,8 +84,8 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -128,7 +109,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

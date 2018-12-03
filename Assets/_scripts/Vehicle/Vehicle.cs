@@ -66,26 +66,15 @@ namespace Level
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
-        private VehicleTask _currentTask;       // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
+        private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
 
         public Passenger Passenger;
         public bool HasPassenger => Passenger != null;
 
-        protected void Start()
+        protected void Awake()
         {
-            // on startup, vehicle is in a "waiting for tasks" state
             _currentTask = null;
-            _animationTween = null;
-        }
-
-        /// <summary>
-        /// Should be called immediately after instantiating a new vehicle. This method need not
-        /// be called for vehicles placed in the editor. Simply avoids expensive auto-generation
-        /// of starting data by assigning explicit known values from the object that created this vehicle
-        /// </summary>
-        public void Initialize(Connection currentConection)
-        {
-            CurrentConnection = currentConection;
+            _animationTween = null;     
         }
 
 
@@ -118,6 +107,7 @@ namespace Level
                 StopTraveling();
                 _currentTask = task;
                 StartTraveling(task.Path);
+                Debug.Log(_currentTask.ToString());
                 return true;
             }
 
@@ -189,7 +179,7 @@ namespace Level
         {
             // Build a line to visualize on
             var travelLine = new GameObject("Line", typeof(LineRenderer)).GetComponent<LineRenderer>();
-            int lengthOfLineRenderer = 20;
+            int lengthOfLineRenderer = vehicleCurve.pointCount * 2;
             travelLine.positionCount = lengthOfLineRenderer;
             travelLine.widthMultiplier = .15f;
 
@@ -212,6 +202,7 @@ namespace Level
                 yield return null;
             }
 
+            // Invoke callback and set vehicle back to "waiting for task" state
             _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
             
             // Remove the curve
@@ -233,6 +224,7 @@ namespace Level
 
                 Vector3 targetDir = connection.transform.position - transform.position;
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
+                
                 // Move our position a step closer to the target.
                 transform.rotation = Quaternion.LookRotation(newDir);
 
