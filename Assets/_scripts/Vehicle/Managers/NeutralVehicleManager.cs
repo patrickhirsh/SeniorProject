@@ -51,7 +51,26 @@ namespace Level
         private Dictionary<Connection, Dictionary<Connection, Queue<Connection>>> _reachableSpawnPointConnections;
 
 
-        public void Start()
+        /// <summary>
+        /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
+        /// when it reaches it's destination. If this task is interrupted, unexpected behavior is occuring.
+        /// </summary>
+        public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
+        {
+            // the neutral vehicle reached it's destination spawn point. Destroy it
+            if (exitStatus)
+                Destroy(vehicle.gameObject);
+
+            // log unexpected behavior
+            else
+            {
+                if (DebugMode && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
+                if (DebugMode && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
+            }
+        }
+
+
+        public void Awake()
         {
             Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
             Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);            
@@ -69,12 +88,8 @@ namespace Level
                 case GameState.SetupConnection:
 
                     // spawnState is off by default (waiting for instructions...)
-                    _spawnState = SpawnState.SpawningOff;
-
-                    // initialize spawnPoints list
-                    _spawnPoints = new List<SpawnRoute>();
-                    foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
-                        _spawnPoints.Add(spawn);
+                    //_spawnState = SpawnState.SpawningOff;
+                    _spawnState = SpawnState.SpawningProcedurally;                   
 
                     // ensure neutral vehicles have been set in the inspector
                     Debug.Assert(_neutralVehiclePrefabs != null);
@@ -83,6 +98,12 @@ namespace Level
 
                 case GameState.SetupBakedPaths:
 
+                    // initialize spawnPoints list
+                    _spawnPoints = new List<SpawnRoute>();
+                    foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
+                        _spawnPoints.Add(spawn);
+
+                    // determine all paths from all spawn points to all other spawn points 
                     populateSpawnPointReachabilityPaths();
                     break;
             }
@@ -103,7 +124,7 @@ namespace Level
                     break;
 
                 case SpawnState.SpawningProcedurally:
-                    //handleProceduralSpawning();
+                    handleProceduralSpawning();
                     break;
             }
         }
@@ -121,36 +142,6 @@ namespace Level
         }
 
 
-        public void getReachableSpawnPoints(Connection spawnPointEntityConnection)
-        {
-            List<List<BezierCurve>> connections = new List<List<BezierCurve>>();
-
-            // TODO: Refactor the output of PathfindingManager.GetPath() to be Queue<Connection> to match with
-            // Vehicle's pathing parameters. That means these structures within this class need to be refactored too
-            // finally, these "reachable spawnpoints" should probably return as List<Queue<Connection>>.
-            // Then, the spawning system can randomly pick an index between 0 and output.length - 1 to get a valid path.
-        }
-
-
-        /// <summary>
-        /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
-        /// when it reaches it's destination. If this task is interrupted, unexpected behavior is occuring.
-        /// </summary>
-        public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
-        {
-            // the neutral vehicle reached it's destination spawn point.
-            if (exitStatus)
-                Destroy(vehicle);
-
-            // log unexpected behavior
-            else
-            {
-                if (DebugMode && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
-                if (DebugMode && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
-            } 
-        }
-
-
         /// <summary>
         /// given a spawn point and a vehicle prefab, spawns a new instance of vehiclePrefab at "spawnPoint" with "destination"
         /// </summary>
@@ -159,21 +150,31 @@ namespace Level
             GameObject vehicle = Instantiate(vehiclePrefab, this.transform);
             vehicle.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);
 
-            Queue<Connection> path;
-            PathfindingManager.Instance.GetPath(spawnPoint, destination, out path);
+            Queue<Connection> path = _reachableSpawnPointConnections[spawnPoint][destination];
             vehicle.GetComponent<Vehicle>().AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback));
         }
 
 
         private void handleProceduralSpawning()
         {
+            // decriment timer
             proceduralSpawnTimer -= Time.deltaTime;
 
             if (proceduralSpawnTimer < 0)
             {
+                // reset spawn timer
                 proceduralSpawnTimer = AVG_SPAWN_TIMER + Random.Range(SPAWN_TIMER_VARIANCE * -1, SPAWN_TIMER_VARIANCE);
 
-                //SpawnVehicle()
+                // get a random prefab, and random start/end connections
+                int randomPrefabIndex = Random.Range(0, _neutralVehiclePrefabs.Count);
+                int startIndex = Random.Range(0, _reachableSpawnPointConnections.Count);
+                Connection startConnection = _reachableSpawnPointConnections.Keys.ToArray()[startIndex];
+                int destinationIndex = Random.Range(0, _reachableSpawnPointConnections[startConnection].Count);
+                Connection endConnection = _reachableSpawnPointConnections[startConnection].Keys.ToArray()[destinationIndex];                
+
+                // spawn the vehicle
+                SpawnVehicle(startConnection, endConnection, _neutralVehiclePrefabs[randomPrefabIndex]);
+                if (DebugMode) { Debug.Log("Spawning vehicle"); }
             }
         }
 
@@ -186,6 +187,8 @@ namespace Level
         /// </summary>
         private void populateSpawnPointReachabilityPaths()
         {
+            _reachableSpawnPointConnections = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
+
             // base dictionary should hold a connection key for every single connection in every single SpawnPointConnection
             foreach (SpawnRoute spawn1 in _spawnPoints)
                 foreach (Connection connection1 in spawn1.Connections)
@@ -205,6 +208,7 @@ namespace Level
             // finally, look for connections that can't reach any other connections AND aren't reachable by any other connections
             // these connections are completely isolated from the grid and should be removed
             // we chack against <= 1 because every connection has a path to itself
+            List<Connection> unreachable = new List<Connection>();
             foreach (Connection connection1 in _reachableSpawnPointConnections.Keys)
                 if (_reachableSpawnPointConnections[connection1].Count <= 1)
                 {
@@ -228,10 +232,14 @@ namespace Level
                             break;
                     }
 
-                    // if we never found another connection that can reach connection1, it's unreachable. remove it.
+                    // if we never found another connection that can reach connection1, it's unreachable.
                     if (!connectionLocated)
-                        _reachableSpawnPointConnections.Remove(connection1);
+                        unreachable.Add(connection1);
                 }
+
+            // remove all unreachable connections
+            foreach (Connection connection in unreachable)
+                _reachableSpawnPointConnections.Remove(connection);
         }
     }
 }

@@ -67,26 +67,32 @@ namespace Level
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
-        private VehicleTask _currentTask;       // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
+        private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
 
         public Passenger Passenger;
         public bool HasPassenger => Passenger != null;
 
         protected void Start()
         {
-            // on startup, vehicle is in a "waiting for tasks" state
-            _currentTask = null;
-            _animationTween = null;
-        }
+            /*
+             * A WARNING TO ALL YE SORRY FOLK WHO WANT TO ADD ANYTHING TO VEHICLE.START()
+             * 
+             * For some reason, Start() is invoked multiple times throughout a Vehicle's task execution.
+             * As you can see by the 0 references, it must be unity that does the multiple invokes... 
+             * From what I can tell, it happens immediately after the TravelTo() coroutine completes
+             * and immediatly before TravelPath() begins. I don't know why, but be warned. Until this
+             * mystery is further explored, anything in this method CAN AND WILL be executed after each
+             * coroutine is finished. No, the vehicle is not being re-instantiated/re-initialized. This is
+             * a call to Start() on an exisiting and initialized Vehicle object. This can be verified by
+             * placing a breakpoint here and observing the data fields that should be null on initialize 
+             * (such as _currentTask) during the second call to Start().
+             * 
+             * TODO: Figure out what the hell is going on here
+            */
 
-        /// <summary>
-        /// Should be called immediately after instantiating a new vehicle. This method need not
-        /// be called for vehicles placed in the editor. Simply avoids expensive auto-generation
-        /// of starting data by assigning explicit known values from the object that created this vehicle
-        /// </summary>
-        public void Initialize(Connection currentConection)
-        {
-            CurrentConnection = currentConection;
+            // Don't place anything here that can't safely be executed after the completion of any task coroutine...
+
+            _animationTween = null;     
         }
 
 
@@ -119,6 +125,7 @@ namespace Level
                 StopTraveling();
                 _currentTask = task;
                 StartTraveling(task.Path);
+                Debug.Log(_currentTask.ToString());
                 return true;
             }
 
@@ -232,7 +239,10 @@ namespace Level
                 yield return null;
             }
 
+            // Invoke callback and set vehicle back to "waiting for task" state
             _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
+            _currentTask = null;
+            
             // Remove the curve
             Destroy(vehicleCurve);
         }
@@ -251,6 +261,7 @@ namespace Level
 
                 Vector3 targetDir = connection.transform.position - transform.position;
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
+                
                 // Move our position a step closer to the target.
                 transform.rotation = Quaternion.LookRotation(newDir);
 

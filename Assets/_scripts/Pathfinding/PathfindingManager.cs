@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Level
 {
-    // TODO: Take a look at the way ConnectsTo is being used here. This needs to be re-evaluated...
     public class PathfindingManager : MonoBehaviour
     {
         private bool _debugMode = true;
@@ -51,6 +50,7 @@ namespace Level
 
             #region SETUP
 
+
             PathNodeComparer pathNodeComparer = new PathNodeComparer();                                 // used to compare the weights of PathNodes when sorting the frontier
             Dictionary<Connection, PathNode> processed = new Dictionary<Connection, PathNode>();        // all processed nodes. used to check if a connection has been processed already
             List<PathNode> frontier = new List<PathNode>();                                             // queue of nearby unprocessed nodes, sorted after each processing step
@@ -77,53 +77,61 @@ namespace Level
 
                 // CHECK THE NODE WE'RE PROCESSING
 
+                // we may not want to process a connection for multiple reasons: it's in "intersection"/"end", it doesn't have a ConnectsTo, it doesn't have paths leaving it, etc..
+                bool processNode = true;
+
                 // if we're processing the end node, we've found the shortest path to it!
                 if (current.connection == end)
-                { endConnectionDiscovered = true; break; }
+                    { endConnectionDiscovered = true; break; }
 
-
-                // if this fails, there exists a connection with a path to it, but no paths leaving it. Our runtime path "baking" algorithm failed somewhere.
-                Debug.Assert(current.connection.ConnectsTo != null);                            
+                // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
+                if (current.connection.ConnectsTo == null)
+                    { processNode = false; }                      
 
 
                 // BEGIN PROCESSING
 
-                // explore the (current connection => linked inbound connection)'s outbound connections.
-                foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
+                // only processed if (processNode)
+                if (processNode)
                 {
-                    // only observe connections we haven't yet processed
-                    if (!processed.ContainsKey(connectionPath.Connection))
+                    // explore the (current connection => linked inbound connection)'s outbound connections.
+                    foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
                     {
-                        PathNode discoveredNode;
-                        bool newNodeDiscovered = true;
-                        float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
-                        // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
-
-                        // check if this connection has already been discovered (is in the frontier)
-                        foreach (PathNode node in frontier)
-                            if (node.connection == connectionPath.Connection)
-                            {
-                                // we've already discovered this node!
-                                discoveredNode = node;
-                                newNodeDiscovered = false;
-
-                                // is this path better than its current path? If so, change its best path to this one. If not, move on
-                                if (discoveredNode.distance > distance)
-                                {
-                                    discoveredNode.distance = distance;
-                                    discoveredNode.prevConnection = current.connection;
-                                }
-                                break;
-                            }
-
-                        // this connection has never been discovered before. Add it to the frontier!
-                        if (newNodeDiscovered)
+                        // only observe connections we haven't yet processed
+                        if (!processed.ContainsKey(connectionPath.Connection))
                         {
-                            discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
-                            frontier.Add(discoveredNode);
+                            PathNode discoveredNode;
+                            bool newNodeDiscovered = true;
+                            float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                            // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
+
+                            // check if this connection has already been discovered (is in the frontier)
+                            foreach (PathNode node in frontier)
+                                if (node.connection == connectionPath.Connection)
+                                {
+                                    // we've already discovered this node!
+                                    discoveredNode = node;
+                                    newNodeDiscovered = false;
+
+                                    // is this path better than its current path? If so, change its best path to this one. If not, move on
+                                    if (discoveredNode.distance > distance)
+                                    {
+                                        discoveredNode.distance = distance;
+                                        discoveredNode.prevConnection = current.connection;
+                                    }
+                                    break;
+                                }
+
+                            // this connection has never been discovered before. Add it to the frontier!
+                            if (newNodeDiscovered)
+                            {
+                                discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
+                                frontier.Add(discoveredNode);
+                            }
                         }
                     }
                 }
+                
 
                 // processing for this connection is complete. Add to processed and continue
                 processed.Add(current.connection, current);
@@ -159,7 +167,6 @@ namespace Level
             // we never discovered the end connection. End connection is not reachable from the start connection
             else
             {
-                if (_debugMode) { Debug.LogError("PathfindingManager.GetPath() could not determine a path (unreachable)"); }
                 return false;
             }
 

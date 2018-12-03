@@ -59,6 +59,7 @@ public class EntityManager : MonoBehaviour
         Debug.Log("Initialize EntityManager", gameObject);
         Entities = GetComponentsInChildren<Entity>();
         Broadcaster.Instance.Broadcast(GameState.SetupConnection);
+        Broadcaster.Instance.Broadcast(GameState.SetupBakedPaths);
     }
 
     public void Bake()
