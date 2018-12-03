@@ -2342,21 +2342,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 13
       objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
-      objectReference: {fileID: 0}
     - target: {fileID: 1792980702454646, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
       propertyPath: m_Name
       value: 4-Lane_2-Way (8)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1.0000005
-      objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1.0000005
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
@@ -5200,6 +5188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugMode: 1
+  _neutralVehiclePrefabs: []
 --- !u!1001 &1534054163
 Prefab:
   m_ObjectHideFlags: 0

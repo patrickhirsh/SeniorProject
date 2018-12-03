@@ -36,6 +36,7 @@ namespace Level
 
         public abstract bool Destinationable { get; }
         public bool HasTerminals => Terminals.Length > 0;
+        public bool HasPassenger => HasTerminals && Terminals.Any(terminal => terminal.HasPassenger);
 
         #region Unity Methods
 
@@ -114,7 +115,7 @@ namespace Level
         public void BakePrefab()
         {
             Connections = GetComponentsInChildren<Connection>();
-            Nodes = GetComponentsInChildren<Node>();
+            Nodes = GetComponentsInChildren<Node>().ToList();
             VehiclePaths = GetComponentsInChildren<BezierCurve>();
 
             BakePaths(Connections, VehiclePaths);
@@ -127,10 +128,14 @@ namespace Level
             {
                 connection.Terminals = new List<Terminal>();
             }
-            foreach (var pickupLocation in GetComponentsInChildren<Terminal>())
+            foreach (var terminal in GetComponentsInChildren<Terminal>())
             {
-                var connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, pickupLocation.transform.position)).FirstOrDefault();
-                if (connection != null) connection.Terminals.Add(pickupLocation);
+                var connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, terminal.transform.position)).FirstOrDefault();
+                if (connection != null)
+                {
+                    connection.Terminals.Add(terminal);
+                    terminal.Connection = connection;
+                }
             }
         }
 

@@ -26,6 +26,34 @@ public class PlayerVehicleManager : VehicleManager
         }
     }
 
+    private void HandlePassiveAI()
+    {
+        ParkingRoute[] parkingSpots = FindObjectsOfType<ParkingRoute>();
+
+        ParkingRoute nearestSpot = parkingSpots[0];
+        float nearestDist = Mathf.Infinity;
+
+        for (int i = 0; i < parkingSpots.Length; i++)
+        {
+            if(parkingSpots[i].Type == ParkingRouteType.Volta && !parkingSpots[i].IsOccupied)
+            {
+                float cDist = Vector3.Distance(_selectedVehicle.transform.position, parkingSpots[i].transform.position);
+
+                if(cDist < nearestDist)
+                {
+                    nearestSpot = parkingSpots[i];
+                    nearestDist = cDist;
+                }
+            }
+        }
+
+        Queue<Connection> connections = new Queue<Connection>();
+
+        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0],out connections);
+
+        _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
+    }
+
     #region Unity
 
     private void OnDrawGizmos()
@@ -44,7 +72,10 @@ public class PlayerVehicleManager : VehicleManager
 
     #region UserInterface
 
-    public GameObject DestinationReticle;
+    public GameObject intersectionDestinationReticle;
+    public GameObject pickupDestinationReticle;
+
+
     private List<GameObject> _destinationReticles = new List<GameObject>();
 
     public Vector3 adjustmentVector;
@@ -57,10 +88,17 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + adjustmentVector, Quaternion.identity);
-//                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
-//                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
-                _destinationReticles.Add(reticle);
+                
+                if(destinationable.HasPassenger){
+                    var reticle = Instantiate(pickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                }
+                else if(destinationable != _selectedVehicle.CurrentRoute){
+                    var reticle = Instantiate(intersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                    //                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
+                    //                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
+                    _destinationReticles.Add(reticle);
+                }
+
             }
         }
     }
@@ -73,29 +111,35 @@ public class PlayerVehicleManager : VehicleManager
     {
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
 
+
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
-        var intersection = hitInfo.transform.GetComponent<IntersectionRoute>();
-        var route = hitInfo.transform.GetComponent<Route>();
+
+        var pin = hitInfo.transform.GetComponent<Pin>();
+
 
         if (vehicle)
         {
             if (VehicleSelected) Deselect();
             CarSelection(vehicle);
         }
-        else if (intersection)
+        else if(pin)
         {
-            IntersectionSelection(intersection);
+            var intersection = pin.GetComponentInParent<IntersectionRoute>();
+            var route = pin.GetComponentInParent<Route>();
+            if (intersection)
+            {
+                IntersectionSelection(intersection);
+            }
+            else if (route && route.Destinationable)
+            {
+                RouteSelection(route);
+            }
+            if (route != null)
+            {
+                _previousSelectedRoute = route;
+            }
         }
-        else if (route && route.Destinationable)
-        {
-            RouteSelection(route);
-        }
-
-        if (route != null)
-        {
-            _previousSelectedRoute = route;
-        }
-
+        
         DrawDestinations();
     }
 

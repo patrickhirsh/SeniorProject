@@ -559,4 +559,12 @@ public class BezierCurve : MonoBehaviour {
     {
         points = new BezierPoint[0];
     }
+
+    public void AddCurve(BezierCurve curve)
+    {
+        foreach (var point in curve.GetAnchorPoints())
+        {
+            AddPoint(point);
+        }
+    }
 }

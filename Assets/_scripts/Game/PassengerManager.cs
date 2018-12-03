@@ -53,7 +53,6 @@ public class PassengerManager : MonoBehaviour
     private void SpawnPassenger()
     {
         int index = Random.Range(0, _terminals.Length - 1);
-        Debug.Log(_terminals.Length);
         _terminals[index].SpawnPassenger(PassengerPrefab);
     }
 }
