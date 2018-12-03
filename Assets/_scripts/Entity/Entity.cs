@@ -8,7 +8,7 @@ namespace Level
 {
     public abstract class Entity : MonoBehaviour
     {
-        [ReadOnly] public Node[] Nodes = new Node[0];
+        [ReadOnly] public List<Node> Nodes = new List<Node>();
 
         #region Unity Methods
         protected virtual void Awake()

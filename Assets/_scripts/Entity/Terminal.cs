@@ -4,7 +4,8 @@ namespace Level
 {
     public class Terminal : MonoBehaviour
     {
-        public Route ParentRoute;
+        public Route ParentRoute => Connection.ParentRoute;
+        public Connection Connection;
         public Passenger Passenger;
 
         public bool HasPassenger => Passenger != null;
@@ -13,10 +14,6 @@ namespace Level
 
         private void Awake()
         {
-            if (ParentRoute == null)
-            {
-                ParentRoute = transform.GetComponentInParent<Route>();
-            }
         }
 
         #endregion

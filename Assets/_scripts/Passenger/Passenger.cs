@@ -1,4 +1,5 @@
-﻿using Level;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Level
@@ -22,15 +23,32 @@ namespace Level
         {
             var depth = 0;
             var current = StartTerminal.ParentRoute;
-            while (depth < searchDepth && !current.HasTerminals)
+            var frontier = new HashSet<Route> { current };
+            while (depth < searchDepth)
             {
                 // Pick a random neighbor
-                current = current.ConnectingRoutes[Random.Range(0, current.ConnectingRoutes.Length)];
-                SearchDepth++;
+                var available = current.NeighborRoutes.Where(route => !frontier.Contains(route)).ToArray();
+                current = available[Random.Range(0, available.Length)];
+                depth++;
+            }
+
+            while (!current.HasTerminals)
+            {
+                current = current.NeighborRoutes[Random.Range(0, current.NeighborRoutes.Length)];
             }
 
             // Pick a random terminal
             return current.Terminals[Random.Range(0, current.Terminals.Length)];
+        }
+
+        private void DrawPathToDestination()
+        {
+            Queue<Connection> connections;
+            if (PathfindingManager.Instance.GetPath(StartTerminal.Connection, DestinationTerminal.Connection, out connections))
+            {
+                var curve = PathfindingManager.Instance.GeneratePath(connections);
+
+            }
         }
 
     }
