@@ -71,8 +71,9 @@ namespace Level
         public Passenger Passenger;
         public bool HasPassenger => Passenger != null;
 
-        protected void Start()
+        protected void Awake()
         {
+            _currentTask = null;
             _animationTween = null;     
         }
 

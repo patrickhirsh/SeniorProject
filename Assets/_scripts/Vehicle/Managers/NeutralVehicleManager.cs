@@ -33,8 +33,8 @@ namespace Level
         }
         #endregion
 
-        private const float AVG_SPAWN_TIMER = 1f;
-        private const float SPAWN_TIMER_VARIANCE = 0f;
+        public const float AVG_SPAWN_TIMER = 1f;
+        public const float SPAWN_TIMER_VARIANCE = 0f;
 
         public bool DebugMode = true;
 
@@ -44,11 +44,11 @@ namespace Level
         private float proceduralSpawnTimer = 0f;            // timer used for procedural spawning
 
         /// <summary>
-        /// _reachableSpawnPointConnections keeps a 2D dictionary that maps any SpawnPointEntity connection to a dictionary
+        /// _pathableSpawnPointEntityConnections keeps a 2D dictionary that maps any SpawnPointEntity connection to a dictionary
         /// that contains all other reachable SpawnPointEntity connections as Keys, and their values being the path itself. This means
         /// any pathing that needs to be done between two SpawnPointEntities is baked directly into this datastructure at runtime!
         /// </summary>
-        private Dictionary<Connection, Dictionary<Connection, Queue<Connection>>> _reachableSpawnPointConnections;
+        private Dictionary<Connection, Dictionary<Connection, Queue<Connection>>> _pathableSpawnPointEntityConnections;
 
 
         /// <summary>
@@ -147,14 +147,24 @@ namespace Level
         /// </summary>
         private void SpawnVehicle(Connection spawnPoint, Connection destination, GameObject vehiclePrefab)
         {
+            // instantiate the new vehicle
             GameObject vehicle = Instantiate(vehiclePrefab, this.transform);
             vehicle.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);
 
-            Queue<Connection> path = _reachableSpawnPointConnections[spawnPoint][destination];
+            // construct a copy of the cached connection Queue
+            Queue<Connection> path = new Queue<Connection>();
+            foreach (Connection connection in _pathableSpawnPointEntityConnections[spawnPoint][destination])
+                path.Enqueue(connection);
+            
+            // assign the pathing task to this new vehicle
             vehicle.GetComponent<Vehicle>().AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback));
         }
 
 
+        /// <summary>
+        /// spawns a new neutral vehicle every (AVG_SPAWN_TIMER + (deviation determined by SPAWN_TIMER_VARIANCE)) seconds.
+        /// This method keeps track of the current spawn timer and should be called every frame update.
+        /// </summary>
         private void handleProceduralSpawning()
         {
             // decriment timer
@@ -167,10 +177,10 @@ namespace Level
 
                 // get a random prefab, and random start/end connections
                 int randomPrefabIndex = Random.Range(0, _neutralVehiclePrefabs.Count);
-                int startIndex = Random.Range(0, _reachableSpawnPointConnections.Count);
-                Connection startConnection = _reachableSpawnPointConnections.Keys.ToArray()[startIndex];
-                int destinationIndex = Random.Range(0, _reachableSpawnPointConnections[startConnection].Count);
-                Connection endConnection = _reachableSpawnPointConnections[startConnection].Keys.ToArray()[destinationIndex];                
+                int startIndex = Random.Range(0, _pathableSpawnPointEntityConnections.Count);
+                Connection startConnection = _pathableSpawnPointEntityConnections.Keys.ToArray()[startIndex];
+                int destinationIndex = Random.Range(0, _pathableSpawnPointEntityConnections[startConnection].Count);
+                Connection endConnection = _pathableSpawnPointEntityConnections[startConnection].Keys.ToArray()[destinationIndex];                
 
                 // spawn the vehicle
                 SpawnVehicle(startConnection, endConnection, _neutralVehiclePrefabs[randomPrefabIndex]);
@@ -181,65 +191,55 @@ namespace Level
 
         /// <summary>
         /// for each connection within a SpawnPointEntity, look for a path to all other SpawnPointEntity connections.
-        /// We represent this data in "_reachableSpawnPointEntityConnections", which is documented above. Any connection
-        /// who can neither reach any other connection NOR be reached by another connection is considered "unreachable"
-        /// and will therefore be removed as a key within the base dictionary.
+        /// We represent this data in "_pathableSpawnPointEntityConnections", which is documented above. Any connection
+        /// who can't reach any other connection is considered "unPathable" and will therefore be removed as a key within the base dictionary.
+        /// This method caches all pathing information for every single spawn point at runtime, allowing constant-time path assignment!
         /// </summary>
         private void populateSpawnPointReachabilityPaths()
         {
-            _reachableSpawnPointConnections = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
+            _pathableSpawnPointEntityConnections = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
 
-            // base dictionary should hold a connection key for every single connection in every single SpawnPointConnection
+            // observe all spawn points as potential starting points
             foreach (SpawnRoute spawn1 in _spawnPoints)
+            {
+                // observe all connections within these spawn points as potential starting points
                 foreach (Connection connection1 in spawn1.Connections)
-                    _reachableSpawnPointConnections.Add(connection1, new Dictionary<Connection, Queue<Connection>>());
+                {
+                    // only observe "outbound" connections in the source
+                    if (connection1.Paths.Count == 0)                   
+                        _pathableSpawnPointEntityConnections.Add(connection1, new Dictionary<Connection, Queue<Connection>>());
+                }                   
+            }              
 
             // for each of these connections, check if a path exists between this connection and EVERY OTHER connection
-            foreach (Connection connection1 in _reachableSpawnPointConnections.Keys)
+            List<Connection> noPaths = new List<Connection>();
+            foreach (Connection connection1 in _pathableSpawnPointEntityConnections.Keys)
+            {
+                // observe all other spawn points
                 foreach (SpawnRoute spawn2 in _spawnPoints)
-                    foreach (Connection connection2 in spawn2.Connections)
-                    {
-                        // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
-                        Queue<Connection> path = new Queue<Connection>();
-                        if (PathfindingManager.Instance.GetPath(connection1, connection2, out path))
-                            _reachableSpawnPointConnections[connection1].Add(connection2, path);
-                    }
-
-            // finally, look for connections that can't reach any other connections AND aren't reachable by any other connections
-            // these connections are completely isolated from the grid and should be removed
-            // we chack against <= 1 because every connection has a path to itself
-            List<Connection> unreachable = new List<Connection>();
-            foreach (Connection connection1 in _reachableSpawnPointConnections.Keys)
-                if (_reachableSpawnPointConnections[connection1].Count <= 1)
                 {
-                    // begin searching for other SpawnNodeEntity connections that reach this connection
-                    bool connectionLocated = false;
-                    foreach (Connection connection2 in _reachableSpawnPointConnections.Keys)
+                    // only observe connections not inside our current spawn point
+                    if (connection1.ParentRoute != spawn2)              
                     {
-                        // connection2 is one of the other connections we're checking reachable spawn connections from. 
-                        // connection3 is a spawn connection that connection 2 connects to
-                        if (connection2 != connection1)
-                            foreach (Connection connection3 in _reachableSpawnPointConnections[connection2].Keys)
-                                if (connection3 == connection1)
-                                {
-                                    // if we get here (connection3 == connection1), connection2 has a connection to connection1!
-                                    connectionLocated = true;
-                                    break;
-                                }
-
-                        // connection found. no need to keep looking
-                        if (connectionLocated)
-                            break;
+                        // observe all connections within each of these other spawn points
+                        foreach (Connection connection2 in spawn2.Connections)
+                        {
+                            // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
+                            Queue<Connection> path = new Queue<Connection>();
+                            if (PathfindingManager.Instance.GetPath(connection1, connection2.ConnectsTo, out path))
+                                { _pathableSpawnPointEntityConnections[connection1].Add(connection2.ConnectsTo, path); }                       
+                        }
                     }
+                }                    
 
-                    // if we never found another connection that can reach connection1, it's unreachable.
-                    if (!connectionLocated)
-                        unreachable.Add(connection1);
-                }
+                // if the only reachable connection from this spawnpoint is itself, mark for removal
+                if (_pathableSpawnPointEntityConnections[connection1].Count <= 1)
+                    noPaths.Add(connection1);
+            }
 
             // remove all unreachable connections
-            foreach (Connection connection in unreachable)
-                _reachableSpawnPointConnections.Remove(connection);
+            foreach (Connection connection in noPaths)
+                _pathableSpawnPointEntityConnections.Remove(connection);
         }
     }
 }
