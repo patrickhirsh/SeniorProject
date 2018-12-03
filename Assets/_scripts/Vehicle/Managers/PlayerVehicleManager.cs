@@ -26,7 +26,7 @@ public class PlayerVehicleManager : VehicleManager
         }
     }
 
-    private void HandlePassiveAI()
+    private void HandlePassiveAi()
     {
         ParkingRoute[] parkingSpots = FindObjectsOfType<ParkingRoute>();
 
@@ -72,13 +72,13 @@ public class PlayerVehicleManager : VehicleManager
 
     #region UserInterface
 
-    public GameObject intersectionDestinationReticle;
-    public GameObject pickupDestinationReticle;
+    public GameObject IntersectionDestinationReticle;
+    public GameObject PickupDestinationReticle;
 
 
     private List<GameObject> _destinationReticles = new List<GameObject>();
 
-    public Vector3 adjustmentVector;
+    public Vector3 AdjustmentVector;
 
     private void DrawDestinations()
     {
@@ -90,10 +90,10 @@ public class PlayerVehicleManager : VehicleManager
             {
                 
                 if(destinationable.HasPassenger){
-                    var reticle = Instantiate(pickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                    var reticle = Instantiate(PickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
                 }
                 else if(destinationable != _selectedVehicle.CurrentRoute){
-                    var reticle = Instantiate(intersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                    var reticle = Instantiate(IntersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
                     //                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
                     //                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
                     _destinationReticles.Add(reticle);

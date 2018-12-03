@@ -3424,9 +3424,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252f3ce77b841714290b90a390c92466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DestinationReticle: {fileID: 1667464610071288, guid: e62dad9fb72c7e347b75ef1f9e5df277,
+  IntersectionDestinationReticle: {fileID: 1618488236950430, guid: 4555c914bc425434288810a6cad13fb0,
     type: 2}
-  adjustmentVector: {x: 2, y: 0.1, z: 0.5}
+  PickupDestinationReticle: {fileID: 1460254189280706, guid: f46a483b8c31c4c059520973f4cf678a,
+    type: 2}
+  AdjustmentVector: {x: 0, y: 0, z: 0}
 --- !u!4 &1067143647
 Transform:
   m_ObjectHideFlags: 0

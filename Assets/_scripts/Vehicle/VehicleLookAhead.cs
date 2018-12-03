@@ -8,18 +8,18 @@ namespace Level
 
         public float GodModeWait = 5f;          // how long a vehicle waits before entering godmode
         public float GodModeDuration = 2f;      // how long godmode lasts
-        private float _GodModeTimer = 0;
-        private bool _IsInGodMode = false;
+        private float _godModeTimer = 0;
+        private bool _isInGodMode = false;
 
         private void Update()
         {
-            if(_IsInGodMode)
+            if(_isInGodMode)
             {
-                _GodModeTimer -= Time.deltaTime;
+                _godModeTimer -= Time.deltaTime;
 
-                if(_GodModeTimer <= 0)
+                if(_godModeTimer <= 0)
                 {
-                    _IsInGodMode = false;
+                    _isInGodMode = false;
                 }
 
             }
@@ -32,19 +32,19 @@ namespace Level
         private void OnTriggerStay(Collider other)
         {
             var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null && !_IsInGodMode && vehicle != Vehicle)
+            if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
             {
                 Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, 0, .25f);
 
                 // if the vehicle is stopped
                 if (vehicle.Speed < 0.1f)
                 {
-                    _GodModeTimer += Time.deltaTime;
+                    _godModeTimer += Time.deltaTime;
 
-                    if (_GodModeTimer > GodModeWait)
+                    if (_godModeTimer > GodModeWait)
                     {
-                        _IsInGodMode = true;
-                        _GodModeTimer = GodModeDuration;
+                        _isInGodMode = true;
+                        _godModeTimer = GodModeDuration;
                         vehicle.Speed = vehicle.BaseSpeed;
                     }
                 }
@@ -59,7 +59,7 @@ namespace Level
             if (vehicle != null && vehicle != Vehicle)
             {
                 Vehicle.Speed = Vehicle.BaseSpeed;
-                _GodModeTimer = 0;
+                _godModeTimer = 0;
             }
         }
 

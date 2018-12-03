@@ -57,13 +57,7 @@ namespace Level
                     lineRenderer.numCapVertices = 2;
                     lineRenderer.numCornerVertices = 2;
                     lineRenderer.useWorldSpace = false;
-                    var points = new Vector3[lengthOfLineRenderer];
-                    for (int i = 0; i < lengthOfLineRenderer; i++)
-                    {
-                        points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
-                    }
-
-                    lineRenderer.SetPositions(points);
+                    PathfindingManager.Instance.DrawPath(curve, lineRenderer);
                 }
             }
         }

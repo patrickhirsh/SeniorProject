@@ -73,24 +73,6 @@ namespace Level
 
         protected void Start()
         {
-            /*
-             * A WARNING TO ALL YE SORRY FOLK WHO WANT TO ADD ANYTHING TO VEHICLE.START()
-             * 
-             * For some reason, Start() is invoked multiple times throughout a Vehicle's task execution.
-             * As you can see by the 0 references, it must be unity that does the multiple invokes... 
-             * From what I can tell, it happens immediately after the TravelTo() coroutine completes
-             * and immediatly before TravelPath() begins. I don't know why, but be warned. Until this
-             * mystery is further explored, anything in this method CAN AND WILL be executed after each
-             * coroutine is finished. No, the vehicle is not being re-instantiated/re-initialized. This is
-             * a call to Start() on an exisiting and initialized Vehicle object. This can be verified by
-             * placing a breakpoint here and observing the data fields that should be null on initialize 
-             * (such as _currentTask) during the second call to Start().
-             * 
-             * TODO: Figure out what the hell is going on here
-            */
-
-            // Don't place anything here that can't safely be executed after the completion of any task coroutine...
-
             _animationTween = null;     
         }
 
@@ -196,7 +178,7 @@ namespace Level
         {
             // Build a line to visualize on
             var travelLine = new GameObject("Line", typeof(LineRenderer)).GetComponent<LineRenderer>();
-            int lengthOfLineRenderer = 20;
+            int lengthOfLineRenderer = vehicleCurve.pointCount * 2;
             travelLine.positionCount = lengthOfLineRenderer;
             travelLine.widthMultiplier = .15f;
 
