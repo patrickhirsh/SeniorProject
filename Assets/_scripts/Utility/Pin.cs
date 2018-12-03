@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Billboard : MonoBehaviour
+public class Pin : MonoBehaviour
 {
     public Camera cam;
     // Use this for initialization

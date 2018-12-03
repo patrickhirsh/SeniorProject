@@ -35,9 +35,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4052283945288076}
-  - component: {fileID: 114601813750763072}
   - component: {fileID: 54275840906872502}
   - component: {fileID: 136476021092717274}
+  - component: {fileID: 114101396901160438}
   m_Layer: 0
   m_Name: Pin
   m_TagString: Untagged
@@ -87,7 +87,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114601813750763072
+--- !u!114 &114101396901160438
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618488236950430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 365e04970f4614af881c2973aaff1f42, type: 3}
+  m_Script: {fileID: 11500000, guid: e2a12f253c85641a4885dd99848fbac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}

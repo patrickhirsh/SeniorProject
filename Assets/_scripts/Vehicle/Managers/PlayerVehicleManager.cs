@@ -104,6 +104,7 @@ public class PlayerVehicleManager : VehicleManager
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var intersection = hitInfo.transform.GetComponent<IntersectionRoute>();
         var route = hitInfo.transform.GetComponent<Route>();
+        var pin = hitInfo.transform.GetComponent<Pin>();
 
         if (vehicle)
         {
