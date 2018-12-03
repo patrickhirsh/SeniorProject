@@ -49,9 +49,9 @@ public class PlayerVehicleManager : VehicleManager
 
         Queue<Connection> connections = new Queue<Connection>();
 
-        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection,nearestSpot.Connections[0],out connections);
+        //PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0],out connections);
 
-        _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer,connections,VehicleTaskCallback))
+        _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
     }
 
     #region Unity
