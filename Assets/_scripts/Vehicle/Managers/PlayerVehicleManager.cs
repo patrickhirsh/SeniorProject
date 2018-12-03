@@ -85,10 +85,13 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                var reticle = Instantiate(DestinationReticle, destinationable.transform.position + adjustmentVector, Quaternion.identity);
-//                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
-//                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
-                _destinationReticles.Add(reticle);
+                if(destinationable != _selectedVehicle.CurrentRoute){
+                    var reticle = Instantiate(DestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                    //                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
+                    //                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
+                    _destinationReticles.Add(reticle);
+                }
+
             }
         }
     }
@@ -101,30 +104,35 @@ public class PlayerVehicleManager : VehicleManager
     {
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
 
+
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
-        var intersection = hitInfo.transform.GetComponent<IntersectionRoute>();
-        var route = hitInfo.transform.GetComponent<Route>();
+
         var pin = hitInfo.transform.GetComponent<Pin>();
+
 
         if (vehicle)
         {
             if (VehicleSelected) Deselect();
             CarSelection(vehicle);
         }
-        else if (intersection)
+        else if(pin)
         {
-            IntersectionSelection(intersection);
+            var intersection = pin.GetComponentInParent<IntersectionRoute>();
+            var route = pin.GetComponentInParent<Route>();
+            if (intersection)
+            {
+                IntersectionSelection(intersection);
+            }
+            else if (route && route.Destinationable)
+            {
+                RouteSelection(route);
+            }
+            if (route != null)
+            {
+                _previousSelectedRoute = route;
+            }
         }
-        else if (route && route.Destinationable)
-        {
-            RouteSelection(route);
-        }
-
-        if (route != null)
-        {
-            _previousSelectedRoute = route;
-        }
-
+        
         DrawDestinations();
     }
 

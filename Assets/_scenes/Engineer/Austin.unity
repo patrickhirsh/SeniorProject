@@ -3426,7 +3426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DestinationReticle: {fileID: 1618488236950430, guid: 4555c914bc425434288810a6cad13fb0,
     type: 2}
-  adjustmentVector: {x: 2, y: 0.1, z: 0.5}
+  adjustmentVector: {x: 0, y: 1, z: 0.5}
 --- !u!4 &1067143647
 Transform:
   m_ObjectHideFlags: 0
@@ -5157,6 +5157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugMode: 1
+  _neutralVehiclePrefabs: []
 --- !u!1001 &1534054163
 Prefab:
   m_ObjectHideFlags: 0
