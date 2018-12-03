@@ -72,7 +72,10 @@ public class PlayerVehicleManager : VehicleManager
 
     #region UserInterface
 
-    public GameObject DestinationReticle;
+    public GameObject intersectionDestinationReticle;
+    public GameObject pickupDestinationReticle;
+
+
     private List<GameObject> _destinationReticles = new List<GameObject>();
 
     public Vector3 adjustmentVector;
@@ -85,8 +88,12 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                if(destinationable != _selectedVehicle.CurrentRoute){
-                    var reticle = Instantiate(DestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                
+                if(destinationable.HasPassenger){
+                    var reticle = Instantiate(pickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
+                }
+                else if(destinationable != _selectedVehicle.CurrentRoute){
+                    var reticle = Instantiate(intersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + adjustmentVector, Quaternion.identity, destinationable.transform);
                     //                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
                     //                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
                     _destinationReticles.Add(reticle);
