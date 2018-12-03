@@ -33,8 +33,8 @@ namespace Level
         }
         #endregion
 
-        public const float AVG_SPAWN_TIMER = 1f;
-        public const float SPAWN_TIMER_VARIANCE = 0f;
+        public float AVG_SPAWN_TIMER = 1f;
+        public float SPAWN_TIMER_VARIANCE = 0f;
 
         public bool DebugMode = true;
 
