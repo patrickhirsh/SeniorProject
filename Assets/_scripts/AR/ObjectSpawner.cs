@@ -8,7 +8,7 @@ public class ObjectSpawner : MonoBehaviour
 {
 
     ARPlaneManager PlaneManager;
-    public GameObject SpawnPrefab;
+    public GameObject PassengerPrefab;
 
     // Use this for initialization
     void Start()
@@ -27,6 +27,6 @@ public class ObjectSpawner : MonoBehaviour
     {
         Debug.Log(args.plane.boundedPlane.Center);
 
-        Instantiate(SpawnPrefab, args.plane.boundedPlane.Center, new Quaternion(0, 0, 0, 1));
+        Instantiate(PassengerPrefab, args.plane.boundedPlane.Center, new Quaternion(0, 0, 0, 1));
     }
 }*/

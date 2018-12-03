@@ -218,7 +218,6 @@ public class BezierCurve : MonoBehaviour {
 	/// </param>
 	public Vector3 GetPointAt(float t)
 	{
-        Debug.Log("T: " + t);
 		if(t <= 0) return points[0].position;
 		else if (t >= 1) return points[points.Length - 1].position;
 		
@@ -559,5 +558,13 @@ public class BezierCurve : MonoBehaviour {
     public void Clear()
     {
         points = new BezierPoint[0];
+    }
+
+    public void AddCurve(BezierCurve curve)
+    {
+        foreach (var point in curve.GetAnchorPoints())
+        {
+            AddPoint(point);
+        }
     }
 }

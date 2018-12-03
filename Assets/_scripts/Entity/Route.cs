@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utility;
-using Grid = Utility.Grid;
 
 namespace Level
 {
@@ -10,6 +8,7 @@ namespace Level
     {
         [ReadOnly] public Connection[] Connections;
         [ReadOnly] public BezierCurve[] VehiclePaths;
+        public Terminal[] Terminals => Connections.SelectMany(connection => connection.Terminals).ToArray();
 
         // An array of all entities this entity can reach
         private Route[] _connectingRoutes;
@@ -35,13 +34,46 @@ namespace Level
             }
         }
 
+        public abstract bool Destinationable { get; }
+        public bool HasTerminals => Terminals.Length > 0;
+        public bool HasPassenger => HasTerminals && Terminals.Any(terminal => terminal.HasPassenger);
+
         #region Unity Methods
+
+        protected virtual void Start()
+        {
+            foreach (var curve in VehiclePaths)
+            {
+                if (curve.GetAnchorPoints().Any())
+                {
+                    var child = new GameObject("Line");
+                    child.transform.SetParent(transform);
+                    var lineRenderer = child.AddComponent<LineRenderer>();
+                    int lengthOfLineRenderer = 20;
+                    lineRenderer.material = GameManager.Instance.TempMaterial;
+                    lineRenderer.positionCount = lengthOfLineRenderer;
+                    lineRenderer.widthMultiplier = .06f;
+
+                    lineRenderer.numCapVertices = 2;
+                    lineRenderer.numCornerVertices = 2;
+                    lineRenderer.useWorldSpace = false;
+                    var points = new Vector3[lengthOfLineRenderer];
+                    for (int i = 0; i < lengthOfLineRenderer; i++)
+                    {
+                        points[i] = curve.GetPointAt(i / (float)(lengthOfLineRenderer - 1));
+                    }
+
+                    lineRenderer.SetPositions(points);
+                }
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {
             var target = other.GetComponent<Vehicle>();
             if (target != null)
             {
+                target.SetCurrentRoute(this);
                 HandleVehicleEnter(target);
             }
         }
@@ -83,7 +115,7 @@ namespace Level
         public void BakePrefab()
         {
             Connections = GetComponentsInChildren<Connection>();
-            Nodes = GetComponentsInChildren<Node>();
+            Nodes = GetComponentsInChildren<Node>().ToList();
             VehiclePaths = GetComponentsInChildren<BezierCurve>();
 
             BakePaths(Connections, VehiclePaths);
@@ -94,12 +126,16 @@ namespace Level
         {
             foreach (var connection in connections)
             {
-                connection.PickupLocations = new List<PickupLocation>();
+                connection.Terminals = new List<Terminal>();
             }
-            foreach (var pickupLocation in GetComponentsInChildren<PickupLocation>())
+            foreach (var terminal in GetComponentsInChildren<Terminal>())
             {
-                var connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, pickupLocation.transform.position)).FirstOrDefault();
-                if (connection != null) connection.PickupLocations.Add(pickupLocation);
+                var connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, terminal.transform.position)).FirstOrDefault();
+                if (connection != null)
+                {
+                    connection.Terminals.Add(terminal);
+                    terminal.Connection = connection;
+                }
             }
         }
 

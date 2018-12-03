@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -29,11 +29,11 @@ namespace Level
         /// If start == end, returns true with an empty path
         /// This algorithm implements a modified version of Dijkstra's Algorithm.
         /// </summary>
-        public bool GetPath(Connection start, Connection end, out List<BezierCurve> path)
+        public bool GetPath(Connection start, Connection end, out Queue<Connection> path)
         {
             #region INPUT PROCESSING/VALIDATION
 
-            path = new List<BezierCurve>();
+            path = new Queue<Connection>();
 
             // The given connections must not be null
             if ((start == null) || (end == null))
@@ -63,7 +63,7 @@ namespace Level
             #region CORE ALGORITHM
 
             // indicates that we've located the end connection entity. halt processing and exit the while loop
-            bool endConnectionDiscovered = false;       
+            bool endConnectionDiscovered = false;
 
             // Begin exploring the frontier. When the frontier is empty, we've processed all reachable connections.
             // These are the voyages of the Starship Enterprise...
@@ -83,7 +83,7 @@ namespace Level
 
 
                 // if this fails, there exists a connection with a path to it, but no paths leaving it. Our runtime path "baking" algorithm failed somewhere.
-                Debug.Assert(current.connection.ConnectsTo != null);                            
+                Debug.Assert(current.connection.ConnectsTo != null);
 
 
                 // BEGIN PROCESSING
@@ -137,34 +137,23 @@ namespace Level
             // if we discovered the end connection, construct the best path
             if (endConnectionDiscovered)
             {
-                BezierCurve curve = new BezierCurve();
+
+                // temporarily store the reversed path
+                List<Connection> reversePath = new List<Connection>();
+                reversePath.Add(current.connection);
 
                 // traverse backwards through the best path (using prevConnection) to construct the path
-                while (true)
+                while (current.prevConnection != null)
                 {
-                    // we should always be able to traverse backwards until we reach the else case and break. Otherwise, we have a fault in the best path linked list
-                    Debug.Assert(current.prevConnection != null);
-
-                    // keep an eye out for the start connection as we construct the path
-                    if (current.prevConnection != start)
-                    {
-                        // step backwards to the previous connection, then get the curve to the current connection
-                        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
-                            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
-                        path.Add(curve);
-                        current = processed[current.prevConnection]; 
-                    }
-
-                    // we've reached the first (start) connection. Generate the last path and exit
-                    else
-                    {
-                        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
-                            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
-                        path.Add(curve);
-                        break;
-                    }
+                    reversePath.Add(current.prevConnection.ConnectsTo);
+                    reversePath.Add(current.prevConnection);
+                    current = processed[current.prevConnection];
                 }
-                path.Reverse();     // we generated the list in reverese order
+
+                // add all final connections to the queue in the proper order
+                for (int i = reversePath.Count - 1; i >= 0; i--)
+                    path.Enqueue(reversePath[i]);
+
                 return true;
             }
 
@@ -178,14 +167,13 @@ namespace Level
             #endregion
         }
 
-
         /// <summary>
         /// GetPath is used to obtain the best path between two Routes with the
         /// requirement that the path must go through the intersections in "intersections"
         /// (and ONLY these intersections). This method currently doesn't support a series
         /// of intersections that loop in a circle.
         /// </summary>
-        public bool GetPath(Route start, Queue<Intersection> intersections, Route end, out Queue<Connection> path)
+        public bool GetPath(Route start, Queue<IntersectionRoute> intersections, Route end, out Queue<Connection> path)
         {
             #region INPUT PROCESSING/VALIDATION
 
@@ -217,7 +205,6 @@ namespace Level
                 if (connection.ConnectsTo != null)
                     frontier.Add(new PathNode(connection, 0, null));
 
-
             PathNode current = frontier[0];
 
             #endregion
@@ -225,8 +212,10 @@ namespace Level
 
             #region CORE ALGORITHM
 
+
+            // TODO: Don't initalize monobehavior Intersection like this...
             bool lookForEnd = false;                                        // indicates we've gone through all intersections and are now looking for "end"
-            Intersection intersection = new Intersection();                 // the current intersection we're looking for (if we aren't looking for "end")
+            IntersectionRoute intersection = new IntersectionRoute();                 // the current intersection we're looking for (if we aren't looking for "end")
             List<PathNode> destinationPathnodes = new List<PathNode>();     // stores a list of all connections we've tried to process (reached) within the current destination
 
             while (true)
@@ -269,37 +258,43 @@ namespace Level
                     {
                         processNode = false;
                         processed.Add(current.connection, current);
-                    }                       
-
-                    // search for the next "destination". if we find it, don't process it, but store it in "destinationPathnodes"
-                    if (!lookForEnd)
-                    {
-                        // we're looking for "intersection"
-                        if (current.connection.ConnectsTo.ParentRoute == intersection)
-                        {
-                            processNode = false;
-                            destinationPathnodes.Add(current);
-                            processed.Add(current.connection, current);
-                        }
                     }
 
                     else
                     {
-                        // we're looking for "end"
-                        if (current.connection.ConnectsTo.ParentRoute == end)
+                        // search for the next "destination". if we find it, don't process it, but store it in "destinationPathnodes"
+                        if (!lookForEnd)
+                        {
+                            // we're looking for "intersection"
+                            if (current.connection.ConnectsTo.ParentRoute == intersection)
+                            {
+                                processNode = false;
+                                destinationPathnodes.Add(current);
+                                processed.Add(current.connection, current);
+                            }
+                        }
+
+                        else
+                        {
+                            // we're looking for "end"
+                            if (current.connection.ConnectsTo.ParentRoute == end)
+                            {
+                                processNode = false;
+                                destinationPathnodes.Add(current);
+                                processed.Add(current.connection, current);
+                            }
+                        }
+
+                        // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
+                        if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(IntersectionRoute)) && (current.connection.ConnectsTo.ParentRoute != end) &&
+                            (current.connection.ConnectsTo.ParentRoute != intersection))
                         {
                             processNode = false;
-                            destinationPathnodes.Add(current);
                             processed.Add(current.connection, current);
                         }
-                    }                   
-                    
-                    // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
-                    if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(Intersection)) && (current.connection.ConnectsTo.ParentRoute != end))
-                    {
-                        processNode = false;
-                        processed.Add(current.connection, current);
                     }
+
+
 
 
                     // BEGIN PROCESSING
@@ -376,11 +371,13 @@ namespace Level
                             // if we've already added a "path", see if this inbound gets there in a shorter path. If so, replace it with this one
                             float distance = Vector3.Distance(inbound.connection.ConnectsTo.transform.position, pathsTo.Connection.transform.position) + inbound.distance;
                             if (reachableOutbound.ContainsKey(pathsTo.Connection))
+                            {
                                 if (reachableOutbound[pathsTo.Connection].distance > distance)
                                 {
                                     reachableOutbound.Remove(pathsTo.Connection);
                                     reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection.ConnectsTo));
                                 }
+                            }
 
                             // otherwise, this is the first inbound that reaches this outbound. Add the path
                             else
@@ -391,7 +388,7 @@ namespace Level
                     // add these new "starting points" to the frontier
                     foreach (PathNode outboundConnection in reachableOutbound.Values)
                         frontier.Add(outboundConnection);
-                }                                             
+                }
             }
 
             #endregion
@@ -410,6 +407,7 @@ namespace Level
             // traverse backwards through the best path (using prevConnection) to construct the path
             while (current.prevConnection != null)
             {
+                reversePath.Add(current.prevConnection.ConnectsTo);
                 reversePath.Add(current.prevConnection);
                 current = processed[current.prevConnection];
             }
@@ -423,6 +421,38 @@ namespace Level
             #endregion
         }
 
+
+        #region BEZIER CURVE CONSTRUCTION
+        //BezierCurve curve = new BezierCurve();
+
+        //// traverse backwards through the best path (using prevConnection) to construct the path
+        //while (true)
+        //{
+        //    // we should always be able to traverse backwards until we reach the else case and break. Otherwise, we have a fault in the best path linked list
+        //    Debug.Assert(current.prevConnection != null);
+
+        //    // keep an eye out for the start connection as we construct the path
+        //    if (current.prevConnection != start)
+        //    {
+        //        // step backwards to the previous connection, then get the curve to the current connection
+        //        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
+        //            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
+        //        path.Add(curve);
+        //        current = processed[current.prevConnection]; 
+        //    }
+
+        //    // we've reached the first (start) connection. Generate the last path and exit
+        //    else
+        //    {
+        //        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
+        //            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
+        //        path.Add(curve);
+        //        break;
+        //    }
+        //}
+        //path.Reverse();     // we generated the list in reverese order
+        //return true;
+        #endregion
 
         #region AMBIGUOUS PATHFINDING
         /*
@@ -605,6 +635,78 @@ namespace Level
         }
 
         */
+        #endregion
+
+
+        #region CURVE GENERATION
+
+        /// <summary>
+        /// Creates a BezierCurve component with a path generated by passing a queue of connections
+        /// </summary>
+        /// <returns>A BezierCurve component</returns>
+        public BezierCurve GeneratePath(Queue<Connection> connections)
+        {
+            var obj = new GameObject("BezierCurve", typeof(BezierCurve));
+            var objCurve = obj.GetComponent<BezierCurve>();
+
+            if (connections.Peek().Paths.Count <= 0)
+            {
+                connections.Dequeue();
+            }
+
+            // traverse each path in _connectionsPath
+            while (connections.Count > 0)
+            {
+                BezierCurve curve;
+                Connection current = connections.Dequeue();
+                Connection target = connections.Dequeue();
+
+                Debug.Assert(current != null, "Current is null");
+                Debug.Assert(target != null, "Target is null");
+
+                // get path between this connection and the next connection
+                if (current.GetPathToConnection(target, out curve))
+                {
+                    objCurve.AddCurve(curve);
+                }
+                else
+                {
+                    // no path between two adjacent connections in the queue
+                    Debug.LogWarning($"Could not find path between connections");
+                }
+            }
+            return objCurve;
+        }
+
+        public void DrawPath(BezierCurve curve, LineRenderer lineRenderer)
+        {
+            if (curve.GetAnchorPoints().Any())
+            {
+                var points = new Vector3[lineRenderer.positionCount];
+                for (int i = 0; i < lineRenderer.positionCount; i++)
+                {
+                    points[i] = curve.GetPointAt(i / (float)(lineRenderer.positionCount - 1));
+                }
+
+                lineRenderer.SetPositions(points);
+            }
+        }
+
+
+        public void DrawPath(BezierCurve curve, LineRenderer lineRenderer, float startFrom)
+        {
+            if (curve.GetAnchorPoints().Any())
+            {
+                var points = new Vector3[lineRenderer.positionCount];
+                for (int i = 0; i < lineRenderer.positionCount; i++)
+                {
+                    points[i] = curve.GetPointAt(startFrom + i / (float)(lineRenderer.positionCount - 1));
+                }
+
+                lineRenderer.SetPositions(points);
+            }
+        }
+
         #endregion
     }
 }

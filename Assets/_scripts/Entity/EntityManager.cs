@@ -1,9 +1,9 @@
 ﻿using Level;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Utility;
-using Grid = Utility.Grid;
 
 /// <summary>
 /// Manages the state of all the entities in a level
@@ -117,11 +117,12 @@ public class EntityManager : MonoBehaviour
         AddEntity(entity);
     }
 
-    public void SpawnLevel(Vector3 pos, Vector3 scale)
+    public void SpawnLevel(Vector3 pos)
     {
-        transform.position = Grid.GetCellIndex(pos).GetPosition();
-//        var spawnedLevel = Instantiate(LevelPrefab, pos, Quaternion.identity, transform);
-//        spawnedLevel.transform.localScale = scale;
-        Initialize();
+        throw new NotImplementedException();
+        //        transform.position = pos;
+        //        var spawnedLevel = Instantiate(LevelPrefab, pos, Quaternion.identity, transform);
+        //        spawnedLevel.transform.localScale = scale;
+        //        Initialize();
     }
 }
