@@ -21,7 +21,7 @@ namespace Level
             EditorGUILayout.LabelField($"{myTarget.Nodes.Length} Nodes");
             EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
             EditorGUILayout.LabelField($"{myTarget.VehiclePaths.Length} Vehicle Paths");
-            EditorGUILayout.LabelField($"{myTarget.Connections.SelectMany(connection => connection.PickupLocations).Count()} Pickup Locations");
+            EditorGUILayout.LabelField($"{myTarget.Connections.SelectMany(connection => connection.Terminals).Count()} Terminals");
             _showNeighbors = EditorGUILayout.Foldout(_showNeighbors, $"{myTarget.NeighborRoutes.Length} Neighbors");
             if (_showNeighbors)
             {

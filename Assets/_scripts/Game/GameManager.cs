@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 /// <summary>
 /// Manages the state of the game like transition between levels or menus

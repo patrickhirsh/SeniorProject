@@ -1,11 +1,12 @@
-﻿using Level;
+﻿using System.Linq;
+using Level;
 using UnityEngine;
 
 namespace Level
 {
     public class LaneRoute : Route
     {
-        public override bool Destinationable => false;
+        public override bool Destinationable =>  Terminals.Any(terminal => terminal.HasPassenger);
 
         public override void HandleVehicleEnter(Vehicle vehicle)
         {

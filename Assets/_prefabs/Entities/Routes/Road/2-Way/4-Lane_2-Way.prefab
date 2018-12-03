@@ -2006,8 +2006,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792980702454646}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -10.5, y: 0, z: 24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4614810060089646}
@@ -3635,7 +3635,7 @@ MonoBehaviour:
   Paths:
   - Connection: {fileID: 114578227593754898}
     Path: {fileID: 114543253171926076}
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114070533040198894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3647,6 +3647,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7fca02f4bf5f34ba6c691adf79a83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ParentRoute: {fileID: 0}
+  Passenger: {fileID: 0}
 --- !u!114 &114104440713912138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3712,7 +3714,7 @@ MonoBehaviour:
     Path: {fileID: 114172366361954276}
   - Connection: {fileID: 114989054957183926}
     Path: {fileID: 114415831976668330}
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114155584476393134
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3897,7 +3899,7 @@ MonoBehaviour:
     Path: {fileID: 114059106068981918}
   - Connection: {fileID: 114646918326134228}
     Path: {fileID: 114698210369669202}
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114284798157741322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4505,7 +4507,7 @@ MonoBehaviour:
   ConnectsTo: {fileID: 0}
   ParentRoute: {fileID: 0}
   Paths: []
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114591786715261316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4573,7 +4575,7 @@ MonoBehaviour:
     Path: {fileID: 114859530274909232}
   - Connection: {fileID: 114935554612243592}
     Path: {fileID: 114447035620922692}
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114646918326134228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4588,7 +4590,7 @@ MonoBehaviour:
   ConnectsTo: {fileID: 0}
   ParentRoute: {fileID: 0}
   Paths: []
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114650391281048838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4715,7 +4717,7 @@ MonoBehaviour:
   Paths:
   - Connection: {fileID: 114578227593754898}
     Path: {fileID: 114249706023000818}
-  PickupLocations:
+  Terminals:
   - {fileID: 114070533040198894}
 --- !u!114 &114698210369669202
 MonoBehaviour:
@@ -4824,6 +4826,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7fca02f4bf5f34ba6c691adf79a83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ParentRoute: {fileID: 0}
+  Passenger: {fileID: 0}
 --- !u!114 &114776232564958638
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4846,7 +4850,7 @@ MonoBehaviour:
     Path: {fileID: 114231773566659386}
   - Connection: {fileID: 114684833638213846}
     Path: {fileID: 114050112169527598}
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114784563552405610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4908,7 +4912,7 @@ MonoBehaviour:
   Paths:
   - Connection: {fileID: 114845394369987700}
     Path: {fileID: 114314711361257148}
-  PickupLocations:
+  Terminals:
   - {fileID: 114773773752738366}
 --- !u!114 &114845394369987700
 MonoBehaviour:
@@ -4924,7 +4928,7 @@ MonoBehaviour:
   ConnectsTo: {fileID: 0}
   ParentRoute: {fileID: 0}
   Paths: []
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114859530274909232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5001,7 +5005,7 @@ MonoBehaviour:
   Paths:
   - Connection: {fileID: 114845394369987700}
     Path: {fileID: 114763439065311410}
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114938387692116870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5075,7 +5079,7 @@ MonoBehaviour:
   ConnectsTo: {fileID: 0}
   ParentRoute: {fileID: 0}
   Paths: []
-  PickupLocations: []
+  Terminals: []
 --- !u!114 &114990263268639702
 MonoBehaviour:
   m_ObjectHideFlags: 1
