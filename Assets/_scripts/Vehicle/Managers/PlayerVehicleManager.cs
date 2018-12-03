@@ -30,7 +30,7 @@ public class PlayerVehicleManager : VehicleManager
     {
         ParkingRoute[] parkingSpots = FindObjectsOfType<ParkingRoute>();
 
-        ParkingRoute nearestSpot;
+        ParkingRoute nearestSpot = parkingSpots[0];
         float nearestDist = Mathf.Infinity;
 
         for (int i = 0; i < parkingSpots.Length; i++)
@@ -49,7 +49,7 @@ public class PlayerVehicleManager : VehicleManager
 
         Queue<Connection> connections = new Queue<Connection>();
 
-        //PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0],out connections);
+        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0],out connections);
 
         _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
     }
