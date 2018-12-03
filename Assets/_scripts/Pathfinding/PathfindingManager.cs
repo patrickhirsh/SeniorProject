@@ -29,11 +29,11 @@ namespace Level
         /// If start == end, returns true with an empty path
         /// This algorithm implements a modified version of Dijkstra's Algorithm.
         /// </summary>
-        public bool GetPath(Connection start, Connection end, out List<BezierCurve> path)
+        public bool GetPath(Connection start, Connection end, out Queue<Connection> path)
         {
             #region INPUT PROCESSING/VALIDATION
 
-            path = new List<BezierCurve>();
+            path = new Queue<Connection>();
 
             // The given connections must not be null
             if ((start == null) || (end == null))
@@ -136,35 +136,23 @@ namespace Level
 
             // if we discovered the end connection, construct the best path
             if (endConnectionDiscovered)
-            {
-                BezierCurve curve = new BezierCurve();
+            {               
+
+                // temporarily store the reversed path
+                List<Connection> reversePath = new List<Connection>();
+                reversePath.Add(current.connection);
 
                 // traverse backwards through the best path (using prevConnection) to construct the path
-                while (true)
+                while (current.prevConnection != null)
                 {
-                    // we should always be able to traverse backwards until we reach the else case and break. Otherwise, we have a fault in the best path linked list
-                    Debug.Assert(current.prevConnection != null);
-
-                    // keep an eye out for the start connection as we construct the path
-                    if (current.prevConnection != start)
-                    {
-                        // step backwards to the previous connection, then get the curve to the current connection
-                        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
-                            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
-                        path.Add(curve);
-                        current = processed[current.prevConnection]; 
-                    }
-
-                    // we've reached the first (start) connection. Generate the last path and exit
-                    else
-                    {
-                        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
-                            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
-                        path.Add(curve);
-                        break;
-                    }
+                    reversePath.Add(current.prevConnection);
+                    current = processed[current.prevConnection];
                 }
-                path.Reverse();     // we generated the list in reverese order
+
+                // add all final connections to the queue in the proper order
+                for (int i = reversePath.Count - 1; i >= 0; i--)
+                    path.Enqueue(reversePath[i]);
+
                 return true;
             }
 
@@ -177,7 +165,6 @@ namespace Level
 
             #endregion
         }
-
 
         /// <summary>
         /// GetPath is used to obtain the best path between two Routes with the
@@ -432,6 +419,40 @@ namespace Level
             #endregion
         }
 
+        
+
+
+        #region BEZIER CURVE CONSTRUCTION
+        //BezierCurve curve = new BezierCurve();
+
+        //// traverse backwards through the best path (using prevConnection) to construct the path
+        //while (true)
+        //{
+        //    // we should always be able to traverse backwards until we reach the else case and break. Otherwise, we have a fault in the best path linked list
+        //    Debug.Assert(current.prevConnection != null);
+
+        //    // keep an eye out for the start connection as we construct the path
+        //    if (current.prevConnection != start)
+        //    {
+        //        // step backwards to the previous connection, then get the curve to the current connection
+        //        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
+        //            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
+        //        path.Add(curve);
+        //        current = processed[current.prevConnection]; 
+        //    }
+
+        //    // we've reached the first (start) connection. Generate the last path and exit
+        //    else
+        //    {
+        //        if (!current.prevConnection.GetPathToConnection(current.connection, out curve))
+        //            if (_debugMode) { Debug.LogError("GetPath() Generated an invalid path"); }
+        //        path.Add(curve);
+        //        break;
+        //    }
+        //}
+        //path.Reverse();     // we generated the list in reverese order
+        //return true;
+        #endregion
 
         #region AMBIGUOUS PATHFINDING
         /*

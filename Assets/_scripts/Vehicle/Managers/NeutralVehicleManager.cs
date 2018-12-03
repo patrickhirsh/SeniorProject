@@ -38,7 +38,7 @@ namespace Level
 
         public bool DebugMode = true;
 
-        private List<GameObject> _neutralVehiclePrefabs;    // all neutral vehicle prefabs valid for this scene
+        public List<GameObject> _neutralVehiclePrefabs;     // all neutral vehicle prefabs valid for this scene
         private List<SpawnRoute> _spawnPoints;              // all valid spawn points in the current level
         private SpawnState _spawnState;                     // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
         private float proceduralSpawnTimer = 0f;            // timer used for procedural spawning
@@ -48,7 +48,7 @@ namespace Level
         /// that contains all other reachable SpawnPointEntity connections as Keys, and their values being the path itself. This means
         /// any pathing that needs to be done between two SpawnPointEntities is baked directly into this datastructure at runtime!
         /// </summary>
-        private Dictionary<Connection, Dictionary<Connection, List<BezierCurve>>> _reachableSpawnPointConnections;
+        private Dictionary<Connection, Dictionary<Connection, Queue<Connection>>> _reachableSpawnPointConnections;
 
 
         public void Start()
@@ -76,8 +76,8 @@ namespace Level
                     foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
                         _spawnPoints.Add(spawn);
 
-                    // populate vehicle prefabs list
-                    populateNeutralVehiclePrefabs();
+                    // ensure neutral vehicles have been set in the inspector
+                    Debug.Assert(_neutralVehiclePrefabs != null);
                     break;
 
 
@@ -159,11 +159,9 @@ namespace Level
             GameObject vehicle = Instantiate(vehiclePrefab, this.transform);
             vehicle.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);
 
-            List<BezierCurve> path;
+            Queue<Connection> path;
             PathfindingManager.Instance.GetPath(spawnPoint, destination, out path);
-            //vehicle.GetComponent<Vehicle>().AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback))
-
-            // TODO: Shit's broke. Gotta re-write GetPath() such that it returns a Queue<Connection>
+            vehicle.GetComponent<Vehicle>().AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback));
         }
 
 
@@ -191,7 +189,7 @@ namespace Level
             // base dictionary should hold a connection key for every single connection in every single SpawnPointConnection
             foreach (SpawnRoute spawn1 in _spawnPoints)
                 foreach (Connection connection1 in spawn1.Connections)
-                    _reachableSpawnPointConnections.Add(connection1, new Dictionary<Connection, List<BezierCurve>>());
+                    _reachableSpawnPointConnections.Add(connection1, new Dictionary<Connection, Queue<Connection>>());
 
             // for each of these connections, check if a path exists between this connection and EVERY OTHER connection
             foreach (Connection connection1 in _reachableSpawnPointConnections.Keys)
@@ -199,7 +197,7 @@ namespace Level
                     foreach (Connection connection2 in spawn2.Connections)
                     {
                         // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
-                        List<BezierCurve> path = new List<BezierCurve>();
+                        Queue<Connection> path = new Queue<Connection>();
                         if (PathfindingManager.Instance.GetPath(connection1, connection2, out path))
                             _reachableSpawnPointConnections[connection1].Add(connection2, path);
                     }
@@ -234,18 +232,6 @@ namespace Level
                     if (!connectionLocated)
                         _reachableSpawnPointConnections.Remove(connection1);
                 }
-        }
-
-        /// <summary>
-        /// Retrieves all vehicle prefabs located at "_prefabs/Vehicles/Neutral Vehicles" and stores them
-        /// for neutral vehicle spawning
-        /// </summary>
-        private void populateNeutralVehiclePrefabs()
-        {
-            _neutralVehiclePrefabs = new List<GameObject>();
-            IEnumerable<GameObject> vehicles = Resources.LoadAll("_prefabs/Vehicles/Neutral Vehicles", typeof(GameObject)).Cast<GameObject>();
-            foreach (GameObject vehicle in vehicles)
-                _neutralVehiclePrefabs.Add(vehicle);
         }
     }
 }
