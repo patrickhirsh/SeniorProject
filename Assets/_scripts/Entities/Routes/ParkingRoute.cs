@@ -5,8 +5,11 @@ using Level;
 
 namespace Level
 {
+    public enum ParkingRouteType { Volta, Enemy }
+
     public class ParkingRoute : Route
     {
+        public ParkingRouteType Type;
         public bool IsOccupied;
 
         public override bool Destinationable => false;
@@ -22,4 +25,3 @@ namespace Level
         }
     }
 }
-

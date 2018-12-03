@@ -26,6 +26,34 @@ public class PlayerVehicleManager : VehicleManager
         }
     }
 
+    private void HandlePassiveAI()
+    {
+        ParkingRoute[] parkingSpots = FindObjectsOfType<ParkingRoute>();
+
+        ParkingRoute nearestSpot;
+        float nearestDist = Mathf.Infinity;
+
+        for (int i = 0; i < parkingSpots.Length; i++)
+        {
+            if(parkingSpots[i].Type == ParkingRouteType.Volta && !parkingSpots[i].IsOccupied)
+            {
+                float cDist = Vector3.Distance(_selectedVehicle.transform.position, parkingSpots[i].transform.position);
+
+                if(cDist < nearestDist)
+                {
+                    nearestSpot = parkingSpots[i];
+                    nearestDist = cDist;
+                }
+            }
+        }
+
+        Queue<Connection> connections = new Queue<Connection>();
+
+        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection,nearestSpot.Connections[0],out connections);
+
+        _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer,connections,VehicleTaskCallback))
+    }
+
     #region Unity
 
     private void OnDrawGizmos()
