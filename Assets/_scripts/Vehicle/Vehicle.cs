@@ -60,7 +60,10 @@ namespace Level
     {
         public Route CurrentRoute;              // the route this vehicle is currently on
         public Connection CurrentConnection;    // the connection this vehicle is currently on
-        public float LookAhead = .2f;           // used to create more natural turn animations
+
+        //TODO: This is not the value look ahead is being assigned. I had to set it in Awake. Why?
+        public float LookAhead = 1f;           // used to create more natural turn animations
+
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
         public float RecoverySpeed = 5f;        // the speed at which this vehicle will travel to recover when "lost"
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
@@ -75,6 +78,7 @@ namespace Level
 
         protected void Awake()
         {
+            LookAhead = .003f;
             _currentTask = null;
             _animationTween = null;     
         }

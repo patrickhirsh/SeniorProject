@@ -10,14 +10,24 @@ namespace Level
         public Terminal DestinationTerminal;
 
         public int SearchDepth;
+
+        public GameObject PassengerDestinationReticle;
+        public Vector3 AdjustmentVector;
         #region Unity Methods
 
         public void Start()
         {
+            
             DestinationTerminal = PickRandomTerminal(SearchDepth);
+
         }
 
         #endregion
+
+        public void SpawnDestinationReticle()
+        {
+            var reticle = Instantiate(PassengerDestinationReticle, DestinationTerminal.ParentRoute.transform.position + AdjustmentVector, Quaternion.identity, DestinationTerminal.transform);
+        }
 
         private Terminal PickRandomTerminal(int searchDepth)
         {

@@ -24,12 +24,24 @@ public class PlayerVehicleManager : VehicleManager
         {
             var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(terminal => terminal.HasPassenger);
             vehicle.AddPassenger(passengerTerminals.Select(terminal => terminal.Passenger).FirstOrDefault());
+            vehicle.Passenger.SpawnDestinationReticle();
         }
         if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
         {
-            Destroy(vehicle.Passenger.gameObject);
-            Debug.Log("PASSENGER DELIVERED");
+            DeliverPassenger(vehicle);
         }
+    }
+
+    private static void DeliverPassenger(Vehicle vehicle)
+    {
+        var hasPin = vehicle.CurrentRoute.GetComponentInChildren<Pin>();
+        if (hasPin)
+        {
+            Debug.Log("HAs the pin");
+            Destroy(hasPin.transform.parent.gameObject);
+        }
+        Destroy(vehicle.Passenger.gameObject);
+        Debug.Log("PASSENGER DELIVERED");
     }
 
     private void HandlePassiveAi()
@@ -80,6 +92,7 @@ public class PlayerVehicleManager : VehicleManager
 
     public GameObject IntersectionDestinationReticle;
     public GameObject PickupDestinationReticle;
+    public GameObject PassengerDeliveryReticle;
 
     private List<GameObject> _destinationReticles = new List<GameObject>();
 
@@ -92,7 +105,11 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-
+                //if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passenger.DestinationTerminal.ParentRoute)
+                //{
+                //    //DO NOT A THING
+                //    break;
+                //}
                 if (destinationable.HasPassenger)
                 {
                     var reticle = Instantiate(PickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
@@ -118,7 +135,8 @@ public class PlayerVehicleManager : VehicleManager
 
         if (vehicle && vehicle.Manager == this)
         {
-            if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Vehicle {vehicle}", vehicle);
+            //if (Debugger.Profile.DebugPlayerVehicleManager) 
+                Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             if (VehicleSelected) Deselect();
             CarSelection(vehicle);
         }
@@ -126,7 +144,12 @@ public class PlayerVehicleManager : VehicleManager
         {
             var route = pin.GetComponentInParent<Route>();
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Route {route}", route);
-
+            /*
+            if (_selectedVehicle.HasPassenger && route == _selectedVehicle.Passenger.DestinationTerminal.ParentRoute)
+            {
+                RouteSelection(route);
+            }
+            else */
             if (route.GetType() == typeof(IntersectionRoute))
             {
                 IntersectionSelection((IntersectionRoute)route);
@@ -145,7 +168,7 @@ public class PlayerVehicleManager : VehicleManager
 
     private void DrawPassengerInfo()
     {
-        var line = GetComponent<LineRenderer>();
+        /*var line = GetComponent<LineRenderer>();
         Debug.Assert(line != null, $"{name} needs a line renderer");
 
         if (line != null && _selectedVehicle != null && _selectedVehicle.HasPassenger)
@@ -158,7 +181,7 @@ public class PlayerVehicleManager : VehicleManager
                 points[i].y += .5f;
             }
             line.SetPositions(points);
-        }
+        }*/
     }
 
     public void HandleNotHit()

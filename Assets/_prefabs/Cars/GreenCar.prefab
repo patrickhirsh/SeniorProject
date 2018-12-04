@@ -813,7 +813,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db6f6dca30fbe34eb6b8f5edb92f82e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugMode: 0
+  CurrentRoute: {fileID: 0}
   CurrentConnection: {fileID: 0}
-  LookAhead: 0.2
+  LookAhead: 0.002
   Speed: 5
+  RecoverySpeed: 5
+  BaseSpeed: 5
+  Passenger: {fileID: 0}
+  Manager: {fileID: 0}
