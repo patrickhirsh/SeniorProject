@@ -9,7 +9,7 @@ namespace Level
         public Passenger Passenger;
 
         public bool HasPassenger => Passenger != null;
-        
+
         #region Unity Methods
 
         private void Awake()
@@ -22,6 +22,11 @@ namespace Level
         {
             Passenger = Instantiate(prefab, transform.position, Quaternion.identity, transform);
             Passenger.StartTerminal = this;
+        }
+
+        public void RemovePassenger()
+        {
+            Passenger = null;
         }
     }
 }

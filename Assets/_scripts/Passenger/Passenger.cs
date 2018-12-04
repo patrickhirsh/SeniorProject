@@ -31,6 +31,12 @@ namespace Level
 
         private Terminal PickRandomTerminal(int searchDepth)
         {
+            var routes = EntityManager.Instance.Routes.Where(route => route.HasTerminals).ToArray();
+            var terminals = routes[Random.Range(0, routes.Length)].Terminals;
+            var terminal = terminals[Random.Range(0, terminals.Length)];
+            if (terminal != StartTerminal) return terminal;
+            return PickRandomTerminal(searchDepth);
+
             var depth = 0;
             var current = StartTerminal.ParentRoute;
             var frontier = new HashSet<Route> { current };

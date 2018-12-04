@@ -7,7 +7,7 @@ namespace Level
     {
         public Vehicle Vehicle;
 
-        public float GodModeWait = 1f;          // how long a vehicle waits before entering godmode
+        public float GodModeWait = 5f;          // how long a vehicle waits before entering godmode
         public float GodModeDuration = 2f;      // how long godmode lasts
         private float _godModeTimer = 0;
         private bool _isInGodMode = false;

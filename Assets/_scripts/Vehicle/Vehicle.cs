@@ -165,10 +165,17 @@ namespace Level
             if (CurrentConnection == null)
                 yield return TravelTo(firstConnection);
 
-            var vehicleCurve = PathfindingManager.Instance.GeneratePath(connections);
+            if (connections.Count > 1)
+            {
+                var vehicleCurve = PathfindingManager.Instance.GeneratePath(connections);
 
-            StartCoroutine(TravelPath(vehicleCurve));
-            if (Manager is PlayerVehicleManager) StartCoroutine(DrawPath(vehicleCurve));
+                StartCoroutine(TravelPath(vehicleCurve));
+                if (Manager is PlayerVehicleManager) StartCoroutine(DrawPath(vehicleCurve));
+            }
+            else
+            {
+                _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
+            }
         }
 
 

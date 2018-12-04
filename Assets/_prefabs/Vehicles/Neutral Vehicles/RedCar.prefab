@@ -252,15 +252,15 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1667412018430948}
-  m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: -0.7071069}
-  m_LocalPosition: {x: -8.91, y: 0, z: 0.59}
+  m_LocalRotation: {x: -0, y: 0.021568954, z: -0, w: -0.9997674}
+  m_LocalPosition: {x: -30.19, y: 0, z: -14.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4876875689409500}
   - {fileID: 4688031468213774}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 450, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 357.528, z: 0}
 --- !u!4 &4067392289637810
 Transform:
   m_ObjectHideFlags: 1
@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vehicle: {fileID: 114867229838792336}
-  GodModeWait: 5
+  GodModeWait: 10
   GodModeDuration: 2
 --- !u!120 &120809127824822306
 LineRenderer:

@@ -22,8 +22,10 @@ public class PlayerVehicleManager : VehicleManager
     {
         if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
-            var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(terminal => terminal.HasPassenger);
-            vehicle.AddPassenger(passengerTerminals.Select(terminal => terminal.Passenger).FirstOrDefault());
+            var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
+            var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
+            vehicle.AddPassenger(terminal.Passenger);
+            terminal.RemovePassenger();
             vehicle.Passenger.SpawnDestinationReticle();
         }
         if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
@@ -136,7 +138,7 @@ public class PlayerVehicleManager : VehicleManager
         if (vehicle && vehicle.Manager == this)
         {
             //if (Debugger.Profile.DebugPlayerVehicleManager) 
-                Debug.Log($"Selected Vehicle {vehicle}", vehicle);
+            Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             if (VehicleSelected) Deselect();
             CarSelection(vehicle);
         }
@@ -168,20 +170,33 @@ public class PlayerVehicleManager : VehicleManager
 
     private void DrawPassengerInfo()
     {
-        /*var line = GetComponent<LineRenderer>();
+        var line = GetComponent<LineRenderer>();
+        var curve = GetComponent<BezierCurve>();
         Debug.Assert(line != null, $"{name} needs a line renderer");
+        Debug.Assert(curve != null, $"{name} needs a bezier curve");
 
-        if (line != null && _selectedVehicle != null && _selectedVehicle.HasPassenger)
+        if (line != null && curve != null && _selectedVehicle != null && _selectedVehicle.HasPassenger)
         {
-            var points = new Vector3[line.positionCount];
-            for (int i = 0; i < line.positionCount; i++)
-            {
-                var t = i / (float)line.positionCount;
-                points[i] = Vector3.Lerp(_selectedVehicle.transform.position, _selectedVehicle.Passenger.DestinationTerminal.transform.position, t);
-                points[i].y += .5f;
-            }
-            line.SetPositions(points);
-        }*/
+            var offsetY = 1f;
+            curve.Clear();
+
+            var start = _selectedVehicle.transform.position;
+            var end = _selectedVehicle.Passenger.DestinationTerminal.transform.position;
+            start.y = end.y = offsetY;
+
+            var half = Vector3.Lerp(start, end, .5f);
+
+            var handle1 = Vector3.Lerp(start, half, .5f);
+            handle1.y = offsetY * 2;
+
+            curve.AddPointAt(start);
+            var mid = curve.AddPointAt(half + Vector3.up);
+            mid.globalHandle1 = handle1;
+            curve.AddPointAt(end);
+
+            line.positionCount = 20;
+            PathfindingManager.Instance.DrawPath(curve, line);
+        }
     }
 
     public void HandleNotHit()
@@ -198,6 +213,7 @@ public class PlayerVehicleManager : VehicleManager
         _start = null;
         _end = null;
         _destinationables = null;
+        GetComponent<LineRenderer>().positionCount = 0;
     }
 
     //process a tap on a pickup location
@@ -294,7 +310,7 @@ public class PlayerVehicleManager : VehicleManager
         // This is an "override"
         if (route.Destinationable) return true;
 
-        if (_selectedVehicle)
+        if (_selectedVehicle != null)
         {
             if (_selectedVehicle.HasPassenger)
             {
