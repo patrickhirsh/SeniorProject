@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using Utility;
 
 public class Broadcaster : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class Broadcaster : MonoBehaviour
             Debug.LogWarning($"No subscribers for state {state}");
             return;
         }
+        if (Debugger.Profile.DebugGameState) Debug.Log($"Broadcast: {state}");
         _subscribers[state].Invoke(state);
     }
 }

@@ -9,5 +9,7 @@ namespace Utility
     {
         public bool DebugVehicle;
         public bool DebugPlayerVehicleManager;
+        public bool DebugNeutralVehicleManager;
+        public bool DebugGameState;
     }
 }

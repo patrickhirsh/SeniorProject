@@ -22,7 +22,13 @@ public class PlayerVehicleManager : VehicleManager
     {
         if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
-            vehicle.AddPassenger(vehicle.CurrentRoute.Terminals.Select(terminal => terminal.Passenger).FirstOrDefault());
+            var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(terminal => terminal.HasPassenger);
+            vehicle.AddPassenger(passengerTerminals.Select(terminal => terminal.Passenger).FirstOrDefault());
+        }
+        if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
+        {
+            Destroy(vehicle.Passenger.gameObject);
+            Debug.Log("PASSENGER DELIVERED");
         }
     }
 
@@ -35,11 +41,11 @@ public class PlayerVehicleManager : VehicleManager
 
         for (int i = 0; i < parkingSpots.Length; i++)
         {
-            if(parkingSpots[i].Type == ParkingRouteType.Volta && !parkingSpots[i].IsOccupied)
+            if (parkingSpots[i].Type == ParkingRouteType.Volta && !parkingSpots[i].IsOccupied)
             {
                 float cDist = Vector3.Distance(_selectedVehicle.transform.position, parkingSpots[i].transform.position);
 
-                if(cDist < nearestDist)
+                if (cDist < nearestDist)
                 {
                     nearestSpot = parkingSpots[i];
                     nearestDist = cDist;
@@ -49,7 +55,7 @@ public class PlayerVehicleManager : VehicleManager
 
         Queue<Connection> connections = new Queue<Connection>();
 
-        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0],out connections);
+        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0], out connections);
 
         _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
     }
@@ -75,7 +81,6 @@ public class PlayerVehicleManager : VehicleManager
     public GameObject IntersectionDestinationReticle;
     public GameObject PickupDestinationReticle;
 
-
     private List<GameObject> _destinationReticles = new List<GameObject>();
 
     public Vector3 AdjustmentVector;
@@ -83,22 +88,21 @@ public class PlayerVehicleManager : VehicleManager
     private void DrawDestinations()
     {
         _destinationReticles.ForEach(Destroy);
-
         if (_destinationables != null)
         {
             foreach (var destinationable in _destinationables)
             {
-                
-                if(destinationable.HasPassenger){
+
+                if (destinationable.HasPassenger)
+                {
                     var reticle = Instantiate(PickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
-                }
-                else if(destinationable != _selectedVehicle.CurrentRoute){
-                    var reticle = Instantiate(IntersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
-                    //                reticle.transform.localScale = Vector3.one * GameManager.Instance.Scale;
-                    //                GameManager.Instance.OnScaleChangeEvent.AddListener(val => { reticle.transform.localScale = Vector3.one * val; });
                     _destinationReticles.Add(reticle);
                 }
-
+                else if (destinationable != _selectedVehicle.CurrentRoute)
+                {
+                    var reticle = Instantiate(IntersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
+                    _destinationReticles.Add(reticle);
+                }
             }
         }
     }
@@ -109,38 +113,52 @@ public class PlayerVehicleManager : VehicleManager
 
     internal void HandleHit(RaycastHit hitInfo)
     {
-        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
-
-
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
-
         var pin = hitInfo.transform.GetComponent<Pin>();
 
-
-        if (vehicle)
+        if (vehicle && vehicle.Manager == this)
         {
+            if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             if (VehicleSelected) Deselect();
             CarSelection(vehicle);
         }
-        else if(pin)
+        else if (pin)
         {
-            var intersection = pin.GetComponentInParent<IntersectionRoute>();
             var route = pin.GetComponentInParent<Route>();
-            if (intersection)
+            if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Route {route}", route);
+
+            if (route.GetType() == typeof(IntersectionRoute))
             {
-                IntersectionSelection(intersection);
+                IntersectionSelection((IntersectionRoute)route);
             }
-            else if (route && route.Destinationable)
+            else if (IsDestinationable(route))
             {
                 RouteSelection(route);
             }
-            if (route != null)
-            {
-                _previousSelectedRoute = route;
-            }
+
+            _previousSelectedRoute = route;
         }
-        
+
         DrawDestinations();
+        DrawPassengerInfo();
+    }
+
+    private void DrawPassengerInfo()
+    {
+        var line = GetComponent<LineRenderer>();
+        Debug.Assert(line != null, $"{name} needs a line renderer");
+
+        if (line != null && _selectedVehicle != null && _selectedVehicle.HasPassenger)
+        {
+            var points = new Vector3[line.positionCount];
+            for (int i = 0; i < line.positionCount; i++)
+            {
+                var t = i / (float)line.positionCount;
+                points[i] = Vector3.Lerp(_selectedVehicle.transform.position, _selectedVehicle.Passenger.DestinationTerminal.transform.position, t);
+                points[i].y += .5f;
+            }
+            line.SetPositions(points);
+        }
     }
 
     public void HandleNotHit()
@@ -151,7 +169,7 @@ public class PlayerVehicleManager : VehicleManager
 
     private void Deselect()
     {
-        Debug.Log("DESELECT");
+        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log("DESELECT");
         _selectedVehicle = null;
         _previousSelectedRoute = null;
         _start = null;
@@ -167,6 +185,7 @@ public class PlayerVehicleManager : VehicleManager
         if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
         {
             _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
+            Deselect();
         }
         else
         {
@@ -231,7 +250,7 @@ public class PlayerVehicleManager : VehicleManager
         {
             if (frontier.Contains(route) || route == start) continue;
             frontier.Add(route);
-            if (route.Destinationable)
+            if (IsDestinationable(route))
             {
                 if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
                 destinations.Add(route);
@@ -245,6 +264,23 @@ public class PlayerVehicleManager : VehicleManager
                 GetNextDestinationables(route, destinations, frontier);
             }
         }
+    }
+
+    private bool IsDestinationable(Route route)
+    {
+        // This is an "override"
+        if (route.Destinationable) return true;
+
+        if (_selectedVehicle)
+        {
+            if (_selectedVehicle.HasPassenger)
+            {
+                return _selectedVehicle.Passenger.DestinationTerminal.ParentRoute == route;
+            }
+            return route.HasPassenger;
+        }
+
+        return false;
     }
 
     #endregion

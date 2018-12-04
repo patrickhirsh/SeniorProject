@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Level
 {
@@ -11,17 +12,30 @@ namespace Level
         private float _godModeTimer = 0;
         private bool _isInGodMode = false;
 
+        private Coroutine _current;
+
         private void Update()
         {
-            if(_isInGodMode)
+            if (_isInGodMode)
             {
                 _godModeTimer -= Time.deltaTime;
 
-                if(_godModeTimer <= 0)
+                if (_godModeTimer <= 0)
                 {
                     _isInGodMode = false;
+                    _godModeTimer = 0;
                 }
 
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            var vehicle = other.GetComponent<Vehicle>();
+            if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
+            {
+                KillCurrent();
+                _current = StartCoroutine(SlowDown());
             }
         }
 
@@ -34,10 +48,8 @@ namespace Level
             var vehicle = other.GetComponent<Vehicle>();
             if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
             {
-                Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, 0, .25f);
-
                 // if the vehicle is stopped
-                if (vehicle.Speed < 0.1f)
+                if (Vehicle.Speed < 0.1f)
                 {
                     _godModeTimer += Time.deltaTime;
 
@@ -45,7 +57,8 @@ namespace Level
                     {
                         _isInGodMode = true;
                         _godModeTimer = GodModeDuration;
-                        vehicle.Speed = vehicle.BaseSpeed;
+                        KillCurrent();
+                        _current = StartCoroutine(SpeedUp());
                     }
                 }
             }
@@ -53,15 +66,39 @@ namespace Level
 
         }
 
+        private void KillCurrent()
+        {
+            if (_current != null) StopCoroutine(_current);
+            _current = null;
+        }
+
         private void OnTriggerExit(Collider other)
         {
             var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null && vehicle != Vehicle)
+            if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
             {
-                Vehicle.Speed = Vehicle.BaseSpeed;
+                KillCurrent();
+                _current = StartCoroutine(SpeedUp());
                 _godModeTimer = 0;
             }
         }
 
+        private IEnumerator SpeedUp()
+        {
+            while (Vehicle.Speed < Vehicle.BaseSpeed)
+            {
+                Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, Vehicle.BaseSpeed, .25f);
+                yield return null;
+            }
+        }
+
+        private IEnumerator SlowDown()
+        {
+            while (Vehicle.Speed > 0)
+            {
+                Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, 0, .25f);
+                yield return null;
+            }
+        }
     }
 }

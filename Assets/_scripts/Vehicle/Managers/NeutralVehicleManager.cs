@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using Utility;
 
 
 namespace Level
@@ -36,8 +36,6 @@ namespace Level
         public float AVG_SPAWN_TIMER = 1f;
         public float SPAWN_TIMER_VARIANCE = 0f;
 
-        public bool DebugMode = true;
-
         public List<GameObject> _neutralVehiclePrefabs;     // all neutral vehicle prefabs valid for this scene
         private List<SpawnRoute> _spawnPoints;              // all valid spawn points in the current level
         private SpawnState _spawnState;                     // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
@@ -64,8 +62,8 @@ namespace Level
             // log unexpected behavior
             else
             {
-                if (DebugMode && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
-                if (DebugMode && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
+                if (Debugger.Profile.DebugNeutralVehicleManager && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
+                if (Debugger.Profile.DebugNeutralVehicleManager && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
             }
         }
 
@@ -73,7 +71,7 @@ namespace Level
         public void Awake()
         {
             Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
-            Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);            
+            Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);
         }
 
 
@@ -89,7 +87,7 @@ namespace Level
 
                     // spawnState is off by default (waiting for instructions...)
                     //_spawnState = SpawnState.SpawningOff;
-                    _spawnState = SpawnState.SpawningProcedurally;                   
+                    _spawnState = SpawnState.SpawningProcedurally;
 
                     // ensure neutral vehicles have been set in the inspector
                     Debug.Assert(_neutralVehiclePrefabs != null);
@@ -148,16 +146,16 @@ namespace Level
         private void SpawnVehicle(Connection spawnPoint, Connection destination, GameObject vehiclePrefab)
         {
             // instantiate the new vehicle
-            GameObject vehicle = Instantiate(vehiclePrefab, this.transform);
-            vehicle.transform.position = new Vector3(spawnPoint.transform.position.x, spawnPoint.transform.position.y, spawnPoint.transform.position.z);
+            var vehicle = Instantiate(vehiclePrefab, spawnPoint.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
+            vehicle.Manager = this;
 
             // construct a copy of the cached connection Queue
             Queue<Connection> path = new Queue<Connection>();
             foreach (Connection connection in _pathableSpawnPointEntityConnections[spawnPoint][destination])
                 path.Enqueue(connection);
-            
+
             // assign the pathing task to this new vehicle
-            vehicle.GetComponent<Vehicle>().AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback));
+            vehicle.AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback));
         }
 
 
@@ -180,11 +178,11 @@ namespace Level
                 int startIndex = Random.Range(0, _pathableSpawnPointEntityConnections.Count);
                 Connection startConnection = _pathableSpawnPointEntityConnections.Keys.ToArray()[startIndex];
                 int destinationIndex = Random.Range(0, _pathableSpawnPointEntityConnections[startConnection].Count);
-                Connection endConnection = _pathableSpawnPointEntityConnections[startConnection].Keys.ToArray()[destinationIndex];                
+                Connection endConnection = _pathableSpawnPointEntityConnections[startConnection].Keys.ToArray()[destinationIndex];
 
                 // spawn the vehicle
                 SpawnVehicle(startConnection, endConnection, _neutralVehiclePrefabs[randomPrefabIndex]);
-                if (DebugMode) { Debug.Log("Spawning vehicle"); }
+                if (Debugger.Profile.DebugNeutralVehicleManager) { Debug.Log("Spawning vehicle"); }
             }
         }
 
@@ -206,10 +204,10 @@ namespace Level
                 foreach (Connection connection1 in spawn1.Connections)
                 {
                     // only observe "outbound" connections in the source
-                    if (connection1.Paths.Count == 0)                   
+                    if (connection1.Paths.Count == 0)
                         _pathableSpawnPointEntityConnections.Add(connection1, new Dictionary<Connection, Queue<Connection>>());
-                }                   
-            }              
+                }
+            }
 
             // for each of these connections, check if a path exists between this connection and EVERY OTHER connection
             List<Connection> noPaths = new List<Connection>();
@@ -219,7 +217,7 @@ namespace Level
                 foreach (SpawnRoute spawn2 in _spawnPoints)
                 {
                     // only observe connections not inside our current spawn point
-                    if (connection1.ParentRoute != spawn2)              
+                    if (connection1.ParentRoute != spawn2)
                     {
                         // observe all connections within each of these other spawn points
                         foreach (Connection connection2 in spawn2.Connections)
@@ -227,10 +225,10 @@ namespace Level
                             // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
                             Queue<Connection> path = new Queue<Connection>();
                             if (PathfindingManager.Instance.GetPath(connection1, connection2.ConnectsTo, out path))
-                                { _pathableSpawnPointEntityConnections[connection1].Add(connection2.ConnectsTo, path); }                       
+                            { _pathableSpawnPointEntityConnections[connection1].Add(connection2.ConnectsTo, path); }
                         }
                     }
-                }                    
+                }
 
                 // if the only reachable connection from this spawnpoint is itself, mark for removal
                 if (_pathableSpawnPointEntityConnections[connection1].Count <= 1)

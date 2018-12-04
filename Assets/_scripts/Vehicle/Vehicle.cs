@@ -67,16 +67,17 @@ namespace Level
 
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
+        private float _position;
 
         public Passenger Passenger;
         public bool HasPassenger => Passenger != null;
+        public VehicleManager Manager;
 
         protected void Awake()
         {
             _currentTask = null;
             _animationTween = null;     
         }
-
 
         /// <summary>
         /// tries to assign a new task to the current vehicle.
@@ -107,7 +108,6 @@ namespace Level
                 StopTraveling();
                 _currentTask = task;
                 StartTraveling(task.Path);
-                Debug.Log(_currentTask.ToString());
                 return true;
             }
 
@@ -127,7 +127,6 @@ namespace Level
                 _currentTask = null;
             }
         }
-
 
         #region VEHICLE PATHING
 
@@ -163,9 +162,9 @@ namespace Level
                 yield return TravelTo(firstConnection);
 
             var vehicleCurve = PathfindingManager.Instance.GeneratePath(connections);
-            Debug.Log(vehicleCurve.pointCount);
 
-            yield return StartCoroutine(TravelPath(vehicleCurve));
+            StartCoroutine(TravelPath(vehicleCurve));
+            if (Manager is PlayerVehicleManager) StartCoroutine(DrawPath(vehicleCurve));
         }
 
 
@@ -177,27 +176,16 @@ namespace Level
         /// </summary>
         private IEnumerator TravelPath(BezierCurve vehicleCurve)
         {
-            // Build a line to visualize on
-            var travelLine = new GameObject("Line", typeof(LineRenderer)).GetComponent<LineRenderer>();
-            int lengthOfLineRenderer = vehicleCurve.pointCount * 2;
-            travelLine.positionCount = lengthOfLineRenderer;
-            travelLine.widthMultiplier = .15f;
-
-            travelLine.numCapVertices = 2;
-            travelLine.numCornerVertices = 2;
-            travelLine.useWorldSpace = false;
-
             // traverse the path
-            float position = 0.0f;
-            while (position <= 1)
+            _position = 0;
+            while (_position <= 1)
             {
-                position += (Speed * Time.deltaTime) / vehicleCurve.length;
-                transform.position = vehicleCurve.GetPointAt(Mathf.Clamp01(position));
+                _position += (Speed * Time.deltaTime) / vehicleCurve.length;
+                transform.position = vehicleCurve.GetPointAt(Mathf.Clamp01(_position));
 
-                if (position + LookAhead < 1f)
-                    transform.LookAt(vehicleCurve.GetPointAt(position + LookAhead));
-                Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(position + LookAhead), Color.cyan, .5f);
-                PathfindingManager.Instance.DrawPath(vehicleCurve, travelLine);
+                if (_position + LookAhead < 1f)
+                    transform.LookAt(vehicleCurve.GetPointAt(_position + LookAhead));
+                Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(_position + LookAhead), Color.cyan, .5f);
 
                 yield return null;
             }
@@ -206,8 +194,23 @@ namespace Level
             _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
             
             // Remove the curve
-            Destroy(vehicleCurve);
-            Destroy(travelLine.gameObject);
+            Destroy(vehicleCurve.gameObject);
+        }
+
+        private IEnumerator DrawPath(BezierCurve vehicleCurve)
+        {
+            // Build a line to visualize on
+            var travelLine = GetComponent<LineRenderer>();
+            travelLine.positionCount = vehicleCurve.pointCount * 2;
+
+            while (_position <= 1)
+            {
+                PathfindingManager.Instance.DrawPath(vehicleCurve, travelLine, _position);
+                yield return null;
+            }
+
+            travelLine.positionCount = 0;
+            yield return null;
         }
 
 
@@ -247,5 +250,6 @@ namespace Level
             passenger.transform.parent = transform;
             passenger.transform.localPosition = Vector3.zero;
         }
+
     }
 }

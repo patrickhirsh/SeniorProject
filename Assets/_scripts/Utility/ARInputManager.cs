@@ -40,7 +40,6 @@ public class ARInputManager : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Got some input");
             //If the level has been placed
             if (_placed)
             {
@@ -65,7 +64,6 @@ public class ARInputManager : MonoBehaviour
                 {
                     Pose hitPose = _sHits[0].pose;
                     var position = new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z);
-                    Debug.Log($"Placing Level at ${position}");
                     SetupLevel(position);
 
                     TurnOffDebugPlanes();
@@ -81,7 +79,6 @@ public class ARInputManager : MonoBehaviour
         Debug.Log("Got some input 2");
         if (Input.touchCount > 0)
         {
-            Debug.Log("LETS GO");
             Touch touch = Input.GetTouch(0);
             //If the level has been placed
             if (_placed)
@@ -111,7 +108,6 @@ public class ARInputManager : MonoBehaviour
                 {
                     Pose hitPose = _sHits[0].pose;
                     var position = new Vector3(hitPose.position.x, hitPose.position.y + AbovePlane, hitPose.position.z);
-                    Debug.Log($"Placing Level at ${position}");
                     SetupLevel(position);
 
                     TurnOffDebugPlanes();

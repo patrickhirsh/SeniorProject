@@ -34,6 +34,7 @@ public class PassengerManager : MonoBehaviour
     {
         // Populate the Pickups list with every pickup in the scene
         _terminals = EntityManager.Instance.Routes.SelectMany(route => route.Terminals).ToArray();
+        Debug.Assert(_terminals.Any(), "Missing terminals for the level. Has the EntityManager been baked?");
     }
 
     // Update is called once per frame

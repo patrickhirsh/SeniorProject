@@ -708,6 +708,7 @@ namespace Level
                 for (int i = 0; i < lineRenderer.positionCount; i++)
                 {
                     points[i] = curve.GetPointAt(startFrom + i / (float)(lineRenderer.positionCount - 1));
+                    points[i].y += .1f;
                 }
 
                 lineRenderer.SetPositions(points);
