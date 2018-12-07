@@ -16,6 +16,7 @@ namespace Level
 
         private void Update()
         {
+            /*
             if (_isInGodMode)
             {
                 _godModeTimer -= Time.deltaTime;
@@ -27,16 +28,19 @@ namespace Level
                 }
 
             }
+            */
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            /*
             var vehicle = other.GetComponent<Vehicle>();
             if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
             {
                 KillCurrent();
                 _current = StartCoroutine(SlowDown());
             }
+            */
         }
 
         /// <summary>
@@ -45,6 +49,7 @@ namespace Level
         /// <param name="other">Other.</param>
         private void OnTriggerStay(Collider other)
         {
+            /*
             var vehicle = other.GetComponent<Vehicle>();
             if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
             {
@@ -62,18 +67,22 @@ namespace Level
                     }
                 }
             }
+            */
 
 
         }
 
         private void KillCurrent()
         {
+            /*
             if (_current != null) StopCoroutine(_current);
             _current = null;
+            */
         }
 
         private void OnTriggerExit(Collider other)
         {
+            /*
             var vehicle = other.GetComponent<Vehicle>();
             if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
             {
@@ -81,24 +90,31 @@ namespace Level
                 _current = StartCoroutine(SpeedUp());
                 _godModeTimer = 0;
             }
+            */
         }
 
         private IEnumerator SpeedUp()
         {
+            /*
             while (Vehicle.Speed < Vehicle.BaseSpeed)
             {
                 Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, Vehicle.BaseSpeed, .25f);
                 yield return null;
             }
+            */
+            return null;
         }
 
         private IEnumerator SlowDown()
         {
+            /*
             while (Vehicle.Speed > 0)
             {
                 Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, 0, .25f);
                 yield return null;
             }
+            */
+            return null;
         }
     }
 }
