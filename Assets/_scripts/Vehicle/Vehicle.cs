@@ -68,6 +68,9 @@ namespace Level
         public float RecoverySpeed = 5f;        // the speed at which this vehicle will travel to recover when "lost"
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
+        public Gradient PickupGradient;
+        public Gradient DropoffGradient;
+
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
         private float _position;
@@ -99,6 +102,7 @@ namespace Level
 
         private void Reset(GameEvent @event)
         {
+            HaltCurrentTask();
             if (HasPassenger)
             {
                 Destroy(Passenger.gameObject);
@@ -175,6 +179,7 @@ namespace Level
             {
                 StopCoroutine(_animationTween);
                 CurrentConnection = null;
+                GetComponent<LineRenderer>().enabled = false;
             }
         }
 
@@ -200,9 +205,10 @@ namespace Level
             if (connections.Count > 1)
             {
                 var vehicleCurve = PathfindingManager.Instance.GeneratePath(connections);
+                // Build a line to visualize on
+                var travelLine = GetComponent<LineRenderer>();
 
-                StartCoroutine(TravelPath(vehicleCurve));
-                if (Manager is PlayerVehicleManager) StartCoroutine(DrawPath(vehicleCurve));
+                yield return TravelPath(vehicleCurve, travelLine);
             }
             else
             {
@@ -217,8 +223,11 @@ namespace Level
         /// If the vehicle is in a "lost" state, it'll first resolve the
         /// lost vehicle before pathing.
         /// </summary>
-        private IEnumerator TravelPath(BezierCurve vehicleCurve)
+        private IEnumerator TravelPath(BezierCurve vehicleCurve, LineRenderer travelLine)
         {
+            travelLine.positionCount = vehicleCurve.pointCount * 2;
+            travelLine.enabled = true;
+
             // traverse the path
             _position = 0;
             while (_position <= 1)
@@ -228,34 +237,29 @@ namespace Level
 
                 if (_position + LookAhead < 1f)
                     transform.LookAt(vehicleCurve.GetPointAt(_position + LookAhead));
+
+                if (Manager is PlayerVehicleManager) DrawPath(vehicleCurve, travelLine);
+
                 Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(_position + LookAhead), Color.cyan, .5f);
 
                 yield return null;
             }
 
+
             // Invoke callback and set vehicle back to "waiting for task" state
             _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
-            
+
             // Remove the curve
             Destroy(vehicleCurve.gameObject);
+            travelLine.enabled = false;
         }
 
-        private IEnumerator DrawPath(BezierCurve vehicleCurve)
+        private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
         {
-            // Build a line to visualize on
-            var travelLine = GetComponent<LineRenderer>();
-            travelLine.positionCount = vehicleCurve.pointCount * 2;
-
-            while (_position <= 1)
-            {
-                PathfindingManager.Instance.DrawPath(vehicleCurve, travelLine, _position);
-                yield return null;
-            }
-
-            travelLine.positionCount = 0;
-            yield return null;
+            // Green if has passenger else purple
+            travelLine.colorGradient = HasPassenger ? DropoffGradient : PickupGradient;
+            PathfindingManager.Instance.DrawPath(vehicleCurve, travelLine, _position);
         }
-
 
         /// <summary>
         /// A coroutine that moves the vehicle towards a given connection.
@@ -270,7 +274,7 @@ namespace Level
 
                 Vector3 targetDir = connection.transform.position - transform.position;
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
-                
+
                 // Move our position a step closer to the target.
                 transform.rotation = Quaternion.LookRotation(newDir);
 
