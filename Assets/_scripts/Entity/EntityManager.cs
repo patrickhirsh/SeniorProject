@@ -8,31 +8,8 @@ using Utility;
 /// <summary>
 /// Manages the state of all the entities in a level
 /// </summary>
-public class EntityManager : MonoBehaviour
+public class EntityManager : Singleton<EntityManager>
 {
-    #region Singleton
-    private static EntityManager _instance;
-    public static EntityManager Instance
-    {
-        get
-        {
-            if (Application.isPlaying) return _instance ?? (_instance = Create());
-            return Create();
-        }
-    }
-
-    private static EntityManager Create()
-    {
-        GameObject singleton = FindObjectOfType<EntityManager>()?.gameObject;
-        if (singleton == null)
-        {
-            singleton = new GameObject { name = $"[{typeof(EntityManager).Name}]" };
-            singleton.AddComponent<EntityManager>();
-        }
-        return singleton.GetComponent<EntityManager>();
-    }
-    #endregion
-
     [HideInInspector]
     public Entity[] Entities;
 
@@ -57,8 +34,8 @@ public class EntityManager : MonoBehaviour
     public void Initialize()
     {
         Entities = GetComponentsInChildren<Entity>();
-        Broadcaster.Instance.Broadcast(GameState.SetupConnection);
-        Broadcaster.Instance.Broadcast(GameState.SetupBakedPaths);
+        Broadcaster.Broadcast(GameEvent.SetupConnection);
+        Broadcaster.Broadcast(GameEvent.SetupBakedPaths);
     }
 
     public void Bake()

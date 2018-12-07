@@ -20,17 +20,17 @@ public class PlayerVehicleManager : VehicleManager
 
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
-        if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
+        if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
+        {
+            DeliverPassenger(vehicle);
+        }
+        if (!vehicle.HasPassenger && vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
             var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
             var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
             vehicle.AddPassenger(terminal.Passenger);
             terminal.RemovePassenger();
             vehicle.Passenger.SpawnDestinationReticle();
-        }
-        if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
-        {
-            DeliverPassenger(vehicle);
         }
     }
 
@@ -39,11 +39,11 @@ public class PlayerVehicleManager : VehicleManager
         var hasPin = vehicle.CurrentRoute.GetComponentInChildren<Pin>();
         if (hasPin)
         {
-            Debug.Log("HAs the pin");
-            Destroy(hasPin.transform.parent.gameObject);
+            Destroy(hasPin.gameObject);
         }
         Destroy(vehicle.Passenger.gameObject);
         Debug.Log("PASSENGER DELIVERED");
+        GameManager.Instance.AddScore(10);
     }
 
     private void HandlePassiveAi()
@@ -74,7 +74,7 @@ public class PlayerVehicleManager : VehicleManager
         _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
     }
 
-    #region Unity
+    #region Unity Methods
 
     private void OnDrawGizmos()
     {
@@ -132,6 +132,8 @@ public class PlayerVehicleManager : VehicleManager
 
     internal void HandleHit(RaycastHit hitInfo)
     {
+        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Hit: {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
+
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var pin = hitInfo.transform.GetComponent<Pin>();
 
@@ -178,16 +180,17 @@ public class PlayerVehicleManager : VehicleManager
         if (line != null && curve != null && _selectedVehicle != null && _selectedVehicle.HasPassenger)
         {
             var offsetY = 1f;
-            curve.Clear();
+            curve.Clear(true);
 
             var start = _selectedVehicle.transform.position;
             var end = _selectedVehicle.Passenger.DestinationTerminal.transform.position;
-            start.y = end.y = offsetY;
+            start.y += offsetY;
+            end.y = start.y;
 
             var half = Vector3.Lerp(start, end, .5f);
 
             var handle1 = Vector3.Lerp(start, half, .5f);
-            handle1.y = offsetY * 2;
+            handle1.y = start.y + offsetY;
 
             curve.AddPointAt(start);
             var mid = curve.AddPointAt(half + Vector3.up);

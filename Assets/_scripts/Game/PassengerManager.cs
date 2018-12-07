@@ -24,7 +24,7 @@ public class PassengerManager : MonoBehaviour
 
     public Passenger PassengerPrefab;
 
-    public float SpawnTime = 5.0f;
+    public float SpawnTime = 20.0f;
     private float _timer;
 
     #region Unity Methods
@@ -40,12 +40,15 @@ public class PassengerManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        _timer -= Time.deltaTime;
-
-        if (_timer <= 0)
+        if (GameManager.CurrentGameState == GameState.LevelSimulating)
         {
-            SpawnPassenger();
-            _timer = SpawnTime;
+            _timer -= Time.deltaTime;
+
+            if (_timer <= 0)
+            {
+                SpawnPassenger();
+                _timer = SpawnTime;
+            }
         }
     }
 

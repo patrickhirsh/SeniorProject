@@ -15,11 +15,19 @@ namespace Level
         public Vector3 AdjustmentVector;
         #region Unity Methods
 
+        private void Awake()
+        {
+            Broadcaster.AddListener(GameEvent.Reset, Reset);
+        }
+
+        private void Reset(GameEvent @event)
+        {
+            Destroy(gameObject);
+        }
+
         public void Start()
         {
-            
             DestinationTerminal = PickRandomTerminal(SearchDepth);
-
         }
 
         #endregion

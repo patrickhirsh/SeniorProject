@@ -12,10 +12,6 @@ namespace Level
 
         #region Unity Methods
 
-        private void Awake()
-        {
-        }
-
         #endregion
 
         public void SpawnPassenger(Passenger prefab)

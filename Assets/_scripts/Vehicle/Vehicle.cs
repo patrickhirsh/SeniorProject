@@ -75,12 +75,44 @@ namespace Level
         public Passenger Passenger;
         public bool HasPassenger => Passenger != null;
         public VehicleManager Manager;
+        private Vector3 _startingPos;
+        private Quaternion _startingRot;
 
         protected void Awake()
         {
             LookAhead = .003f;
             _currentTask = null;
-            _animationTween = null;     
+            _animationTween = null;
+
+            Broadcaster.AddListener(GameEvent.Reset, Reset);
+            Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
+        }
+
+        private void GameStateChanged(GameEvent @event)
+        {
+            if (GameManager.CurrentGameState == GameState.LevelSimulating)
+            {
+                _startingPos = transform.position;
+                _startingRot = transform.rotation;
+            }
+        }
+
+        private void Reset(GameEvent @event)
+        {
+            if (HasPassenger)
+            {
+                Destroy(Passenger.gameObject);
+            }
+
+            if (Manager is PlayerVehicleManager)
+            {
+                transform.position = _startingPos;
+                transform.rotation = _startingRot;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         /// <summary>

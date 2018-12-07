@@ -42,24 +42,7 @@ namespace Level
 
         protected virtual void Start()
         {
-            foreach (var curve in VehiclePaths)
-            {
-                if (curve.GetAnchorPoints().Any())
-                {
-                    var child = new GameObject("Line");
-                    child.transform.SetParent(transform);
-                    var lineRenderer = child.AddComponent<LineRenderer>();
-                    int lengthOfLineRenderer = 20;
-                    lineRenderer.material = GameManager.Instance.TempMaterial;
-                    lineRenderer.positionCount = lengthOfLineRenderer;
-                    lineRenderer.widthMultiplier = .06f;
-
-                    lineRenderer.numCapVertices = 2;
-                    lineRenderer.numCornerVertices = 2;
-                    lineRenderer.useWorldSpace = false;
-                    PathfindingManager.Instance.DrawPath(curve, lineRenderer);
-                }
-            }
+//            DrawPaths();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -105,6 +88,27 @@ namespace Level
         }
 
         #endregion
+
+        private void DrawPaths()
+        {
+            foreach (var curve in VehiclePaths)
+            {
+                if (curve.GetAnchorPoints().Any())
+                {
+                    var child = new GameObject("Line");
+                    child.transform.SetParent(transform);
+                    var lineRenderer = child.AddComponent<LineRenderer>();
+                    int lengthOfLineRenderer = 20;
+                    lineRenderer.positionCount = lengthOfLineRenderer;
+                    lineRenderer.widthMultiplier = .06f;
+
+                    lineRenderer.numCapVertices = 2;
+                    lineRenderer.numCornerVertices = 2;
+                    lineRenderer.useWorldSpace = false;
+                    PathfindingManager.Instance.DrawPath(curve, lineRenderer);
+                }
+            }
+        }
 
         public void BakePrefab()
         {

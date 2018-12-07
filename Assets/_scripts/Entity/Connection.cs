@@ -50,7 +50,7 @@ namespace Level
 
         private void Awake()
         {
-            Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
+            Broadcaster.AddListener(GameEvent.SetupConnection, Initialize);
         }
 
         protected virtual void OnDrawGizmosSelected()
@@ -77,7 +77,7 @@ namespace Level
         }
         #endregion
 
-        protected void Initialize(GameState gameState)
+        protected void Initialize(GameEvent gameEvent)
         {
             ParentRoute = transform.GetComponentInParent<Route>();
             if(debug)

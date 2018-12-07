@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -555,8 +556,15 @@ public class BezierCurve : MonoBehaviour {
 		return GetPoint(distance / curveLength, firstPoint, secondPoint);
 	}
 	*/
-    public void Clear()
+    public void Clear(bool destroy = false)
     {
+        if (destroy && points.Any())
+        {
+            foreach (var point in points)
+            {
+                Destroy(point.gameObject);
+            }
+        }
         points = new BezierPoint[0];
     }
 

@@ -1,23 +1,143 @@
-﻿using Level;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Experimental.XR;
+using UnityEngine.XR.ARFoundation;
 
 public class InputManager : MonoBehaviour
 {
-    #region Singleton
-    private static InputManager _instance;
-    public static InputManager Instance => _instance ?? (_instance = Create());
+    [SerializeField]
+    [Tooltip("Instantiates this prefab on a plane at the touch location.")]
 
-    private static InputManager Create()
+    public Camera Camera;
+    public GameObject Level;
+    public ARSessionOrigin SessionOrigin;
+    public float LevelYOffset;
+    public PlayerVehicleManager PlayerVehicleManager;
+
+    private bool _vehicleSelected;
+
+    private void Awake()
     {
-        var singleton = FindObjectOfType<InputManager>()?.gameObject;
-        if (singleton == null) singleton = new GameObject { name = typeof(InputManager).Name };
-        singleton.AddComponent<InputManager>();
-        return singleton.GetComponent<InputManager>();
+        Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
     }
-    #endregion
 
+    private void GameStateChanged(GameEvent state)
+    {
+        switch (GameManager.CurrentGameState)
+        {
+            case GameState.LevelPlacement:
+            case GameState.LevelRePlacement:
+                SetDebugPlanesActive(true);
+                break;
+            case GameState.LevelSimulating:
+                SetDebugPlanesActive(false);
+                break;
+        }
+    }
 
-   
+    void Update()
+    {
+#if UNITY_ANDROID || UNITY_IOS
+        HandleMobileInput();
+#else
+        HandleDesktopInput();
+#endif
+    }
+
+    private void HandleDesktopInput()
+    {
+        switch (GameManager.CurrentGameState)
+        {
+            case GameState.LevelPlaced:
+            case GameState.LevelPlacement:
+            case GameState.LevelRePlacement:
+                if (Input.GetMouseButton(0))
+                {
+                    if (EventSystem.current.IsPointerOverGameObject()) return;
+                    List<ARRaycastHit> hits = new List<ARRaycastHit>();
+                    if (SessionOrigin.Raycast(Input.mousePosition, hits, TrackableType.PlaneWithinPolygon))
+                    {
+                        Pose hitPose = hits[0].pose;
+                        var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
+                        MoveLevel(position);
+                    }
+                }
+                break;
+            case GameState.LevelSimulating:
+                if (Input.GetMouseButtonDown(0))
+                {
+                    RaycastHit hitInfo;
+                    //If raycast hits an object
+                    var ray = Camera.ScreenPointToRay(Input.mousePosition);
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
+
+                    if (Physics.Raycast(ray, out hitInfo))
+                    {
+                        PlayerVehicleManager.HandleHit(hitInfo);
+                    }
+                    else
+                    {
+                        PlayerVehicleManager.HandleNotHit();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void HandleMobileInput()
+    {
+        if (Input.touchCount <= 0) return;
+        var touch = Input.GetTouch(0);
+        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
+
+        switch (GameManager.CurrentGameState)
+        {
+            case GameState.LevelPlaced:
+            case GameState.LevelPlacement:
+            case GameState.LevelRePlacement:
+                var hits = new List<ARRaycastHit>();
+                if (SessionOrigin.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
+                {
+                    var hitPose = hits[0].pose;
+                    var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
+                    MoveLevel(position);
+                }
+                break;
+            case GameState.LevelSimulating:
+                if (touch.phase == TouchPhase.Began)
+                {
+                    RaycastHit hitInfo;
+                    //If raycast hits an object
+                    var ray = Camera.ScreenPointToRay(touch.position);
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
+
+                    if (Physics.Raycast(ray, out hitInfo))
+                    {
+                        PlayerVehicleManager.HandleHit(hitInfo);
+                    }
+                    else
+                    {
+                        PlayerVehicleManager.HandleNotHit();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void MoveLevel(Vector3 position)
+    {
+        Level.transform.position = position;
+        GameManager.SetGameState(GameState.LevelPlaced);
+    }
+
+    private void SetDebugPlanesActive(bool active)
+    {
+        var visualizers = SessionOrigin.trackablesParent.GetComponentsInChildren<ARPlaneMeshVisualizer>(true);
+        foreach (var x in visualizers)
+        {
+            x.gameObject.SetActive(active);
+        }
+        //SessionOrigin.GetComponent<ARPointCloud>().gameObject.SetActive(false);
+    }
 }

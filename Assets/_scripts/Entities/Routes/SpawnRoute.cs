@@ -65,17 +65,17 @@ namespace Level
         protected override void Start()
         {
             base.Start();
-            Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
+            Broadcaster.AddListener(GameEvent.SetupConnection, Initialize);
         }
 
         /// <summary>
         /// Handles all GameEvent Broadcasts
         /// </summary>
-        public void Initialize(GameState gameEvent)
+        public void Initialize(GameEvent gameEvent)
         {
             switch (gameEvent)
             {
-                case GameState.SetupConnection:
+                case GameEvent.SetupConnection:
                     _spawnQueue = new List<SpawnDirective>();
                     break;
             }

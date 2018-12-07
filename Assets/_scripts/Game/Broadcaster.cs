@@ -5,41 +5,37 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using Utility;
 
-public class Broadcaster : MonoBehaviour
+public class Broadcaster : Singleton<Broadcaster>
 {
-    #region Singleton
-    private static Broadcaster _instance;
-    public static Broadcaster Instance => _instance ?? (_instance = Create());
-
-    private static Broadcaster Create()
-    {
-        GameObject singleton = FindObjectOfType<Broadcaster>()?.gameObject;
-        if (singleton == null) singleton = new GameObject { name = typeof(Broadcaster).Name };
-        if (singleton.GetComponent<Broadcaster>() == null) singleton.AddComponent<Broadcaster>();
-        return singleton.GetComponent<Broadcaster>();
-    }
-
-    #endregion
-
     [Serializable]
-    public class BroadcastUnityEvent : UnityEvent<GameState> { }
+    public class BroadcastUnityEvent : UnityEvent<GameEvent> { }
 
-    private readonly Dictionary<GameState, BroadcastUnityEvent> _subscribers = new Dictionary<GameState, BroadcastUnityEvent>();
+    private readonly Dictionary<GameEvent, BroadcastUnityEvent> _subscribers = new Dictionary<GameEvent, BroadcastUnityEvent>();
 
-    public void AddListener(GameState state, UnityAction<GameState> action)
+    private void AddListen(GameEvent @event, UnityAction<GameEvent> action)
     {
-        if (!_subscribers.ContainsKey(state)) _subscribers.Add(state, new BroadcastUnityEvent());
-        _subscribers[state].AddListener(action);
+        if (!_subscribers.ContainsKey(@event)) _subscribers.Add(@event, new BroadcastUnityEvent());
+        _subscribers[@event].AddListener(action);
     }
 
-    public void Broadcast(GameState state)
+    public static void AddListener(GameEvent @event, UnityAction<GameEvent> action)
     {
-        if (!_subscribers.ContainsKey(state))
+        Instance.AddListen(@event, action);
+    }
+
+    private void BroadcastState(GameEvent @event)
+    {
+        if (!_subscribers.ContainsKey(@event))
         {
-            Debug.LogWarning($"No subscribers for state {state}");
+            Debug.LogWarning($"No subscribers for @event {@event}");
             return;
         }
-        if (Debugger.Profile.DebugGameState) Debug.Log($"Broadcast: {state}");
-        _subscribers[state].Invoke(state);
+        if (Debugger.Profile.DebugGameState) Debug.Log($"Broadcast: {@event}");
+        _subscribers[@event].Invoke(@event);
+    }
+
+    public static void Broadcast(GameEvent @event)
+    {
+        Instance.BroadcastState(@event);
     }
 }

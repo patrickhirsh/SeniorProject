@@ -2,9 +2,8 @@
 using UnityEngine.XR.ARFoundation;
 
 [RequireComponent(typeof(ARSessionOrigin))]
-public class Scaler : MonoBehaviour
+public class ARScaler : Singleton<ARScaler>
 {
-
     ARSessionOrigin m_SessionOrigin;
     public GameObject referenceToScale;
 
@@ -20,7 +19,7 @@ public class Scaler : MonoBehaviour
     }
 
     // Method called by a Slider
-    public void OnValueChange(float value)
+    public void Scale(float value)
     {
         Transform t = gameObject.transform;
 
@@ -36,6 +35,6 @@ public class Scaler : MonoBehaviour
 
     private void Start()
     {
-        OnValueChange(m_defaultScaleValue);
+        Scale(m_defaultScaleValue);
     }
 }

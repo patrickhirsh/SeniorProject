@@ -7,7 +7,7 @@ using Utility;
 namespace Level
 {
     /// <summary>
-    /// Represents a (single) state the NeutralVehicleManager can be in at any time for spawning vehicles
+    /// Represents a (single) @event the NeutralVehicleManager can be in at any time for spawning vehicles
     /// Use setSpawnState() to change _spawnState
     /// 
     /// STATE DEFINITIONS:
@@ -67,34 +67,40 @@ namespace Level
             }
         }
 
-
         public void Awake()
         {
-            Broadcaster.Instance.AddListener(GameState.SetupConnection, Initialize);
-            Broadcaster.Instance.AddListener(GameState.SetupBakedPaths, Initialize);
+            Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
+            Broadcaster.AddListener(GameEvent.SetupBakedPaths, BakePaths);
+        }
+
+        private void GameStateChanged(GameEvent @event)
+        {
+            // Begin the simulation
+            if (GameManager.CurrentGameState == GameState.LevelSimulating)
+            {
+                // spawnState is off by default (waiting for instructions...)
+                //_spawnState = SpawnState.SpawningOff;
+                _spawnState = SpawnState.SpawningProcedurally;
+
+                // ensure neutral vehicles have been set in the inspector
+                Debug.Assert(_neutralVehiclePrefabs != null);
+            }
+            else
+            {
+                _spawnState = SpawnState.SpawningOff;
+            }
         }
 
 
         /// <summary>
         /// Handles all GameEvent Broadcasts
         /// </summary>
-        /// <param name="gameState"></param>
-        public void Initialize(GameState gameState)
+        /// <param name="gameEvent"></param>
+        public void BakePaths(GameEvent gameEvent)
         {
-            switch (gameState)
+            switch (gameEvent)
             {
-                case GameState.SetupConnection:
-
-                    // spawnState is off by default (waiting for instructions...)
-                    //_spawnState = SpawnState.SpawningOff;
-                    _spawnState = SpawnState.SpawningProcedurally;
-
-                    // ensure neutral vehicles have been set in the inspector
-                    Debug.Assert(_neutralVehiclePrefabs != null);
-                    break;
-
-
-                case GameState.SetupBakedPaths:
+                case GameEvent.SetupBakedPaths:
 
                     // initialize spawnPoints list
                     _spawnPoints = new List<SpawnRoute>();
@@ -128,8 +134,8 @@ namespace Level
         }
 
         /// <summary>
-        /// Sets the spawnState to the given state. Only accepts states with exactly one flag set.
-        /// If an invalid state is given, returns false. Otherwise, returns true.
+        /// Sets the spawnState to the given @event. Only accepts states with exactly one flag set.
+        /// If an invalid @event is given, returns false. Otherwise, returns true.
         /// </summary>
         public bool SetSpawnState(SpawnState state)
         {
