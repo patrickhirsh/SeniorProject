@@ -68,6 +68,9 @@ namespace Level
         public float RecoverySpeed = 5f;        // the speed at which this vehicle will travel to recover when "lost"
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
+        public Gradient PickupGradient;
+        public Gradient DropoffGradient;
+
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
         private float _position;
@@ -248,6 +251,8 @@ namespace Level
 
             while (_position <= 1)
             {
+                // Green if has passenger else purple
+                travelLine.colorGradient = HasPassenger ? DropoffGradient : PickupGradient;
                 PathfindingManager.Instance.DrawPath(vehicleCurve, travelLine, _position);
                 yield return null;
             }
