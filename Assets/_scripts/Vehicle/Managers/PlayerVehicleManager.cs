@@ -23,15 +23,21 @@ public class PlayerVehicleManager : VehicleManager
         if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
         {
             DeliverPassenger(vehicle);
+            vehicle.Passenger.DespawnDestinationReticle();
         }
         if (!vehicle.HasPassenger && vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
-            var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
-            var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
-            vehicle.AddPassenger(terminal.Passenger);
-            terminal.RemovePassenger();
-            vehicle.Passenger.SpawnDestinationReticle();
+            PickupPassenger(vehicle);
         }
+    }
+
+    private static void PickupPassenger(Vehicle vehicle)
+    {
+        var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
+        var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
+        vehicle.AddPassenger(terminal.Passenger);
+        terminal.RemovePassenger();
+        vehicle.Passenger.SpawnDestinationReticle();
     }
 
     private static void DeliverPassenger(Vehicle vehicle)
@@ -107,12 +113,12 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                //if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passenger.DestinationTerminal.ParentRoute)
-                //{
-                //    //DO NOT A THING
-                //    break;
-                //}
-                if (destinationable.HasPassenger)
+                if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passenger.DestinationTerminal.ParentRoute)
+                {
+                    var reticle = Instantiate(PassengerDeliveryReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
+                    _destinationReticles.Add(reticle);
+                }
+                else if (destinationable.HasPassenger)
                 {
                     var reticle = Instantiate(PickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
                     _destinationReticles.Add(reticle);
@@ -143,6 +149,10 @@ public class PlayerVehicleManager : VehicleManager
             Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             if (VehicleSelected) Deselect();
             CarSelection(vehicle);
+            if (_selectedVehicle.HasPassenger)
+            {
+                _selectedVehicle.Passenger.SetDestReticle(true);
+            }
         }
         else if (pin)
         {
@@ -211,6 +221,7 @@ public class PlayerVehicleManager : VehicleManager
     private void Deselect()
     {
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log("DESELECT");
+        //_selectedVehicle.Passenger.SetDestReticle(false);
         _selectedVehicle = null;
         _previousSelectedRoute = null;
         _start = null;
@@ -227,6 +238,7 @@ public class PlayerVehicleManager : VehicleManager
         if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
         {
             _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
+            //_selectedVehicle.Passenger.SetDestReticle(false);
             Deselect();
         }
         else

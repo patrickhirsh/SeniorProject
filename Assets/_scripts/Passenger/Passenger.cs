@@ -11,9 +11,13 @@ namespace Level
 
         public int SearchDepth;
 
-        public GameObject PassengerDestinationReticle;
+        public Pin PassengerPickupReticle;
+        public Pin PassengerDestinationReticle;
         public Vector3 AdjustmentVector;
         #region Unity Methods
+
+        private Pin pickupReticle;
+        private Pin destReticle;
 
         private void Awake()
         {
@@ -28,15 +32,35 @@ namespace Level
         public void Start()
         {
             DestinationTerminal = PickRandomTerminal(SearchDepth);
+            SpawnPickupReticle();
         }
-
         #endregion
+
+        #region Reticle Methods
+        public void SpawnPickupReticle()
+        {
+            pickupReticle = Instantiate(PassengerPickupReticle, StartTerminal.ParentRoute.transform.position + AdjustmentVector, Quaternion.identity, this.transform);
+           
+        }
 
         public void SpawnDestinationReticle()
         {
-            var reticle = Instantiate(PassengerDestinationReticle, DestinationTerminal.ParentRoute.transform.position + AdjustmentVector, Quaternion.identity, DestinationTerminal.transform);
+            this.pickupReticle.gameObject.SetActive(false);
+            Destroy(pickupReticle.gameObject);
+            destReticle = Instantiate(PassengerDestinationReticle, DestinationTerminal.ParentRoute.transform.position + AdjustmentVector, Quaternion.identity, DestinationTerminal.transform);
+            SetDestReticle(false);
         }
 
+        public void DespawnDestinationReticle()
+        {
+            Destroy(destReticle);
+        }
+ 
+        public void SetDestReticle(bool x)
+        {
+            destReticle.gameObject.SetActive(x);
+        }
+        #endregion
         private Terminal PickRandomTerminal(int searchDepth)
         {
             var routes = EntityManager.Instance.Routes.Where(route => route.HasTerminals).ToArray();
