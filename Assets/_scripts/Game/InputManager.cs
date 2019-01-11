@@ -69,7 +69,7 @@ public class InputManager : MonoBehaviour
                 {
                     RaycastHit hitInfo;
                     //If raycast hits an object
-                    var ray = Camera.ScreenPointToRay(Input.mousePosition);
+                    var ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                     Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
 
                     if (Physics.Raycast(ray, out hitInfo))
@@ -109,7 +109,7 @@ public class InputManager : MonoBehaviour
                 {
                     RaycastHit hitInfo;
                     //If raycast hits an object
-                    var ray = Camera.ScreenPointToRay(touch.position);
+                    var ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
                     Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
 
                     if (Physics.Raycast(ray, out hitInfo))
