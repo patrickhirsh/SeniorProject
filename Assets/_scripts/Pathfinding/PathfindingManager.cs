@@ -716,6 +716,11 @@ namespace Level
         }
 
         #endregion
+
+        public bool GetPath(Route start, Route intersections, out Queue<Connection> connections)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 

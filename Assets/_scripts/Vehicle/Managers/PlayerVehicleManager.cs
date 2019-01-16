@@ -234,8 +234,9 @@ public class PlayerVehicleManager : VehicleManager
     private void RouteSelection(Route route)
     {
         Queue<Connection> connections;
-        var intersections = new Queue<IntersectionRoute>(_intersections.Reverse());
-        if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
+
+        if (PathfindingManager.Instance.GetPath(_start, route, out connections))
+//        if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
         {
             _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
             //_selectedVehicle.Passenger.SetDestReticle(false);
