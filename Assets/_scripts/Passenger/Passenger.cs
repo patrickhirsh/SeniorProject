@@ -96,7 +96,7 @@ namespace Level
             Queue<Connection> connections;
             if (PathfindingManager.Instance.GetPath(StartTerminal.Connection, DestinationTerminal.Connection, out connections))
             {
-                var curve = PathfindingManager.Instance.GeneratePath(connections);
+                var curve = PathfindingManager.Instance.GenerateCurves(connections);
 
             }
         }

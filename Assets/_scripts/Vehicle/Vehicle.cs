@@ -204,7 +204,7 @@ namespace Level
 
             if (connections.Count > 1)
             {
-                var vehicleCurve = PathfindingManager.Instance.GeneratePath(connections);
+                var vehicleCurve = PathfindingManager.Instance.GenerateCurves(connections);
                 // Build a line to visualize on
                 var travelLine = GetComponent<LineRenderer>();
 
@@ -258,7 +258,7 @@ namespace Level
         {
             // Green if has passenger else purple
             travelLine.colorGradient = HasPassenger ? DropoffGradient : PickupGradient;
-            PathfindingManager.Instance.DrawPath(vehicleCurve, travelLine, _position);
+            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, _position);
         }
 
         /// <summary>

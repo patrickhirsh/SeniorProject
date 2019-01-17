@@ -105,7 +105,7 @@ namespace Level
                     lineRenderer.numCapVertices = 2;
                     lineRenderer.numCornerVertices = 2;
                     lineRenderer.useWorldSpace = false;
-                    PathfindingManager.Instance.DrawPath(curve, lineRenderer);
+                    PathfindingManager.Instance.DrawCurve(curve, lineRenderer);
                 }
             }
         }
