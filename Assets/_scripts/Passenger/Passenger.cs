@@ -9,6 +9,8 @@ namespace Level
         public Terminal StartTerminal;
         public Terminal DestinationTerminal;
 
+        public enum Color {Red, Green, Blue, Yellow, Purple, Orange}
+
         public int SearchDepth;
 
         public Pin PassengerPickupReticle;
