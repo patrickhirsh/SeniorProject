@@ -9,6 +9,8 @@ namespace Level
         public Terminal StartTerminal;
         public Terminal DestinationTerminal;
 
+        public enum Color {Red, Green, Blue, Yellow, Purple, Orange}
+
         public int SearchDepth;
 
         public Pin PassengerPickupReticle;
@@ -94,7 +96,7 @@ namespace Level
             Queue<Connection> connections;
             if (PathfindingManager.Instance.GetPath(StartTerminal.Connection, DestinationTerminal.Connection, out connections))
             {
-                var curve = PathfindingManager.Instance.GeneratePath(connections);
+                var curve = PathfindingManager.Instance.GenerateCurves(connections);
 
             }
         }

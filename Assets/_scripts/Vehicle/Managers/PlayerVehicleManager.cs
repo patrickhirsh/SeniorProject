@@ -208,7 +208,7 @@ public class PlayerVehicleManager : VehicleManager
             curve.AddPointAt(end);
 
             line.positionCount = 20;
-            PathfindingManager.Instance.DrawPath(curve, line);
+            PathfindingManager.Instance.DrawCurve(curve, line);
         }
     }
 
