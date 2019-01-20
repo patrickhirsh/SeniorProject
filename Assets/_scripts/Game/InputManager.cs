@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
     public ARSessionOrigin SessionOrigin;
     public float LevelYOffset;
     public PlayerVehicleManager PlayerVehicleManager;
+    public float raycastThickness;
 
     private bool _vehicleSelected;
 
@@ -69,10 +70,9 @@ public class InputManager : MonoBehaviour
                 {
                     RaycastHit hitInfo;
                     //If raycast hits an object
-                    var ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
-
-                    if (Physics.Raycast(ray, out hitInfo))
+                    Vector3 origin = Camera.main.transform.position;
+                       
+                    if (Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo))
                     {
                         PlayerVehicleManager.HandleHit(hitInfo);
                     }
@@ -108,11 +108,9 @@ public class InputManager : MonoBehaviour
                 if (touch.phase == TouchPhase.Began)
                 {
                     RaycastHit hitInfo;
-                    //If raycast hits an object
-                    var ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 20);
+                    Vector3 origin = Camera.main.transform.position;
 
-                    if (Physics.Raycast(ray, out hitInfo))
+                    if (Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo))
                     {
                         PlayerVehicleManager.HandleHit(hitInfo);
                     }
