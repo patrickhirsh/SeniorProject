@@ -5140,6 +5140,7 @@ GameObject:
   - component: {fileID: 717924316}
   - component: {fileID: 717924315}
   - component: {fileID: 717924314}
+  - component: {fileID: 717924318}
   m_Layer: 0
   m_Name: Cube (19)
   m_TagString: Untagged
@@ -5214,6 +5215,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 33
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &717924318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 717924313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeliveryLocation: {fileID: 1880951117}
+  BuildingColor: 2
 --- !u!4 &722559705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4172409532465272, guid: 77809ba862577684cad59b802e8258a4,
@@ -9424,6 +9438,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 114646404409632202, guid: 89c3b1a2b2d14a446a69fab2d2701645,
+        type: 2}
+      propertyPath: DeliveryLocation
+      value: 
+      objectReference: {fileID: 1863399730}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89c3b1a2b2d14a446a69fab2d2701645, type: 2}
   m_IsPrefabAsset: 0
@@ -11847,7 +11866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeliveryLocation: {fileID: 0}
+  DeliveryLocation: {fileID: 1863399730}
   BuildingColor: 0
 --- !u!1001 &1738088120
 Prefab:

@@ -7,10 +7,10 @@ namespace Level
     public class Passenger : MonoBehaviour
     {
         public Terminal StartTerminal;
-        public Terminal DestinationTerminal;
-
-        public enum Color {Red, Green, Blue, Yellow, Purple, Orange}
-
+        public Route DestRoute;
+        private Building.BuildingColors Color;
+ 
+        private LevelManager LM;
         public int SearchDepth;
 
         public Pin PassengerPickupReticle;
@@ -24,6 +24,8 @@ namespace Level
         private void Awake()
         {
             Broadcaster.AddListener(GameEvent.Reset, Reset);
+            LM = FindObjectOfType<LevelManager>();
+            Color = LM.GetValidColor();
         }
 
         private void Reset(GameEvent @event)
@@ -33,7 +35,7 @@ namespace Level
 
         public void Start()
         {
-            DestinationTerminal = PickRandomTerminal(SearchDepth);
+            DestRoute = GetDestTerminal();
             SpawnPickupReticle();
         }
         #endregion
@@ -49,7 +51,7 @@ namespace Level
         {
             this.pickupReticle.gameObject.SetActive(false);
             Destroy(pickupReticle.gameObject);
-            destReticle = Instantiate(PassengerDestinationReticle, DestinationTerminal.ParentRoute.transform.position + AdjustmentVector, Quaternion.identity, DestinationTerminal.transform);
+            destReticle = Instantiate(PassengerDestinationReticle, DestRoute.transform.position + AdjustmentVector, Quaternion.identity, DestRoute.transform);
             SetDestReticle(false);
         }
 
@@ -63,38 +65,40 @@ namespace Level
             destReticle.gameObject.SetActive(x);
         }
         #endregion
-        private Terminal PickRandomTerminal(int searchDepth)
+        private Route GetDestTerminal()
         {
-            var routes = EntityManager.Instance.Routes.Where(route => route.HasTerminals).ToArray();
-            var terminals = routes[Random.Range(0, routes.Length)].Terminals;
-            var terminal = terminals[Random.Range(0, terminals.Length)];
-            if (terminal != StartTerminal) return terminal;
-            return PickRandomTerminal(searchDepth);
+            #region legacy random destiation code
+            //var routes = EntityManager.Instance.Routes.Where(route => route.HasTerminals).ToArray();
+            //var terminals = routes[Random.Range(0, routes.Length)].Terminals;
+            //var terminal = terminals[Random.Range(0, terminals.Length)];
+            //if (terminal != StartTerminal) return terminal;
+            //return PickRandomTerminal(searchDepth);
 
-            var depth = 0;
-            var current = StartTerminal.ParentRoute;
-            var frontier = new HashSet<Route> { current };
-            while (depth < searchDepth)
-            {
-                // Pick a random neighbor
-                var available = current.NeighborRoutes.Where(route => !frontier.Contains(route)).ToArray();
-                current = available[Random.Range(0, available.Length)];
-                depth++;
-            }
+            //var depth = 0;
+            //var current = StartTerminal.ParentRoute;
+            //var frontier = new HashSet<Route> { current };
+            //while (depth < searchDepth)
+            //{
+            //    // Pick a random neighbor
+            //    var available = current.NeighborRoutes.Where(route => !frontier.Contains(route)).ToArray();
+            //    current = available[Random.Range(0, available.Length)];
+            //    depth++;
+            //}
 
-            while (!current.HasTerminals)
-            {
-                current = current.NeighborRoutes[Random.Range(0, current.NeighborRoutes.Length)];
-            }
-
-            // Pick a random terminal
-            return current.Terminals[Random.Range(0, current.Terminals.Length)];
+            //while (!current.HasTerminals)
+            //{
+            //    current = current.NeighborRoutes[Random.Range(0, current.NeighborRoutes.Length)];
+            //}
+            #endregion
+            
+            // Return 
+            return LM.GetBuildingRoute(this.Color);
         }
 
         private void DrawPathToDestination()
         {
             Queue<Connection> connections;
-            if (PathfindingManager.Instance.GetPath(StartTerminal.Connection, DestinationTerminal.Connection, out connections))
+            if (PathfindingManager.Instance.GetPath(StartTerminal.Connection, DestRoute.Connections[0], out connections))
             {
                 var curve = PathfindingManager.Instance.GenerateCurves(connections);
 

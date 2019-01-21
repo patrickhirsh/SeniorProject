@@ -20,7 +20,7 @@ public class PlayerVehicleManager : VehicleManager
 
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
-        if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestinationTerminal.ParentRoute)
+        if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestRoute)
         {
             DeliverPassenger(vehicle);
             vehicle.Passenger.DespawnDestinationReticle();
@@ -113,7 +113,7 @@ public class PlayerVehicleManager : VehicleManager
         {
             foreach (var destinationable in _destinationables)
             {
-                if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passenger.DestinationTerminal.ParentRoute)
+                if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passenger.DestRoute)
                 {
                     var reticle = Instantiate(PassengerDeliveryReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
                     _destinationReticles.Add(reticle);
@@ -193,7 +193,7 @@ public class PlayerVehicleManager : VehicleManager
             curve.Clear(true);
 
             var start = _selectedVehicle.transform.position;
-            var end = _selectedVehicle.Passenger.DestinationTerminal.transform.position;
+            var end = _selectedVehicle.Passenger.DestRoute.transform.position;
             start.y += offsetY;
             end.y = start.y;
 
@@ -330,7 +330,7 @@ public class PlayerVehicleManager : VehicleManager
         {
             if (_selectedVehicle.HasPassenger)
             {
-                return _selectedVehicle.Passenger.DestinationTerminal.ParentRoute == route;
+                return _selectedVehicle.Passenger.DestRoute == route;
             }
             return route.HasPassenger;
         }
