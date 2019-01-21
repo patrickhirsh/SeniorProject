@@ -136,6 +136,17 @@ public class InputManager : MonoBehaviour
         {
             x.gameObject.SetActive(active);
         }
+        if(!active)
+            SessionOrigin.GetComponent<ARPlaneManager>().enabled = false;
         //SessionOrigin.GetComponent<ARPointCloud>().gameObject.SetActive(false);
     }
+
+    //Possible function to use?
+    //public void StopPlaneDetection()
+    //{
+    //    ARSession session = ARSession.GetARSessionNativeInterface();
+    //    ARKitWorldTrackingSessionConfiguration config = new ARKitWorldTrackingSessionConfiguration();
+    //    config.planeDetection = UnityARPlaneDetection.None;
+    //    session.RunWithConfig(config);
+    //}
 }
