@@ -46,6 +46,26 @@ public class InputManager : MonoBehaviour
 #endif
     }
 
+    private void HandleLevelSimulating(bool click)
+    {
+        RaycastHit hitInfo;
+        Vector3 origin = Camera.main.transform.position;
+
+        var hit = Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo);
+
+        PlayerVehicleManager.HandleHover(hit, hitInfo);
+
+        if (Input.GetMouseButtonDown(0) && hit)
+        {
+            PlayerVehicleManager.HandleHit(hitInfo);
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            PlayerVehicleManager.HandleNotHit();
+        }
+
+    }
+
     private void HandleDesktopInput()
     {
         switch (GameManager.CurrentGameState)
@@ -66,21 +86,7 @@ public class InputManager : MonoBehaviour
                 }
                 break;
             case GameState.LevelSimulating:
-                if (Input.GetMouseButtonDown(0))
-                {
-                    RaycastHit hitInfo;
-                    //If raycast hits an object
-                    Vector3 origin = Camera.main.transform.position;
-                       
-                    if (Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo))
-                    {
-                        PlayerVehicleManager.HandleHit(hitInfo);
-                    }
-                    else
-                    {
-                        PlayerVehicleManager.HandleNotHit();
-                    }
-                }
+                HandleLevelSimulating(Input.GetMouseButtonDown(0));
                 break;
         }
     }
@@ -105,20 +111,7 @@ public class InputManager : MonoBehaviour
                 }
                 break;
             case GameState.LevelSimulating:
-                if (touch.phase == TouchPhase.Began)
-                {
-                    RaycastHit hitInfo;
-                    Vector3 origin = Camera.main.transform.position;
-
-                    if (Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo))
-                    {
-                        PlayerVehicleManager.HandleHit(hitInfo);
-                    }
-                    else
-                    {
-                        PlayerVehicleManager.HandleNotHit();
-                    }
-                }
+                HandleLevelSimulating(touch.phase == TouchPhase.Began);
                 break;
         }
     }

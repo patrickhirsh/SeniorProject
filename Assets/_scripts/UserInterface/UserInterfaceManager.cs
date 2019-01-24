@@ -9,12 +9,14 @@ namespace UserInterface
     {
         public LevelPlacementCanvas LevelPlacementCanvas;
         public ScoreCanvas ScoreCanvas;
+        public InfoCanvas InfoCanvas;
+
         private Component[] _all;
 
         private void Awake()
         {
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
-            _all = new Component[] { LevelPlacementCanvas, ScoreCanvas };
+            _all = new Component[] { LevelPlacementCanvas, ScoreCanvas, InfoCanvas };
         }
 
         private void GameStateChanged(GameEvent state)
@@ -29,8 +31,8 @@ namespace UserInterface
                     break;
 
                 case GameState.LevelSimulating:
-                    DisableCanvases(_all.Except(new Component[] { ScoreCanvas }));
-                    EnableCanvases(new Component[] { ScoreCanvas });
+                    DisableCanvases(_all.Except(new Component[] { ScoreCanvas, InfoCanvas }));
+                    EnableCanvases(new Component[] { ScoreCanvas, InfoCanvas });
                     break;
 
                 default:

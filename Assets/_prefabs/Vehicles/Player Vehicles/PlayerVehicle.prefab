@@ -267,8 +267,8 @@ MonoBehaviour:
   BaseSpeed: 5
   PickupGradient:
     serializedVersion: 2
-    key0: {r: 0.8867924, g: 0, b: 0.85447186, a: 1}
-    key1: {r: 0.6735186, g: 0, b: 0.8773585, a: 1}
+    key0: {r: 0, g: 0.29218823, b: 0.8862745, a: 1}
+    key1: {r: 0.6735186, g: 0, b: 0.8773585, a: 0.02352941}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -284,8 +284,8 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 65535
-    atime2: 0
+    atime1: 32768
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
@@ -293,11 +293,11 @@ MonoBehaviour:
     atime7: 0
     m_Mode: 0
     m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
+    m_NumAlphaKeys: 3
   DropoffGradient:
     serializedVersion: 2
     key0: {r: 0, g: 1, b: 0.033422947, a: 1}
-    key1: {r: 0, g: 0.6226415, b: 0.012726262, a: 1}
+    key1: {r: 0, g: 0.6226415, b: 0.012726262, a: 0}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -313,7 +313,7 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 65535
+    atime1: 32768
     atime2: 0
     atime3: 0
     atime4: 0
@@ -323,7 +323,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  Passenger: {fileID: 0}
+  Passengers: []
   Manager: {fileID: 0}
 --- !u!114 &114981889567429626
 MonoBehaviour:

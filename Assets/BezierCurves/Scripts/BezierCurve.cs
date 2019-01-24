@@ -127,17 +127,17 @@ public class BezierCurve : MonoBehaviour {
 	
 	#region UnityFunctions
 	
-	void OnDrawGizmos () {
-		Gizmos.color = drawColor;
-		
-		if(points.Length > 1){
-			for(int i = 0; i < points.Length - 1; i++){
-				DrawCurve(points[i], points[i+1], resolution);
-			}
-			
-			if (close) DrawCurve(points[points.Length - 1], points[0], resolution);
-		}
-	}
+//	void OnDrawGizmos () {
+//		Gizmos.color = drawColor;
+//		
+//		if(points.Length > 1){
+//			for(int i = 0; i < points.Length - 1; i++){
+//				DrawCurve(points[i], points[i+1], resolution);
+//			}
+//			
+//			if (close) DrawCurve(points[points.Length - 1], points[0], resolution);
+//		}
+//	}
 	
 	void Awake(){
 		dirty = true;

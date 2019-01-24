@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Level
@@ -61,7 +62,8 @@ namespace Level
         public Route CurrentRoute;              // the route this vehicle is currently on
         public Connection CurrentConnection;    // the connection this vehicle is currently on
 
-        //TODO: This is not the value look ahead is being assigned. I had to set it in Awake. Why?
+        //TODO: This is not the value look ahead is being assigned. I had to set it in Awake. Why? 
+        // ^^^^^^^^^^^^^^^^^ It's in the Unity Inspector ... - Jaden
         public float LookAhead = 1f;           // used to create more natural turn animations
 
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
@@ -75,8 +77,8 @@ namespace Level
         private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
         private float _position;
 
-        public Passenger Passenger;
-        public bool HasPassenger => Passenger != null;
+        public List<Passenger> Passengers;
+        public bool HasPassenger => Passengers != null && Passengers.Any();
         public VehicleManager Manager;
         private Vector3 _startingPos;
         private Quaternion _startingRot;
@@ -105,7 +107,7 @@ namespace Level
             HaltCurrentTask();
             if (HasPassenger)
             {
-                Destroy(Passenger.gameObject);
+                Passengers.ForEach(Destroy);
             }
 
             if (Manager is PlayerVehicleManager)
@@ -198,21 +200,25 @@ namespace Level
 
         private IEnumerator Travel(Queue<Connection> connections, Connection firstConnection)
         {
+            Debug.Assert(connections != null, "Connections appears to be null", gameObject);
             // if the last call to StartTraveling was interrupted, recover the vehicle
             if (CurrentConnection == null)
                 yield return TravelTo(firstConnection);
 
             if (connections.Count > 1)
             {
+                var destination = connections.Last().ParentRoute;
                 var vehicleCurve = PathfindingManager.Instance.GenerateCurves(connections);
                 // Build a line to visualize on
                 var travelLine = GetComponent<LineRenderer>();
 
-                yield return TravelPath(vehicleCurve, travelLine);
+                yield return TravelPath(vehicleCurve, travelLine, destination);
             }
             else
             {
-                _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
+                var task = _currentTask;
+                _currentTask = null;
+                task.Callback?.Invoke(task.Type, this, true);
             }
         }
 
@@ -223,7 +229,7 @@ namespace Level
         /// If the vehicle is in a "lost" state, it'll first resolve the
         /// lost vehicle before pathing.
         /// </summary>
-        private IEnumerator TravelPath(BezierCurve vehicleCurve, LineRenderer travelLine)
+        private IEnumerator TravelPath(BezierCurve vehicleCurve, LineRenderer travelLine, Route destination)
         {
             travelLine.positionCount = vehicleCurve.pointCount * 2;
             travelLine.enabled = true;
@@ -238,16 +244,19 @@ namespace Level
                 if (_position + LookAhead < 1f)
                     transform.LookAt(vehicleCurve.GetPointAt(_position + LookAhead));
 
-                if (Manager is PlayerVehicleManager) DrawPath(vehicleCurve, travelLine);
+//                if (Manager is PlayerVehicleManager) DrawPath(vehicleCurve, travelLine);
 
-                Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(_position + LookAhead), Color.cyan, .5f);
+//                Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(_position + LookAhead), Color.cyan, .5f);
 
                 yield return null;
             }
 
+            SetCurrentRoute(destination);
 
+            var task = _currentTask;
+            _currentTask = null;
             // Invoke callback and set vehicle back to "waiting for task" state
-            _currentTask.Callback?.Invoke(_currentTask.Type, this, true);
+            task.Callback?.Invoke(task.Type, this, true);
 
             // Remove the curve
             Destroy(vehicleCurve.gameObject);
@@ -293,10 +302,14 @@ namespace Level
 
         public void AddPassenger(Passenger passenger)
         {
-            Passenger = passenger;
-            passenger.transform.parent = transform;
-            passenger.transform.localPosition = Vector3.zero;
+            Passengers.Add(passenger);
+            passenger.transform.SetParent(transform, false);
         }
 
+        public void RemovePassenger(Passenger passenger)
+        {
+            Debug.Assert(Passengers.Contains(passenger), "Passenger is not in vehicle???");
+            Passengers.Remove(passenger);
+        }
     }
 }

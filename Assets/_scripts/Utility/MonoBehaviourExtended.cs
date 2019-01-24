@@ -6,12 +6,12 @@ public static class MethodExtensionForMonoBehaviourTransform
     /// Gets or add a component. Usage example:
     /// BoxCollider boxCollider = transform.GetOrAddComponent<BoxCollider>();
     /// </summary>
-    public static T GetOrAddComponent<T>(this Component child) where T : Component
+    public static T GetOrAddComponent<T>(this Component component) where T : Component
     {
-        var result = child.GetComponent<T>();
+        var result = component.GetComponent<T>();
         if (result == null)
         {
-            result = child.gameObject.AddComponent<T>();
+            result = component.gameObject.AddComponent<T>();
         }
         return result;
     }

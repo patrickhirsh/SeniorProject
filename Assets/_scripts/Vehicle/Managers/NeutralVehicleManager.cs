@@ -80,7 +80,7 @@ namespace Level
             {
                 // spawnState is off by default (waiting for instructions...)
                 //_spawnState = SpawnState.SpawningOff;
-                _spawnState = SpawnState.SpawningProcedurally;
+                _spawnState = SpawnState.SpawningOff;
 
                 // ensure neutral vehicles have been set in the inspector
                 Debug.Assert(_neutralVehiclePrefabs != null);

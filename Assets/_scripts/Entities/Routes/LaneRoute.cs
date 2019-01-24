@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using Level;
-using UnityEngine;
-
-namespace Level
+﻿namespace Level
 {
     public class LaneRoute : Route
     {

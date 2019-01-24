@@ -1,6 +1,4 @@
-﻿using Level;
-
-namespace Level
+﻿namespace Level
 {
     public class Scenery : Entity
     {

@@ -1,34 +1,70 @@
-﻿using Level;
+﻿using System;
+using Level;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using Utility;
 using Connection = Level.Connection;
+using Random = UnityEngine.Random;
 
 public class PlayerVehicleManager : VehicleManager
 {
-    private Vehicle _selectedVehicle;
+    #region Singleton
+    private static PlayerVehicleManager _instance;
+    public static PlayerVehicleManager Instance => _instance ?? (_instance = Create());
 
-    private Route _start;
-    private Stack<IntersectionRoute> _intersections;
-    private Route _end;
+    private static PlayerVehicleManager Create()
+    {
+        GameObject singleton = FindObjectOfType<PlayerVehicleManager>()?.gameObject;
+        if (singleton == null)
+        {
+            singleton = new GameObject { name = $"[{typeof(PlayerVehicleManager).Name}]" };
+            singleton.AddComponent<LevelManager>();
+        }
+        return singleton.GetComponent<PlayerVehicleManager>();
+    }
+    #endregion
 
-    private Route _previousSelectedRoute;
-    private List<Route> _destinationables;
+    private List<Passenger> _selectedPassengers = new List<Passenger>();
 
-    private bool VehicleSelected => _selectedVehicle != null;
+    private Dictionary<Vehicle, Queue<VehicleTask>> VehicleTasks = new Dictionary<Vehicle, Queue<VehicleTask>>();
 
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
-        if (vehicle.HasPassenger && vehicle.CurrentRoute == vehicle.Passenger.DestRoute)
+        if (vehicle.HasPassenger)
         {
-            DeliverPassenger(vehicle);
-            vehicle.Passenger.DespawnDestinationReticle();
+            foreach (var passenger in new List<Passenger>(vehicle.Passengers))
+            {
+                if (passenger.DestRoute == vehicle.CurrentRoute)
+                {
+                    DeliverPassenger(vehicle, passenger);
+                }
+            }
         }
-        if (!vehicle.HasPassenger && vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
+        if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
             PickupPassenger(vehicle);
         }
+
+        if (VehicleTasks.ContainsKey(vehicle) && VehicleTasks[vehicle].Any())
+        {
+            vehicle.AssignTask(VehicleTasks[vehicle].Dequeue());
+        }
+        else if (vehicle.HasPassenger && !VehicleTasks[vehicle].Any())
+        {
+            // We have a passenger but we don't have a task to drop them off.
+            Queue<Connection> connections;
+            if (PathfindingManager.Instance.GetPath(vehicle.CurrentRoute, vehicle.Passengers.First().DestRoute, out connections))
+            {
+                vehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
+            }
+            else
+            {
+                Debug.LogWarning("Could not find path to passenger for vehicle");
+            }
+        }
+
     }
 
     private static void PickupPassenger(Vehicle vehicle)
@@ -37,17 +73,12 @@ public class PlayerVehicleManager : VehicleManager
         var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
         vehicle.AddPassenger(terminal.Passenger);
         terminal.RemovePassenger();
-        vehicle.Passenger.SpawnDestinationReticle();
     }
 
-    private static void DeliverPassenger(Vehicle vehicle)
+    private static void DeliverPassenger(Vehicle vehicle, Passenger passenger)
     {
-        var hasPin = vehicle.CurrentRoute.GetComponentInChildren<Pin>();
-        if (hasPin)
-        {
-            Destroy(hasPin.gameObject);
-        }
-        Destroy(vehicle.Passenger.gameObject);
+        vehicle.RemovePassenger(passenger);
+        Destroy(passenger.gameObject);
         Debug.Log("PASSENGER DELIVERED");
         GameManager.Instance.AddScore(10);
     }
@@ -63,21 +94,21 @@ public class PlayerVehicleManager : VehicleManager
         {
             if (parkingSpots[i].Type == ParkingRouteType.Volta && !parkingSpots[i].IsOccupied)
             {
-                float cDist = Vector3.Distance(_selectedVehicle.transform.position, parkingSpots[i].transform.position);
-
-                if (cDist < nearestDist)
-                {
-                    nearestSpot = parkingSpots[i];
-                    nearestDist = cDist;
-                }
+                //                float cDist = Vector3.Distance(_selectedVehicle.transform.position, parkingSpots[i].transform.position);
+                //
+                //                if (cDist < nearestDist)
+                //                {
+                //                    nearestSpot = parkingSpots[i];
+                //                    nearestDist = cDist;
+                //                }
             }
         }
 
         Queue<Connection> connections = new Queue<Connection>();
 
-        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0], out connections);
+        //        PathfindingManager.Instance.GetPath(_selectedVehicle.CurrentConnection, nearestSpot.Connections[0], out connections);
 
-        _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
+        //        _selectedVehicle.AssignTask(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
     }
 
     #region Unity Methods
@@ -85,13 +116,6 @@ public class PlayerVehicleManager : VehicleManager
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        if (_destinationables != null)
-        {
-            foreach (var destinationable in _destinationables)
-            {
-                Gizmos.DrawSphere(destinationable.transform.position + Vector3.up, .25f);
-            }
-        }
     }
 
     #endregion
@@ -109,27 +133,27 @@ public class PlayerVehicleManager : VehicleManager
     private void DrawDestinations()
     {
         _destinationReticles.ForEach(Destroy);
-        if (_destinationables != null)
-        {
-            foreach (var destinationable in _destinationables)
-            {
-                if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passenger.DestRoute)
-                {
-                    var reticle = Instantiate(PassengerDeliveryReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
-                    _destinationReticles.Add(reticle);
-                }
-                else if (destinationable.HasPassenger)
-                {
-                    var reticle = Instantiate(PickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
-                    _destinationReticles.Add(reticle);
-                }
-                else if (destinationable != _selectedVehicle.CurrentRoute)
-                {
-                    var reticle = Instantiate(IntersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
-                    _destinationReticles.Add(reticle);
-                }
-            }
-        }
+        //        if (_destinationables != null)
+        //        {
+        //            foreach (var destinationable in _destinationables)
+        //            {
+        //                if (_selectedVehicle.HasPassenger && destinationable == _selectedVehicle.Passengers.DestRoute)
+        //                {
+        //                    var reticle = Instantiate(PassengerDeliveryReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
+        //                    _destinationReticles.Add(reticle);
+        //                }
+        //                else if (destinationable.HasPassenger)
+        //                {
+        //                    var reticle = Instantiate(PickupDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
+        //                    _destinationReticles.Add(reticle);
+        //                }
+        //                else if (destinationable != _selectedVehicle.CurrentRoute)
+        //                {
+        //                    var reticle = Instantiate(IntersectionDestinationReticle, destinationable.transform.GetChild(0).GetChild(0).transform.position + AdjustmentVector, Quaternion.identity, destinationable.transform);
+        //                    _destinationReticles.Add(reticle);
+        //                }
+        //            }
+        //        }
     }
 
     #endregion
@@ -143,73 +167,86 @@ public class PlayerVehicleManager : VehicleManager
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var pin = hitInfo.transform.GetComponent<Pin>();
 
-        if (vehicle && vehicle.Manager == this)
+        if (vehicle && HasOwnership(vehicle) && _selectedPassengers.Any())
         {
-            //if (Debugger.Profile.DebugPlayerVehicleManager) 
-            Debug.Log($"Selected Vehicle {vehicle}", vehicle);
-            if (VehicleSelected) Deselect();
-            CarSelection(vehicle);
-            if (_selectedVehicle.HasPassenger)
-            {
-                _selectedVehicle.Passenger.SetDestReticle(true);
-            }
+            if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Vehicle {vehicle}", vehicle);
+            HandleVehicleSelect(vehicle);
         }
         else if (pin)
         {
             var route = pin.GetComponentInParent<Route>();
-            if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Route {route}", route);
-            /*
-            if (_selectedVehicle.HasPassenger && route == _selectedVehicle.Passenger.DestinationTerminal.ParentRoute)
-            {
-                RouteSelection(route);
-            }
-            else */
-            if (route.GetType() == typeof(IntersectionRoute))
-            {
-                IntersectionSelection((IntersectionRoute)route);
-            }
-            else if (IsDestinationable(route))
-            {
-                RouteSelection(route);
-            }
-
-            _previousSelectedRoute = route;
+            if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Passengers {route}", route);
+            HandlePassengerSelect(pin);
         }
 
-        DrawDestinations();
-        DrawPassengerInfo();
+        //        DrawDestinations();
+        //        DrawPassengerInfo();
     }
 
-    private void DrawPassengerInfo()
+    private void HandleVehicleSelect(Vehicle vehicle)
     {
-        var line = GetComponent<LineRenderer>();
-        var curve = GetComponent<BezierCurve>();
-        Debug.Assert(line != null, $"{name} needs a line renderer");
-        Debug.Assert(curve != null, $"{name} needs a bezier curve");
+        vehicle.HaltCurrentTask();
+        if (!VehicleTasks.ContainsKey(vehicle)) VehicleTasks[vehicle] = new Queue<VehicleTask>();
+        BuildTasks(vehicle);
+        _selectedPassengers = new List<Passenger>();
+        HoverChanged.Invoke("Sending vehicle to pick up passengers");
 
-        if (line != null && curve != null && _selectedVehicle != null && _selectedVehicle.HasPassenger)
+    }
+
+    private void BuildTasks(Vehicle vehicle)
+    {
+        // Get a path to pickup all selected passengers
+        var current = vehicle.CurrentRoute;
+        foreach (var passenger in _selectedPassengers)
         {
-            var offsetY = 1f;
-            curve.Clear(true);
-
-            var start = _selectedVehicle.transform.position;
-            var end = _selectedVehicle.Passenger.DestRoute.transform.position;
-            start.y += offsetY;
-            end.y = start.y;
-
-            var half = Vector3.Lerp(start, end, .5f);
-
-            var handle1 = Vector3.Lerp(start, half, .5f);
-            handle1.y = start.y + offsetY;
-
-            curve.AddPointAt(start);
-            var mid = curve.AddPointAt(half + Vector3.up);
-            mid.globalHandle1 = handle1;
-            curve.AddPointAt(end);
-
-            line.positionCount = 20;
-            PathfindingManager.Instance.DrawCurve(curve, line);
+            Queue<Connection> connections;
+            if (PathfindingManager.Instance.GetPath(current, passenger.StartRoute, out connections))
+            {
+                VehicleTasks[vehicle].Enqueue(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
+                current = passenger.StartRoute;
+            }
+            else
+            {
+                Debug.LogWarning("Could not find path to passenger for vehicle");
+            }
         }
+
+        // Get path from last picked up passenger to each destination of passengers
+        foreach (var passenger in _selectedPassengers)
+        {
+            Queue<Connection> connections;
+            Debug.Assert(passenger.DestRoute != null, "Passengers does not have a destination");
+            if (PathfindingManager.Instance.GetPath(current, passenger.DestRoute, out connections))
+            {
+                VehicleTasks[vehicle].Enqueue(new VehicleTask(TaskType.PassivePlayer, connections, VehicleTaskCallback));
+                current = passenger.DestRoute;
+            }
+            else
+            {
+                Debug.LogWarning("Could not find path for passenger to destination");
+            }
+        }
+
+        vehicle.AssignTask(VehicleTasks[vehicle].Dequeue());
+    }
+
+    private void HandlePassengerSelect(Pin pin)
+    {
+        if (!_selectedPassengers.Contains(pin.Passenger))
+        {
+            _selectedPassengers.Add(pin.Passenger);
+            HoverChanged.Invoke("Deselect Passengers");
+        }
+        else
+        {
+            _selectedPassengers.Remove(pin.Passenger);
+            HoverChanged.Invoke("Select Passengers");
+        }
+    }
+
+    private bool HasOwnership(Vehicle vehicle)
+    {
+        return vehicle.Manager == this;
     }
 
     public void HandleNotHit()
@@ -221,122 +258,57 @@ public class PlayerVehicleManager : VehicleManager
     private void Deselect()
     {
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log("DESELECT");
-        //_selectedVehicle.Passenger.SetDestReticle(false);
-        _selectedVehicle = null;
-        _previousSelectedRoute = null;
-        _start = null;
-        _end = null;
-        _destinationables = null;
+        //_selectedVehicle.Passengers.SetDestReticle(false);
         GetComponent<LineRenderer>().positionCount = 0;
     }
 
-    //process a tap on a pickup location
-    private void RouteSelection(Route route)
-    {
-        Queue<Connection> connections;
 
-        if (PathfindingManager.Instance.GetPath(_start, route, out connections))
-//        if (PathfindingManager.Instance.GetPath(_start, intersections, route, out connections))
+    #endregion
+
+
+    #region Hover
+    [Serializable]
+    public class HoverEvent : UnityEvent<string> { }
+    public HoverEvent HoverChanged = new HoverEvent();
+    private Transform _hoverTransform;
+
+    public void HandleHover(bool hit, RaycastHit hitInfo)
+    {
+        if (hit)
         {
-            _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
-            //_selectedVehicle.Passenger.SetDestReticle(false);
-            Deselect();
+            if (_hoverTransform == null || _hoverTransform != hitInfo.transform)
+            {
+                _hoverTransform = hitInfo.transform;
+
+                var vehicle = hitInfo.transform.GetComponent<Vehicle>();
+                var pin = hitInfo.transform.GetComponent<Pin>();
+
+                if (vehicle && HasOwnership(vehicle) && _selectedPassengers.Any())
+                {
+                    HoverChanged.Invoke("Send Vehicle to Pickup");
+                }
+                else if (vehicle && HasOwnership(vehicle))
+                {
+                    HoverChanged.Invoke("No Passengers Selected");
+                }
+
+                if (pin && !_selectedPassengers.Contains(pin.Passenger))
+                {
+                    HoverChanged.Invoke("Select Passengers");
+                }
+                else if (pin && _selectedPassengers.Contains(pin.Passenger))
+                {
+                    HoverChanged.Invoke("Deselect Passengers");
+                }
+            }
         }
         else
         {
-            Debug.LogWarning("Could not find a path for player input");
+            HoverChanged.Invoke(null);
+            _hoverTransform = null;
         }
     }
-
-    //process a tap on an intersection
-    private void IntersectionSelection(IntersectionRoute intersection)
-    {
-        if (_previousSelectedRoute == intersection && _intersections.Any())
-        {
-            // We assume that the intersection is the last in the queue if we double click it
-            _end = _intersections.Pop();
-
-            Debug.Assert(_start != null, "Start is not defined.");
-            Debug.Assert(_end != null, "End is not defined.");
-
-            Queue<Connection> connections;
-            var intersections = new Queue<IntersectionRoute>(_intersections.Reverse());
-            if (PathfindingManager.Instance.GetPath(_start, intersections, _end, out connections))
-            {
-                _selectedVehicle.AssignTask(new VehicleTask(TaskType.ActivePlayer, connections, VehicleTaskCallback));
-            }
-            else
-            {
-                Debug.LogWarning("Could not find a path for player input");
-            }
-
-            Deselect();
-        }
-        else if (_destinationables != null && _destinationables.Contains(intersection))
-        {
-            _intersections.Push(intersection);
-            DestinationableSearch(intersection);
-        }
-    }
-
-    private void CarSelection(Vehicle vehicle)
-    {
-        //Pick a new vehicle to control
-        _selectedVehicle = vehicle;
-        _start = _selectedVehicle.CurrentRoute;
-        _intersections = new Stack<IntersectionRoute>();
-
-        _selectedVehicle.HaltCurrentTask();
-        DestinationableSearch(_start);
-    }
-
-    private void DestinationableSearch(Route start)
-    {
-        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Get next destinationables from {start}", start);
-
-        _destinationables = new List<Route>();
-        HashSet<Route> frontier = new HashSet<Route>();
-        GetNextDestinationables(start, _destinationables, frontier);
-    }
-
-    private void GetNextDestinationables(Route start, IList<Route> destinations, HashSet<Route> frontier)
-    {
-        foreach (var route in start.NeighborRoutes)
-        {
-            if (frontier.Contains(route) || route == start) continue;
-            frontier.Add(route);
-            if (IsDestinationable(route))
-            {
-                if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Destination Found: {route}", route);
-                destinations.Add(route);
-                if (route.GetType() != typeof(IntersectionRoute))
-                {
-                    GetNextDestinationables(route, destinations, frontier);
-                }
-            }
-            else
-            {
-                GetNextDestinationables(route, destinations, frontier);
-            }
-        }
-    }
-
-    private bool IsDestinationable(Route route)
-    {
-        // This is an "override"
-        if (route.Destinationable) return true;
-
-        if (_selectedVehicle != null)
-        {
-            if (_selectedVehicle.HasPassenger)
-            {
-                return _selectedVehicle.Passenger.DestRoute == route;
-            }
-            return route.HasPassenger;
-        }
-
-        return false;
-    }
-
     #endregion
+
+
 }

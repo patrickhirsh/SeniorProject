@@ -60,7 +60,6 @@ namespace UserInterface
         private void HandleContinueButton()
         {
             // Done with placement, transition to simulation
-            Debug.Log("HERE");
             GameManager.SetGameState(GameState.LevelSimulating);
         }
     }

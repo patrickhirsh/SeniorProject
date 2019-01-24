@@ -50,7 +50,7 @@ namespace Level
             var target = other.GetComponent<Vehicle>();
             if (target != null)
             {
-                target.SetCurrentRoute(this);
+//                target.SetCurrentRoute(this);
                 HandleVehicleEnter(target);
             }
         }
@@ -89,26 +89,26 @@ namespace Level
 
         #endregion
 
-        private void DrawPaths()
-        {
-            foreach (var curve in VehiclePaths)
-            {
-                if (curve.GetAnchorPoints().Any())
-                {
-                    var child = new GameObject("Line");
-                    child.transform.SetParent(transform);
-                    var lineRenderer = child.AddComponent<LineRenderer>();
-                    int lengthOfLineRenderer = 20;
-                    lineRenderer.positionCount = lengthOfLineRenderer;
-                    lineRenderer.widthMultiplier = .06f;
-
-                    lineRenderer.numCapVertices = 2;
-                    lineRenderer.numCornerVertices = 2;
-                    lineRenderer.useWorldSpace = false;
-                    PathfindingManager.Instance.DrawCurve(curve, lineRenderer);
-                }
-            }
-        }
+//        private void DrawPaths()
+//        {
+//            foreach (var curve in VehiclePaths)
+//            {
+//                if (curve.GetAnchorPoints().Any())
+//                {
+//                    var child = new GameObject("Line");
+//                    child.transform.SetParent(transform);
+//                    var lineRenderer = child.AddComponent<LineRenderer>();
+//                    int lengthOfLineRenderer = 20;
+//                    lineRenderer.positionCount = lengthOfLineRenderer;
+//                    lineRenderer.widthMultiplier = .06f;
+//
+//                    lineRenderer.numCapVertices = 2;
+//                    lineRenderer.numCornerVertices = 2;
+//                    lineRenderer.useWorldSpace = false;
+//                    PathfindingManager.Instance.DrawCurve(curve, lineRenderer);
+//                }
+//            }
+//        }
 
         public void BakePrefab()
         {

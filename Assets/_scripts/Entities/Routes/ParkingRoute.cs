@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Level;
-
-namespace Level
+﻿namespace Level
 {
     public enum ParkingRouteType { Volta, Enemy }
 
