@@ -9,6 +9,9 @@ using UnityEngine.Events;
 /// </summary>
 public class GameManager : Singleton<GameManager>
 {
+
+    public Canvas UI;
+    
     #region Unity Methods
 
     private void Start()
@@ -23,7 +26,6 @@ public class GameManager : Singleton<GameManager>
     private void Reset(GameEvent @event)
     {
         _gameStates.Clear();
-        SetScore(0);
     }
 
     #region GameState
@@ -49,22 +51,30 @@ public class GameManager : Singleton<GameManager>
 
     #endregion
 
-    [Serializable]
-    public class ScoreEvent : UnityEvent<int> { }
 
-    public ScoreEvent ScoreChanged;
+    //All of this should be done by score manager now
+    //[Serializable]
+    //public class ScoreEvent : UnityEvent<int> { }
 
-    public int CurrentScore { get; private set; }
+    //public ScoreEvent ScoreChanged;
 
-    public void AddScore(int amount)
+    //public int CurrentScore { get; private set; }
+
+    //public void AddScore(int amount)
+    //{
+    //    SetScore(CurrentScore + amount);
+    //}
+
+    //private void SetScore(int i)
+    //{
+    //    CurrentScore = i;
+    //    ScoreChanged?.Invoke(CurrentScore);
+    //}
+
+    public void gameOver()
     {
-        SetScore(CurrentScore + amount);
-    }
-
-    private void SetScore(int i)
-    {
-        CurrentScore = i;
-        ScoreChanged?.Invoke(CurrentScore);
+        UI.GetComponent<UserInterface.ScoreCanvas>().gameObject.SetActive(false);
+        UI.GetComponent<GameOverScript>().gameObject.SetActive(true); 
     }
 
 }

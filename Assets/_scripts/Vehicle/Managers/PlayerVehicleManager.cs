@@ -49,7 +49,7 @@ public class PlayerVehicleManager : VehicleManager
         }
         Destroy(vehicle.Passenger.gameObject);
         Debug.Log("PASSENGER DELIVERED");
-        GameManager.Instance.AddScore(10);
+        //GameManager.Instance.AddScore(10);
     }
 
     private void HandlePassiveAi()

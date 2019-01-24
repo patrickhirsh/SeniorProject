@@ -18,10 +18,6 @@ namespace UserInterface
         private void Start()
         {
             RestartButton.onClick.AddListener(HandleRestartButton);
-
-            _score = GameManager.Instance.CurrentScore;
-            Score.text = _score.ToString();
-            GameManager.Instance.ScoreChanged.AddListener(UpdateScore);
         }
 
         #endregion
@@ -31,29 +27,30 @@ namespace UserInterface
             Broadcaster.Broadcast(GameEvent.Reset);
             GameManager.SetGameState(GameState.LevelRePlacement);
         }
-
-        private void UpdateScore(int score)
-        {
-            StartCoroutine(AnimateScore());
-        }
-
-        private IEnumerator AnimateScore()
-        {
-            var currentScore = GameManager.Instance.CurrentScore;
-            while (_score != currentScore)
-            {
-                if (_score > currentScore)
-                {
-                    _score--;
-                }
-                else
-                {
-                    _score++;
-                }
-
-                Score.text = _score.ToString();
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
     }
+
+    //    private void UpdateScore(int score)
+    //    {
+    //        StartCoroutine(AnimateScore());
+    //    }
+
+    //    private IEnumerator AnimateScore()
+    //    {
+    //        var currentScore = GameManager.Instance.CurrentScore;
+    //        while (_score != currentScore)
+    //        {
+    //            if (_score > currentScore)
+    //            {
+    //                _score--;
+    //            }
+    //            else
+    //            {
+    //                _score++;
+    //            }
+
+    //            Score.text = _score.ToString();
+    //            yield return new WaitForSeconds(0.1f);
+    //        }
+    //    }
+    //}
 }
