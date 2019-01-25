@@ -16,7 +16,7 @@ namespace Level
 
         public void SpawnPassenger(Passenger prefab)
         {
-            Passenger = Instantiate(prefab, transform.position, Quaternion.identity, transform);
+            Passenger = Instantiate(prefab, ParentRoute.CenterTransform, false);
             Passenger.StartTerminal = this;
         }
 

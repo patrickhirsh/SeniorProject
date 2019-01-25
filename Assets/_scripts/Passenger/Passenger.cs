@@ -12,14 +12,14 @@ namespace Level
 
         public Route StartRoute => StartTerminal.ParentRoute;
         public Route DestRoute;
-        private Building.BuildingColors Color;
+        private Building.BuildingColors _color;
 
         public Pin PassengerPickupReticle;
         public Vector3 AdjustmentVector;
 
         #region Unity Methods
 
-        private Pin pickupPin;
+        private Pin _pickupPin;
 
         private void Awake()
         {
@@ -33,8 +33,8 @@ namespace Level
 
         public void Start()
         {
-            Color = LevelManager.Instance.GetValidColor();
-            DestRoute = LevelManager.Instance.GetBuildingRoute(Color);
+            _color = LevelManager.Instance.GetValidColor();
+            DestRoute = LevelManager.Instance.GetBuildingRoute(_color);
             SpawnPickupReticle();
         }
         #endregion
@@ -44,10 +44,10 @@ namespace Level
 
         public void SpawnPickupReticle()
         {
-            pickupPin = Instantiate(PassengerPickupReticle, transform, false);
-            pickupPin.transform.position += AdjustmentVector;
-            pickupPin.Passenger = this;
-            pickupPin.SpriteRenderer.color = ColorKey.GetColor(Color);
+            _pickupPin = Instantiate(PassengerPickupReticle, transform, false);
+            _pickupPin.transform.position += AdjustmentVector;
+            _pickupPin.Passenger = this;
+            _pickupPin.SpriteRenderer.color = ColorKey.GetColor(_color);
         }
 
         #endregion

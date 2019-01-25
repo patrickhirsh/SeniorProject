@@ -33,7 +33,20 @@ public class EntityManager : Singleton<EntityManager>
 
     public void Initialize()
     {
-        Entities = GetComponentsInChildren<Entity>();
+        // Verify that we have baked all the entities in the scene
+        if (Entities.Length != GetComponentsInChildren<Entity>().Length)
+        {
+            Debug.LogError($"Entity Manager for level needs to be baked. Entities: {Entities.Length} | Children: {GetComponentsInChildren<Entity>().Length}");
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            // Recover if not Unity Editor
+            if (Entities == null || !Entities.Any())
+            {
+                Entities = GetComponentsInChildren<Entity>();
+            }
+        }
+
         Broadcaster.Broadcast(GameEvent.SetupConnection);
         Broadcaster.Broadcast(GameEvent.SetupBakedPaths);
     }

@@ -6,6 +6,8 @@ namespace Level
 {
     public abstract class Route : Entity
     {
+        [SerializeField] public Transform CenterTransform;
+
         [ReadOnly] public Connection[] Connections;
         [ReadOnly] public BezierCurve[] VehiclePaths;
         public Terminal[] Terminals => Connections.SelectMany(connection => connection.Terminals).ToArray();
@@ -17,13 +19,15 @@ namespace Level
             get
             {
                 // We can cache at runtime, but we don't want to cache while in the editor
-                if (Application.isPlaying) return _connectingRoutes ?? (_connectingRoutes = FindConnectingRoutes().ToArray());
+                if (Application.isPlaying)
+                    return _connectingRoutes ?? (_connectingRoutes = FindConnectingRoutes().ToArray());
                 return FindConnectingRoutes().ToArray();
             }
         }
 
         // An array of neighbor entities this entity connects to
         private Route[] _neighborRoutes;
+
         public Route[] NeighborRoutes
         {
             get
@@ -42,7 +46,7 @@ namespace Level
 
         protected virtual void Start()
         {
-//            DrawPaths();
+            // DrawPaths();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -50,7 +54,7 @@ namespace Level
             var target = other.GetComponent<Vehicle>();
             if (target != null)
             {
-//                target.SetCurrentRoute(this);
+                // target.SetCurrentRoute(this);
                 HandleVehicleEnter(target);
             }
         }
@@ -89,26 +93,26 @@ namespace Level
 
         #endregion
 
-//        private void DrawPaths()
-//        {
-//            foreach (var curve in VehiclePaths)
-//            {
-//                if (curve.GetAnchorPoints().Any())
-//                {
-//                    var child = new GameObject("Line");
-//                    child.transform.SetParent(transform);
-//                    var lineRenderer = child.AddComponent<LineRenderer>();
-//                    int lengthOfLineRenderer = 20;
-//                    lineRenderer.positionCount = lengthOfLineRenderer;
-//                    lineRenderer.widthMultiplier = .06f;
-//
-//                    lineRenderer.numCapVertices = 2;
-//                    lineRenderer.numCornerVertices = 2;
-//                    lineRenderer.useWorldSpace = false;
-//                    PathfindingManager.Instance.DrawCurve(curve, lineRenderer);
-//                }
-//            }
-//        }
+        //        private void DrawPaths()
+        //        {
+        //            foreach (var curve in VehiclePaths)
+        //            {
+        //                if (curve.GetAnchorPoints().Any())
+        //                {
+        //                    var child = new GameObject("Line");
+        //                    child.transform.SetParent(transform);
+        //                    var lineRenderer = child.AddComponent<LineRenderer>();
+        //                    int lengthOfLineRenderer = 20;
+        //                    lineRenderer.positionCount = lengthOfLineRenderer;
+        //                    lineRenderer.widthMultiplier = .06f;
+        //
+        //                    lineRenderer.numCapVertices = 2;
+        //                    lineRenderer.numCornerVertices = 2;
+        //                    lineRenderer.useWorldSpace = false;
+        //                    PathfindingManager.Instance.DrawCurve(curve, lineRenderer);
+        //                }
+        //            }
+        //        }
 
         public void BakePrefab()
         {

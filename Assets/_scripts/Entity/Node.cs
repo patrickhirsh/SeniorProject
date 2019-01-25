@@ -16,15 +16,15 @@ namespace Level
 
         public Entity Entity => transform.GetComponentInParent<Entity>();
 
-        protected virtual void Update()
-        {
-
-            if (transform.hasChanged && !Input.GetMouseButton(0))
-            {
-                //                transform.SnapToGrid();
-                transform.hasChanged = false;
-            }
-        }
+//        protected virtual void Update()
+//        {
+//
+//            if (transform.hasChanged && !Input.GetMouseButton(0))
+//            {
+//                transform.SnapToGrid();
+//                transform.hasChanged = false;
+//            }
+//        }
 
         /// <summary>
         /// Iterates each direction returning the point of valid connections
