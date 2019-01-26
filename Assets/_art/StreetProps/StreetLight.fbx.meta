@@ -19,7 +19,12 @@ ModelImporter:
     2300000: pasted__pCube9
     3300000: pasted__pCube9
     4300000: pasted__pCube9
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert3
+    second: {fileID: 2100000, guid: 073874b2c396e1f43a9e257a1b59a6e8, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
