@@ -31,10 +31,11 @@ public class ScoreManagerScript : MonoBehaviour {
     /// <param name="timerLeft">This is how long the passenger had left on their timer when they were picked up/dropped off, whichever we decide is better</param>
     /// <param name="carType">This is the type of car the passenger was picked up in</param>
     /// <param name="numDelivered">This is the number of passengers dropped off at the location when this function was called</param>
-    public void ScorePoints(int timerLeft, CarType carType, int numDelivered)
+    public void ScorePoints(float timerLeft, CarType carType, int numDelivered)
     {
-        int retval = 1;   
-        retval = retval * timerLeft/100;
+        float retval = 1;
+        timerLeft += 5;
+        retval = retval * timerLeft/30;
         switch (carType)
         {
             case CarType.LX:
