@@ -303,6 +303,7 @@ namespace Level
         public void AddPassenger(Passenger passenger)
         {
             Passengers.Add(passenger);
+            passenger.PickedUp = true;
             passenger.transform.SetParent(transform, false);
         }
 

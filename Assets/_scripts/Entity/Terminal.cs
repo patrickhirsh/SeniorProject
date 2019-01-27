@@ -14,10 +14,15 @@ namespace Level
 
         #endregion
 
-        public void SpawnPassenger(Passenger prefab)
+        public bool SpawnPassenger(Passenger prefab)
         {
-            Passenger = Instantiate(prefab, ParentRoute.CenterTransform, false);
-            Passenger.StartTerminal = this;
+            if (!this.HasPassenger)
+            {
+                Passenger = Instantiate(prefab, ParentRoute.CenterTransform, false);
+                Passenger.StartTerminal = this;
+                return true;
+            }
+            return false;
         }
 
         public void RemovePassenger()
