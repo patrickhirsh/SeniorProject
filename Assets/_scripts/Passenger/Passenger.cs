@@ -55,7 +55,8 @@ namespace Level
             // spawn an enemy vehicle if the passenger times out and hasn't yet been picked up
             if (_timeRemaining == 0 && !PickedUp && !EnemyVehicleEnroute)
             {
-                //EnemyVehicleManager.Instance.PickupPassenger(this);
+                EnemyVehicleManager.Instance.PickupPassenger(this);
+                Debug.Log("Enemy Vehicle Spawned!");
                 EnemyVehicleEnroute = true;
             }
 

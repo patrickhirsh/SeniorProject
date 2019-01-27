@@ -306,6 +306,7 @@ Transform:
   m_Children:
   - {fileID: 1067143647}
   - {fileID: 1516478676}
+  - {fileID: 1751719600}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3276,7 +3277,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PassengerPrefab: {fileID: 114575948943433876, guid: 002ee8d4b0c874556a8985d17b8e0407,
     type: 2}
+  PassengerTimeout: 30
   SpawnTime: 10
+  PassengersToSpawn: 30
 --- !u!4 &278937192
 Transform:
   m_ObjectHideFlags: 0
@@ -17469,6 +17472,48 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8,
     type: 2}
   m_PrefabInternal: {fileID: 1933841028}
+--- !u!1 &1751719599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1751719600}
+  - component: {fileID: 1751719601}
+  m_Layer: 0
+  m_Name: '[EnemyVehicleManager]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1751719600
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1751719599}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 17686365}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1751719601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1751719599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77951fada7739334cb7ec7fa777c9704, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VehiclePrefab: {fileID: 1667412018430948, guid: 80dc4c11f24a7c74d9e25e741d69ebd5,
+    type: 2}
 --- !u!4 &1755185224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8,

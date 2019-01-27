@@ -94,7 +94,7 @@ public class EnemyVehicleManager : VehicleManager
 
             case EnemyVehicleStatus.pathingToDespawn:
                 _enemyVehicles.Remove(vehicle);
-                Destroy(vehicle);
+                Destroy(vehicle.gameObject);
                 break;
         }
     }
@@ -111,6 +111,7 @@ public class EnemyVehicleManager : VehicleManager
 
         // instantiate the new vehicle
         Vehicle vehicle = Instantiate(VehiclePrefab, spawnPoint.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
+        vehicle.CurrentRoute = spawnPoint;
         vehicle.Manager = this;
 
         // track the vehicle with a mapping to its task
@@ -121,7 +122,7 @@ public class EnemyVehicleManager : VehicleManager
 
         // obtain a path to the passenger and assign the task
         Queue<Connection> path = new Queue<Connection>();
-        PathfindingManager.Instance.GetPath(spawnPoint, passenger.StartRoute, out path);
+        PathfindingManager.Instance.GetPath(vehicle.CurrentRoute, passenger.StartRoute, out path);
         vehicle.AssignTask(new VehicleTask(TaskType.ActiveAi, path, VehicleTaskCallback));
     }
 
@@ -147,7 +148,7 @@ public class EnemyVehicleManager : VehicleManager
         // obtain a path to the vehicle's despawn point and assign the task
         SpawnRoute despawnPoint = NeutralVehicleManager.Instance.GetRandomSpawnRoute();
         Queue<Connection> path = new Queue<Connection>();
-        PathfindingManager.Instance.GetPath(despawnPoint, vehicle.CurrentRoute, out path);
+        PathfindingManager.Instance.GetPath(vehicle.CurrentRoute, despawnPoint, out path);
         vehicle.AssignTask(new VehicleTask(TaskType.ActiveAi, path, VehicleTaskCallback));
     }
 }
