@@ -15,7 +15,7 @@ public class ScoreManagerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        score = 0;
+        score = 10;
 	}
 
 
@@ -80,5 +80,10 @@ public class ScoreManagerScript : MonoBehaviour {
             return 3;
         }
 
+    }
+
+    public int GetCurrentScore()
+    {
+        return score;
     }
 }
