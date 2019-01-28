@@ -14,9 +14,12 @@ public class PlayerVehicleManager : VehicleManager
     private static PlayerVehicleManager _instance;
     public static PlayerVehicleManager Instance => _instance ?? (_instance = Create());
 
+    private static ScoreManagerScript SM;
+
     private static PlayerVehicleManager Create()
     {
         GameObject singleton = FindObjectOfType<PlayerVehicleManager>()?.gameObject;
+        SM = FindObjectOfType<ScoreManagerScript>();
         if (singleton == null)
         {
             singleton = new GameObject { name = $"[{typeof(PlayerVehicleManager).Name}]" };
@@ -34,13 +37,21 @@ public class PlayerVehicleManager : VehicleManager
     {
         if (vehicle.HasPassenger)
         {
+            int numDroppedOff = 0;
+            float timeLeft = 0;
+            //Need to add the code here to score points
             foreach (var passenger in new List<Passenger>(vehicle.Passengers))
             {
                 if (passenger.DestRoute == vehicle.CurrentRoute)
                 {
+                    numDroppedOff += 1;
+                    timeLeft += passenger.GetTimeRemaining();
                     DeliverPassenger(vehicle, passenger);
                 }
             }
+            //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
+            SM.ScorePoints(timeLeft, ScoreManagerScript.CarType.STD, numDroppedOff);
+
         }
         if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
@@ -78,6 +89,7 @@ public class PlayerVehicleManager : VehicleManager
     private static void DeliverPassenger(Vehicle vehicle, Passenger passenger)
     {
         vehicle.RemovePassenger(passenger);
+        
         Destroy(passenger.gameObject);
         Debug.Log("PASSENGER DELIVERED");
         //GameManager.Instance.AddScore(10);
