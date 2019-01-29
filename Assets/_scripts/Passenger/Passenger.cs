@@ -87,9 +87,9 @@ namespace Level
                 float time = _timeRemaining / PassengerManager.PassengerTimeout;
                 Color newRingColor = RingColorGradient.Evaluate(1 - time);
                 Ring.GetComponent<Renderer>().material.SetColor("_Color", newRingColor);
-
+                Debug.Log("Time is" + time);
                 if(_timeRemaining > 0)
-                    Ring.GetComponent<Renderer>().material.SetFloat("_Speed", 6-(_timeRemaining/5));
+                    Ring.GetComponent<Renderer>().material.SetFloat("_Speed", 6-(time*5));
             }
 
             // NOTE: PickedUp == true when ANY vehicle has picked it up. Once it's picked up, don't show
