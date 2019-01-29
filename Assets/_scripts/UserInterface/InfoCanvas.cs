@@ -39,19 +39,19 @@ namespace UserInterface
 
             if (vehicle && Manager.HasOwnership(vehicle) && Manager.SelectedPins.Any())
             {
-                UpdateText("Send Vehicle to Pickup");
+                UpdateText("Send Vehicle to Pickup Passengers");
             }
             else if (vehicle && Manager.HasOwnership(vehicle))
             {
-                UpdateText("No Passengers Selected");
+                UpdateText("No Passenger Selected");
             }
             else if (pin && !Manager.SelectedPins.Contains(pin))
             {
-                UpdateText("Select Passengers");
+                UpdateText("Select Passenger");
             }
             else if (pin && Manager.SelectedPins.Contains(pin))
             {
-                UpdateText("Deselect Passengers");
+                UpdateText("Deselect Passenger");
             }
             else
             {

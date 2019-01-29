@@ -10026,6 +10026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectedPins: []
+  PlayerVehicles: []
   HoverChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12091,49 +12092,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
         type: 2}
-      propertyPath: Manager
-      value: 
-      objectReference: {fileID: 1067143646}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
       propertyPath: CurrentRoute
       value: 
       objectReference: {fileID: 1000797988}
     - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
         type: 2}
-      propertyPath: PickupGradient.key0.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
-      propertyPath: PickupGradient.key0.b
-      value: 0.8862745
-      objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
-      propertyPath: PickupGradient.key1.a
-      value: 0.02352941
-      objectReference: {fileID: 0}
-    - target: {fileID: 65671402932093442, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
-      propertyPath: m_Size.x
-      value: 2.8058457
-      objectReference: {fileID: 0}
-    - target: {fileID: 65671402932093442, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
-      propertyPath: m_Center.x
-      value: 0.06672484
-      objectReference: {fileID: 0}
-    - target: {fileID: 65671402932093442, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
-      propertyPath: m_Center.z
-      value: -0.012159468
-      objectReference: {fileID: 0}
-    - target: {fileID: 65671402932093442, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 2}
-      propertyPath: m_Size.z
-      value: 3.7259722
-      objectReference: {fileID: 0}
+      propertyPath: Manager
+      value: 
+      objectReference: {fileID: 1067143646}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 2}
   m_IsPrefabAsset: 0

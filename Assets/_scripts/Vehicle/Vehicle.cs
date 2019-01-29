@@ -72,6 +72,7 @@ namespace Level
 
         public Gradient PickupGradient;
         public Gradient DropoffGradient;
+        public GameObject RingPrefab;
 
         private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
@@ -82,7 +83,8 @@ namespace Level
         public VehicleManager Manager;
         private Vector3 _startingPos;
         private Quaternion _startingRot;
-        private GameObject Ring;
+        private GameObject _ring;
+
 
         protected void Awake()
         {
@@ -93,11 +95,18 @@ namespace Level
             Broadcaster.AddListener(GameEvent.Reset, Reset);
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
 
-            Ring = GameObject.FindObjectOfType<SpawnRingObject>().SpawnRing(this.transform.position + new Vector3(0, .2f, 0), Color.blue, 2);
-            Ring.transform.parent = this.transform;
-            Ring.SetActive(false);
+            _ring = SpawnRing(Color.blue, 2);
+            _ring.transform.parent = transform;
+            _ring.SetActive(false);
+        }
 
-
+        private GameObject SpawnRing(Color color, float speed)
+        {
+            GameObject spawnedObj = Instantiate(RingPrefab, transform, false);
+            Material ringMat = spawnedObj.GetComponent<Renderer>().material;
+            ringMat.SetColor("_Color", color);
+            ringMat.SetFloat("_Speed", speed);
+            return spawnedObj;
         }
 
         private void GameStateChanged(GameEvent @event)
@@ -111,7 +120,7 @@ namespace Level
 
         protected void Start()
         {
-            if (this.Manager.GetType() == typeof(PlayerVehicleManager))
+            if (Manager.GetType() == typeof(PlayerVehicleManager))
             {
                 Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
             }
@@ -332,12 +341,12 @@ namespace Level
         public void ActivateRing()
         {
             Debug.Log("RING SET ACTIVE");
-            Ring.SetActive(true);
+            _ring.SetActive(true);
         }
 
         public void DeactivateRing()
         {
-            Ring.SetActive(false);
+            _ring.SetActive(false);
         }
     }
 }

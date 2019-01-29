@@ -18,19 +18,17 @@ namespace Level
         public bool PickedUp;
         public bool EnemyVehicleEnroute;
         public Gradient RingColorGradient;
+        public GameObject RingPrefab;
 
-        private SpawnRingObject RingSpawner;
         private Building.BuildingColors _color;
         private float _timeRemaining;
         private Pin _pickupPin;
-        private SpawnRingObject RingObject;
         private GameObject Ring;
 
         #region Unity Methods
         private void Awake()
         {
             Broadcaster.AddListener(GameEvent.Reset, Reset);
-            RingSpawner = GameObject.FindObjectOfType<SpawnRingObject>();
         }
 
         private void Reset(GameEvent @event)
@@ -47,7 +45,16 @@ namespace Level
             PickedUp = false;
             EnemyVehicleEnroute = false;
             SpawnPickupReticle();
-            
+
+        }
+
+        private GameObject SpawnRing(Color color, float speed)
+        {
+            GameObject spawnedObj = Instantiate(RingPrefab, transform, false);
+            Material ringMat = spawnedObj.GetComponent<Renderer>().material;
+            ringMat.SetColor("_Color", color);
+            ringMat.SetFloat("_Speed", speed);
+            return spawnedObj;
         }
 
         public void Update()
@@ -72,7 +79,7 @@ namespace Level
             //TODO: visualize passenger time remaining here...
             if(Ring == null && !PickedUp)
             {
-                Ring = RingSpawner.SpawnRing(this.transform.position + new Vector3(0, 0.1f, 0), Color.red, 3);
+                Ring = SpawnRing(Color.red, 3);
             }
                 
             else if(!PickedUp)
@@ -83,10 +90,6 @@ namespace Level
 
                 if(_timeRemaining > 0)
                     Ring.GetComponent<Renderer>().material.SetFloat("_Speed", 6-(_timeRemaining/5));
-                   
-
-                
-             
             }
 
             // NOTE: PickedUp == true when ANY vehicle has picked it up. Once it's picked up, don't show

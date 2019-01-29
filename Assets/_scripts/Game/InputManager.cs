@@ -46,7 +46,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_ANDROID || UNITY_IOS
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         HandleMobileInput();
 #else
         HandleDesktopInput();
