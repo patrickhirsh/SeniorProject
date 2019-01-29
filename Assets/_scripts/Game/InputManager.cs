@@ -63,11 +63,11 @@ public class InputManager : MonoBehaviour
 
         PlayerVehicleManager.HandleHover(hit, hitInfo);
 
-        if (Input.GetMouseButtonDown(0) && hit)
+        if (click && hit)
         {
             PlayerVehicleManager.HandleHit(hitInfo);
         }
-        else if (Input.GetMouseButtonDown(0))
+        else if (click)
         {
             PlayerVehicleManager.HandleNotHit();
         }
@@ -101,25 +101,32 @@ public class InputManager : MonoBehaviour
 
     private void HandleMobileInput()
     {
-        if (Input.touchCount <= 0) return;
-        var touch = Input.GetTouch(0);
-        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
+        Touch touch = new Touch();
+        if (Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+        }
+
+        //        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
 
         switch (GameManager.CurrentGameState)
         {
             case GameState.LevelPlaced:
             case GameState.LevelPlacement:
             case GameState.LevelRePlacement:
-                var hits = new List<ARRaycastHit>();
-                if (SessionOrigin.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
+                if (Input.touchCount > 0)
                 {
-                    var hitPose = hits[0].pose;
-                    var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
-                    MoveLevel(position);
+                    var hits = new List<ARRaycastHit>();
+                    if (SessionOrigin.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
+                    {
+                        var hitPose = hits[0].pose;
+                        var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
+                        MoveLevel(position);
+                    }
                 }
                 break;
             case GameState.LevelSimulating:
-                HandleLevelSimulating(touch.phase == TouchPhase.Began);
+                HandleLevelSimulating(Input.touchCount > 0 && touch.phase == TouchPhase.Began);
                 break;
         }
     }
@@ -137,7 +144,7 @@ public class InputManager : MonoBehaviour
         {
             x.gameObject.SetActive(active);
         }
-        if(!active)
+        if (!active)
             SessionOrigin.GetComponent<ARPlaneManager>().enabled = false;
         //SessionOrigin.GetComponent<ARPointCloud>().gameObject.SetActive(false);
     }
