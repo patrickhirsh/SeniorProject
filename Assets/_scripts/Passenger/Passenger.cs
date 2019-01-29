@@ -37,7 +37,7 @@ namespace Level
         {
             _color = LevelManager.Instance.GetValidColor();
             DestRoute = LevelManager.Instance.GetBuildingRoute(_color);
-            _timeRemaining = PassengerManager.Instance.PassengerTimeout;
+            _timeRemaining = PassengerManager.PassengerTimeout;
             PickedUp = false;
             EnemyVehicleEnroute = false;
             SpawnPickupReticle();
@@ -84,7 +84,7 @@ namespace Level
             _pickupPin = Instantiate(PassengerPickupReticle, transform, false);
             _pickupPin.transform.position += AdjustmentVector;
             _pickupPin.Passenger = this;
-            _pickupPin.SpriteRenderer.color = ColorKey.GetColor(_color);
+            _pickupPin.SetColor(ColorKey.GetColor(_color));
         }
         #endregion
     }

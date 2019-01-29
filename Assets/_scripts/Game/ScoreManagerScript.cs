@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScoreManagerScript : MonoBehaviour {
 
     private int score;
-    private int minScoreVal = (int)(10 / PassengerManager.Instance.PassengerTimeout);
+    private int minScoreVal = (int)(10 / PassengerManager.PassengerTimeout);
 
     public int oneStarNum;
     public int twoStarNum;
@@ -36,7 +36,7 @@ public class ScoreManagerScript : MonoBehaviour {
     {
         float retval = 100;
 
-        retval = retval * ((timerLeft/PassengerManager.Instance.PassengerTimeout)*2 + minScoreVal);
+        retval = retval * ((timerLeft/PassengerManager.PassengerTimeout)*2 + minScoreVal);
         switch (carType)
         {
             case CarType.LX:

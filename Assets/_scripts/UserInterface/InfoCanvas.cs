@@ -21,8 +21,7 @@ namespace UserInterface
         private void Start()
         {
             PlayerVehicleManager.Instance.HoverChanged.AddListener(UpdateSelectionInfo);
-            _doFade = Score.DOFade(0f, .2f).Pause();
-            _doFade.SetAutoKill(false);
+            _doFade = Score.DOFade(0f, .2f).SetAutoKill(false).Pause();
         }
 
         #endregion
@@ -38,7 +37,7 @@ namespace UserInterface
             var vehicle = hoverGameObject.GetComponent<Vehicle>();
             var pin = hoverGameObject.GetComponent<Pin>();
 
-            if (vehicle && Manager.HasOwnership(vehicle) && Manager.SelectedPassengers.Any())
+            if (vehicle && Manager.HasOwnership(vehicle) && Manager.SelectedPins.Any())
             {
                 UpdateText("Send Vehicle to Pickup");
             }
@@ -46,11 +45,11 @@ namespace UserInterface
             {
                 UpdateText("No Passengers Selected");
             }
-            else if (pin && !Manager.SelectedPassengers.Contains(pin.Passenger))
+            else if (pin && !Manager.SelectedPins.Contains(pin))
             {
                 UpdateText("Select Passengers");
             }
-            else if (pin && Manager.SelectedPassengers.Contains(pin.Passenger))
+            else if (pin && Manager.SelectedPins.Contains(pin))
             {
                 UpdateText("Deselect Passengers");
             }

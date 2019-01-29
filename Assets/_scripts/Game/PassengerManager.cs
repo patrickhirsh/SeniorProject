@@ -24,7 +24,7 @@ public class PassengerManager : MonoBehaviour
 
     public Passenger PassengerPrefab;
 
-    public float PassengerTimeout = 60.0f;
+    public static float PassengerTimeout = 60.0f;
     public float SpawnTime = 30.0f;
     public int PassengersToSpawn = 30;
     private int _passengerCount = 0;
