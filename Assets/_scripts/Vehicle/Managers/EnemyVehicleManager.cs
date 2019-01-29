@@ -71,6 +71,7 @@ public class EnemyVehicleManager : VehicleManager
                     if (terminal.Passenger == _enemyVehicles[vehicle].passenger)
                     {
                         vehicle.AddPassenger(terminal.Passenger);
+                        //terminal.Passenger.DestroyRing();
                         terminal.RemovePassenger();
                         DropOffPassenger(vehicle);
                         _enemyVehicles[vehicle].status = EnemyVehicleStatus.pathingToDestination;

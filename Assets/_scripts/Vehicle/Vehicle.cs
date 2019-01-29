@@ -82,6 +82,7 @@ namespace Level
         public VehicleManager Manager;
         private Vector3 _startingPos;
         private Quaternion _startingRot;
+        private GameObject Ring;
 
         protected void Awake()
         {
@@ -91,6 +92,15 @@ namespace Level
 
             Broadcaster.AddListener(GameEvent.Reset, Reset);
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
+
+            Ring = GameObject.FindObjectOfType<SpawnRingObject>().SpawnRing(this.transform.position + new Vector3(0, .2f, 0), Color.blue, 2);
+            Ring.transform.parent = this.transform;
+            Ring.SetActive(false);
+
+            if(this.Manager.GetType() == typeof(PlayerVehicleManager))
+            {
+                Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
+            }
         }
 
         private void GameStateChanged(GameEvent @event)
@@ -302,6 +312,7 @@ namespace Level
 
         public void AddPassenger(Passenger passenger)
         {
+            passenger.DestroyRing();
             Passengers.Add(passenger);
             passenger.PickedUp = true;
             passenger.transform.SetParent(transform, false);
@@ -311,6 +322,17 @@ namespace Level
         {
             Debug.Assert(Passengers.Contains(passenger), "Passenger is not in vehicle???");
             Passengers.Remove(passenger);
+        }
+
+        public void ActivateRing()
+        {
+            Debug.Log("RING SET ACTIVE");
+            Ring.SetActive(true);
+        }
+
+        public void DeactivateRing()
+        {
+            Ring.SetActive(false);
         }
     }
 }

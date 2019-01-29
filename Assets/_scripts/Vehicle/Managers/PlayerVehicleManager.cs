@@ -33,6 +33,8 @@ public class PlayerVehicleManager : VehicleManager
 
     private Dictionary<Vehicle, Queue<VehicleTask>> VehicleTasks = new Dictionary<Vehicle, Queue<VehicleTask>>();
 
+    public List<Vehicle> PlayerVehicles;
+
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
         if (vehicle.HasPassenger)
@@ -83,6 +85,7 @@ public class PlayerVehicleManager : VehicleManager
         var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
         var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
         vehicle.AddPassenger(terminal.Passenger);
+        //terminal.Passenger.DestroyRing();
         terminal.RemovePassenger();
     }
 
@@ -181,11 +184,20 @@ public class PlayerVehicleManager : VehicleManager
 
         if (vehicle && HasOwnership(vehicle) && _selectedPassengers.Any())
         {
+            foreach(Vehicle x in PlayerVehicles)
+            {
+                x.DeactivateRing();
+            }
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             HandleVehicleSelect(vehicle);
         }
         else if (pin)
         {
+            foreach (Vehicle x in PlayerVehicles)
+            {
+                Debug.Log("IN FOR LOOPS");
+                x.ActivateRing();
+            }
             var route = pin.GetComponentInParent<Route>();
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Passengers {route}", route);
             HandlePassengerSelect(pin);
@@ -263,6 +275,10 @@ public class PlayerVehicleManager : VehicleManager
 
     public void HandleNotHit()
     {
+        foreach (Vehicle x in PlayerVehicles)
+        {
+            x.DeactivateRing();
+        }
         Deselect();
         DrawDestinations();
     }
