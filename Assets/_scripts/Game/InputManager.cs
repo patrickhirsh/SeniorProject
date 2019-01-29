@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
 
     public Camera Camera;
+
     public GameObject Level;
     public ARSessionOrigin SessionOrigin;
     public float LevelYOffset;
@@ -17,6 +18,7 @@ public class InputManager : MonoBehaviour
     public float raycastThickness;
 
     private bool _vehicleSelected;
+    private Camera _camera;
 
     private void Awake()
     {
@@ -37,7 +39,12 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Start()
+    {
+        _camera = Camera.main;
+    }
+
+    private void Update()
     {
 #if UNITY_ANDROID || UNITY_IOS
         HandleMobileInput();
@@ -49,9 +56,10 @@ public class InputManager : MonoBehaviour
     private void HandleLevelSimulating(bool click)
     {
         RaycastHit hitInfo;
-        Vector3 origin = Camera.main.transform.position;
+        var cameraTransform = _camera.transform;
+        var origin = cameraTransform.position;
 
-        var hit = Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo);
+        var hit = Physics.SphereCast(origin, raycastThickness, cameraTransform.forward, out hitInfo);
 
         PlayerVehicleManager.HandleHover(hit, hitInfo);
 

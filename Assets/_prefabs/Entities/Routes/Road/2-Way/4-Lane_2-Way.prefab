@@ -1182,7 +1182,6 @@ GameObject:
   - component: {fileID: 4172409532465272}
   - component: {fileID: 114665874453937694}
   - component: {fileID: 114477498172557300}
-  - component: {fileID: 65914841529073138}
   m_Layer: 0
   m_Name: 4-Lane_2-Way
   m_TagString: Untagged
@@ -1857,9 +1856,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792980702454646}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -96, y: 0, z: 81}
-  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000034272668}
+  m_LocalPosition: {x: -79.568726, y: 0, z: 76.111206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4614810060089646}
   - {fileID: 4893968483092824}
@@ -1870,7 +1869,7 @@ Transform:
   - {fileID: 4315038900908692}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
 --- !u!4 &4173137770174160
 Transform:
   m_ObjectHideFlags: 1
@@ -2942,18 +2941,6 @@ Transform:
   m_Father: {fileID: 4215760616308336}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &65914841529073138
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1792980702454646}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 0.5, z: 6}
-  m_Center: {x: 0.75, y: 0.25, z: 2.25}
 --- !u!114 &114010696810757224
 MonoBehaviour:
   m_ObjectHideFlags: 1

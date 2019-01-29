@@ -4049,21 +4049,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1792980702454646, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
       propertyPath: m_Name
       value: 4-Lane_2-Way (246)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180.00002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33f1814c084df3149a3df09a433bb2a8, type: 2}
@@ -5164,6 +5152,7 @@ GameObject:
   - component: {fileID: 510995519}
   - component: {fileID: 510995521}
   - component: {fileID: 510995520}
+  - component: {fileID: 510995522}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -5229,6 +5218,20 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 510995518}
   m_CullTransparentMesh: 0
+--- !u!114 &510995522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 510995518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1573420865, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: -1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &514429517 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114665874453937694, guid: 33f1814c084df3149a3df09a433bb2a8,
@@ -6261,7 +6264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.00012207031, y: 50}
+  m_AnchoredPosition: {x: 0, y: 50}
   m_SizeDelta: {x: -160, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &612544387
@@ -8493,12 +8496,12 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -9831,13 +9834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252f3ce77b841714290b90a390c92466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IntersectionDestinationReticle: {fileID: 1618488236950430, guid: 4555c914bc425434288810a6cad13fb0,
-    type: 2}
-  PickupDestinationReticle: {fileID: 1460254189280706, guid: f46a483b8c31c4c059520973f4cf678a,
-    type: 2}
-  PassengerDeliveryReticle: {fileID: 1460254189280706, guid: 0e117df302a3f3747a7acf7a3e621ff0,
-    type: 2}
-  AdjustmentVector: {x: 0, y: 1, z: 0}
+  SelectedPins: []
   HoverChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -13399,10 +13396,6 @@ Prefab:
     - target: {fileID: 1792980702454646, guid: 55015cbb96f0c554e90a8aa51ca3f53f, type: 2}
       propertyPath: m_Name
       value: Spawn_4-Lane (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4172409532465272, guid: 55015cbb96f0c554e90a8aa51ca3f53f, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55015cbb96f0c554e90a8aa51ca3f53f, type: 2}
@@ -20563,7 +20556,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 15, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2131692116
 MonoBehaviour:
@@ -20577,14 +20570,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5882353}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5176471}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 84b0b473c0f2f1b4ba21d2a3d4727ffd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

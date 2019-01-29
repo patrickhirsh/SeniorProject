@@ -367,7 +367,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4172409532465272}
   - component: {fileID: 114477498172557300}
-  - component: {fileID: 65914841529073138}
   - component: {fileID: 114090006339032678}
   m_Layer: 0
   m_Name: Spawn_4-Lane
@@ -549,7 +548,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792980702454646}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -94.5, y: 0, z: 175.5}
+  m_LocalPosition: {x: -70.568726, y: 0, z: 77.611206}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4614810060089646}
@@ -875,18 +874,6 @@ Transform:
   m_Father: {fileID: 4172409532465272}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &65914841529073138
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1792980702454646}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 0.5, z: 6}
-  m_Center: {x: -0.75, y: 0.25, z: 0.75}
 --- !u!114 &114027347715860930
 MonoBehaviour:
   m_ObjectHideFlags: 1
