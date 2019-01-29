@@ -97,10 +97,7 @@ namespace Level
             Ring.transform.parent = this.transform;
             Ring.SetActive(false);
 
-            if(this.Manager.GetType() == typeof(PlayerVehicleManager))
-            {
-                Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
-            }
+
         }
 
         private void GameStateChanged(GameEvent @event)
@@ -109,6 +106,14 @@ namespace Level
             {
                 _startingPos = transform.position;
                 _startingRot = transform.rotation;
+            }
+        }
+
+        protected void Start()
+        {
+            if (this.Manager.GetType() == typeof(PlayerVehicleManager))
+            {
+                Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
             }
         }
 

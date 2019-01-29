@@ -30,11 +30,13 @@ namespace Level
         private void Awake()
         {
             Broadcaster.AddListener(GameEvent.Reset, Reset);
+            RingSpawner = GameObject.FindObjectOfType<SpawnRingObject>();
         }
 
         private void Reset(GameEvent @event)
         {
             Destroy(gameObject);
+
         }
 
         public void Start()
@@ -45,7 +47,7 @@ namespace Level
             PickedUp = false;
             EnemyVehicleEnroute = false;
             SpawnPickupReticle();
-            RingSpawner = GameObject.FindObjectOfType<SpawnRingObject>();
+            
         }
 
         public void Update()
@@ -69,10 +71,13 @@ namespace Level
 
             //TODO: visualize passenger time remaining here...
             if(Ring == null && !PickedUp)
+            {
                 Ring = RingSpawner.SpawnRing(this.transform.position + new Vector3(0, 0.1f, 0), Color.red, 3);
+            }
+                
             else if(!PickedUp)
             {
-                float time = _timeRemaining / PassengerManager.Instance.PassengerTimeout;
+                float time = _timeRemaining / PassengerManager.PassengerTimeout;
                 Color newRingColor = RingColorGradient.Evaluate(1 - time);
                 Ring.GetComponent<Renderer>().material.SetColor("_Color", newRingColor);
 
