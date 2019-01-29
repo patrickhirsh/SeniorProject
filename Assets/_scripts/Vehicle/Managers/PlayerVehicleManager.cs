@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Utility;
 using Connection = Level.Connection;
 using Random = UnityEngine.Random;
@@ -29,7 +30,7 @@ public class PlayerVehicleManager : VehicleManager
     }
     #endregion
 
-    private List<Passenger> _selectedPassengers = new List<Passenger>();
+    public List<Passenger> SelectedPassengers = new List<Passenger>();
 
     private Dictionary<Vehicle, Queue<VehicleTask>> VehicleTasks = new Dictionary<Vehicle, Queue<VehicleTask>>();
 
@@ -179,7 +180,7 @@ public class PlayerVehicleManager : VehicleManager
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var pin = hitInfo.transform.GetComponent<Pin>();
 
-        if (vehicle && HasOwnership(vehicle) && _selectedPassengers.Any())
+        if (vehicle && HasOwnership(vehicle) && SelectedPassengers.Any())
         {
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             HandleVehicleSelect(vehicle);
@@ -188,7 +189,6 @@ public class PlayerVehicleManager : VehicleManager
         {
             var route = pin.GetComponentInParent<Route>();
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Passengers {route}", route);
-            HandlePassengerSelect(pin);
         }
 
         //        DrawDestinations();
@@ -200,16 +200,14 @@ public class PlayerVehicleManager : VehicleManager
         vehicle.HaltCurrentTask();
         if (!VehicleTasks.ContainsKey(vehicle)) VehicleTasks[vehicle] = new Queue<VehicleTask>();
         BuildTasks(vehicle);
-        _selectedPassengers = new List<Passenger>();
-        HoverChanged.Invoke("Sending vehicle to pick up passengers");
-
+        SelectedPassengers = new List<Passenger>();
     }
 
     private void BuildTasks(Vehicle vehicle)
     {
         // Get a path to pickup all selected passengers
         var current = vehicle.CurrentRoute;
-        foreach (var passenger in _selectedPassengers)
+        foreach (var passenger in SelectedPassengers)
         {
             Queue<Connection> connections;
             if (PathfindingManager.Instance.GetPath(current, passenger.StartRoute, out connections))
@@ -224,7 +222,7 @@ public class PlayerVehicleManager : VehicleManager
         }
 
         // Get path from last picked up passenger to each destination of passengers
-        foreach (var passenger in _selectedPassengers)
+        foreach (var passenger in SelectedPassengers)
         {
             Queue<Connection> connections;
             Debug.Assert(passenger.DestRoute != null, "Passengers does not have a destination");
@@ -242,21 +240,7 @@ public class PlayerVehicleManager : VehicleManager
         vehicle.AssignTask(VehicleTasks[vehicle].Dequeue());
     }
 
-    private void HandlePassengerSelect(Pin pin)
-    {
-        if (!_selectedPassengers.Contains(pin.Passenger))
-        {
-            _selectedPassengers.Add(pin.Passenger);
-            HoverChanged.Invoke("Deselect Passengers");
-        }
-        else
-        {
-            _selectedPassengers.Remove(pin.Passenger);
-            HoverChanged.Invoke("Select Passengers");
-        }
-    }
-
-    private bool HasOwnership(Vehicle vehicle)
+    public bool HasOwnership(Vehicle vehicle)
     {
         return vehicle.Manager == this;
     }
@@ -280,44 +264,19 @@ public class PlayerVehicleManager : VehicleManager
 
     #region Hover
     [Serializable]
-    public class HoverEvent : UnityEvent<string> { }
+    public class HoverEvent : UnityEvent<GameObject> { }
     public HoverEvent HoverChanged = new HoverEvent();
-    private Transform _hoverTransform;
 
     public void HandleHover(bool hit, RaycastHit hitInfo)
     {
         if (hit)
         {
-            if (_hoverTransform == null || _hoverTransform != hitInfo.transform)
-            {
-                _hoverTransform = hitInfo.transform;
-
-                var vehicle = hitInfo.transform.GetComponent<Vehicle>();
-                var pin = hitInfo.transform.GetComponent<Pin>();
-
-                if (vehicle && HasOwnership(vehicle) && _selectedPassengers.Any())
-                {
-                    HoverChanged.Invoke("Send Vehicle to Pickup");
-                }
-                else if (vehicle && HasOwnership(vehicle))
-                {
-                    HoverChanged.Invoke("No Passengers Selected");
-                }
-
-                if (pin && !_selectedPassengers.Contains(pin.Passenger))
-                {
-                    HoverChanged.Invoke("Select Passengers");
-                }
-                else if (pin && _selectedPassengers.Contains(pin.Passenger))
-                {
-                    HoverChanged.Invoke("Deselect Passengers");
-                }
-            }
+            Debug.Log(hitInfo.transform);
+            HoverChanged?.Invoke(hitInfo.transform.gameObject);
         }
         else
         {
             HoverChanged.Invoke(null);
-            _hoverTransform = null;
         }
     }
     #endregion
