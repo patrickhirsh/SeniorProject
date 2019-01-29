@@ -29,7 +29,12 @@ namespace Level
 
         protected override void Start()
         {
+            base.Start();
             StartCoroutine(RunIntersection());
+//            foreach (var colliderGroup in ColliderGroups)
+//            {
+//                colliderGroup.SetActive(false);
+//            }
         }
 
         private IEnumerator RunIntersection()
@@ -52,6 +57,8 @@ namespace Level
 
                         //Move to next group and set Green
                         activeGroup = colliderGroup;
+                        yield return new WaitForSeconds(2f);
+
                         activeGroup.SetActive(false);
 
                         yield return new WaitForSeconds(Random.Range(4f, 10f));

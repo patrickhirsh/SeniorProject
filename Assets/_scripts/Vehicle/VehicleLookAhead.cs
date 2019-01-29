@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Level
@@ -9,112 +11,100 @@ namespace Level
 
         public float GodModeWait = 5f;          // how long a vehicle waits before entering godmode
         public float GodModeDuration = 2f;      // how long godmode lasts
+        private bool IsColliding => _colliding.Any();
+
         private float _godModeTimer = 0;
-        private bool _isInGodMode = false;
+        private bool _isInGodMode;
+        private bool _isWaiting;
+        private bool _isSlowed;
 
         private Coroutine _current;
+        private List<Collider> _colliding = new List<Collider>();
 
         private void Update()
         {
-            /*
             if (_isInGodMode)
             {
-                _godModeTimer -= Time.deltaTime;
+                if (_isSlowed) SpeedUp();
 
+                _godModeTimer -= Time.deltaTime;
                 if (_godModeTimer <= 0)
                 {
                     _isInGodMode = false;
-                    _godModeTimer = 0;
+                    _isWaiting = false;
                 }
-
             }
-            */
+            else
+            {
+                if (IsColliding && !_isWaiting)
+                {
+                    if (!_isSlowed) SlowDown();
+                    _godModeTimer = GodModeWait;
+                    _isWaiting = true;
+
+                }
+                else if (IsColliding && _isWaiting)
+                {
+                    _godModeTimer -= Time.deltaTime;
+
+                    if (_godModeTimer <= 0)
+                    {
+                        _isInGodMode = true;
+                        _isWaiting = false;
+                        _godModeTimer = GodModeDuration;
+
+                        if (_isSlowed) SpeedUp();
+                    }
+                }
+                else
+                {
+                    _godModeTimer = GodModeWait;
+                    _isWaiting = false;
+                    _isInGodMode = false;
+
+                    if (_isSlowed) SpeedUp();
+                }
+            }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            /*
-            var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
+            if (other.GetComponent<Vehicle>() || other.GetComponent<Stoplight>())
             {
-                KillCurrent();
-                _current = StartCoroutine(SlowDown());
-            }
-            */
-        }
-
-        /// <summary>
-        /// Slow the car down if another car is in front
-        /// </summary>
-        /// <param name="other">Other.</param>
-        private void OnTriggerStay(Collider other)
-        {
-            /*
-            var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
-            {
-                // if the vehicle is stopped
-                if (Vehicle.Speed < 0.1f)
+                if (!_colliding.Contains(other))
                 {
-                    _godModeTimer += Time.deltaTime;
-
-                    if (_godModeTimer > GodModeWait)
-                    {
-                        _isInGodMode = true;
-                        _godModeTimer = GodModeDuration;
-                        KillCurrent();
-                        _current = StartCoroutine(SpeedUp());
-                    }
+                    _colliding.Add(other);
                 }
             }
-            */
-
-
-        }
-
-        private void KillCurrent()
-        {
-            /*
-            if (_current != null) StopCoroutine(_current);
-            _current = null;
-            */
         }
 
         private void OnTriggerExit(Collider other)
         {
-            /*
-            var vehicle = other.GetComponent<Vehicle>();
-            if (vehicle != null && !_isInGodMode && vehicle != Vehicle)
+            if (other.GetComponent<Vehicle>() || other.GetComponent<Stoplight>())
             {
-                KillCurrent();
-                _current = StartCoroutine(SpeedUp());
-                _godModeTimer = 0;
+                if (_colliding.Contains(other))
+                {
+                    _colliding.Remove(other);
+                }
             }
-            */
         }
 
-        private IEnumerator SpeedUp()
+        private void KillCurrent()
         {
-            /*
-            while (Vehicle.Speed < Vehicle.BaseSpeed)
-            {
-                Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, Vehicle.BaseSpeed, .25f);
-                yield return null;
-            }
-            */
-            return null;
+            if (_current != null) StopCoroutine(_current);
+            _current = null;
         }
 
-        private IEnumerator SlowDown()
+        private void SpeedUp()
         {
-            /*
-            while (Vehicle.Speed > 0)
-            {
-                Vehicle.Speed = Mathf.Lerp(Vehicle.Speed, 0, .25f);
-                yield return null;
-            }
-            */
-            return null;
+            Vehicle.Speed = Vehicle.BaseSpeed;
+            _isSlowed = false;
+        }
+
+        private void SlowDown()
+        {
+            Vehicle.Speed = 0;
+            _isSlowed = true;
         }
     }
 }
