@@ -11,80 +11,109 @@ namespace Level
 
         public float GodModeWait = 5f;          // how long a vehicle waits before entering godmode
         public float GodModeDuration = 2f;      // how long godmode lasts
-        private bool IsColliding => _colliding.Any();
+        private bool IsVehicleCollision => _collidingVehicles.Any();
+        private bool IsAtIntersection => _collidingIntersections.Any();
 
-        private float _godModeTimer = 0;
+        private float _timer = 0;
         private bool _isInGodMode;
         private bool _isWaiting;
         private bool _isSlowed;
 
         private Coroutine _current;
-        private List<Collider> _colliding = new List<Collider>();
+        private List<Collider> _collidingVehicles = new List<Collider>();
+        private List<Collider> _collidingIntersections = new List<Collider>();
 
         private void Update()
         {
-            if (_isInGodMode)
+
+            if (IsAtIntersection)
+            {
+                if (!_isSlowed) SlowDown();
+                _isInGodMode = false;
+                _isWaiting = false;
+                foreach (var intersection in _collidingIntersections.ToArray())
+                {
+                    if (!intersection.enabled)
+                    {
+                        _collidingIntersections.Remove(intersection);
+                    }
+                }
+            }
+            else if (_isInGodMode)
             {
                 if (_isSlowed) SpeedUp();
 
-                _godModeTimer -= Time.deltaTime;
-                if (_godModeTimer <= 0)
+                _timer -= Time.deltaTime;
+                if (_timer <= 0)
                 {
                     _isInGodMode = false;
                     _isWaiting = false;
                 }
             }
-            else
+            else if (IsVehicleCollision)
             {
-                if (IsColliding && !_isWaiting)
+                if (!_isWaiting)
                 {
                     if (!_isSlowed) SlowDown();
-                    _godModeTimer = GodModeWait;
+                    _timer = GodModeWait;
                     _isWaiting = true;
-
                 }
-                else if (IsColliding && _isWaiting)
+                else if (_isWaiting)
                 {
-                    _godModeTimer -= Time.deltaTime;
+                    _timer -= Time.deltaTime;
 
-                    if (_godModeTimer <= 0)
+                    if (_timer <= 0)
                     {
                         _isInGodMode = true;
                         _isWaiting = false;
-                        _godModeTimer = GodModeDuration;
-
-                        if (_isSlowed) SpeedUp();
+                        _timer = GodModeDuration;
                     }
                 }
-                else
-                {
-                    _godModeTimer = GodModeWait;
-                    _isWaiting = false;
-                    _isInGodMode = false;
+            }
+            else
+            {
+                _timer = GodModeWait;
+                _isWaiting = false;
+                _isInGodMode = false;
 
-                    if (_isSlowed) SpeedUp();
-                }
+                if (_isSlowed) SpeedUp();
             }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<Vehicle>() || other.GetComponent<Stoplight>())
+            if (other.GetComponent<Vehicle>())
             {
-                if (!_colliding.Contains(other))
+                if (!_collidingVehicles.Contains(other) && !_isInGodMode)
                 {
-                    _colliding.Add(other);
+                    _collidingVehicles.Add(other);
+                }
+            }
+
+            if (other.GetComponent<Stoplight>())
+            {
+                if (!_collidingIntersections.Contains(other))
+                {
+                    _collidingIntersections.Add(other);
                 }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.GetComponent<Vehicle>() || other.GetComponent<Stoplight>())
+            if (other.GetComponent<Vehicle>())
             {
-                if (_colliding.Contains(other))
+                if (_collidingVehicles.Contains(other))
                 {
-                    _colliding.Remove(other);
+                    _collidingVehicles.Remove(other);
+                }
+            }
+
+            if (other.GetComponent<Stoplight>())
+            {
+                if (_collidingIntersections.Contains(other))
+                {
+                    _collidingIntersections.Remove(other);
                 }
             }
         }

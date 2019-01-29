@@ -30,11 +30,11 @@ namespace Level
         protected override void Start()
         {
             base.Start();
-            StartCoroutine(RunIntersection());
-//            foreach (var colliderGroup in ColliderGroups)
-//            {
-//                colliderGroup.SetActive(false);
-//            }
+//            StartCoroutine(RunIntersection());
+            foreach (var colliderGroup in ColliderGroups)
+            {
+                colliderGroup.SetActive(false);
+            }
         }
 
         private IEnumerator RunIntersection()

@@ -15,9 +15,11 @@ public class Pin : MonoBehaviour
     public Text SelectionNumber;
 
     private bool _selected;
+    private bool _hover;
     private Camera _camera;
     private float _y;
-    private Sequence _sequence;
+    private Sequence _selectionSequence;
+    private Sequence _hoverSequence;
 
     #region Unity Methods
 
@@ -25,6 +27,17 @@ public class Pin : MonoBehaviour
     {
         _camera = Camera.main;
         SelectionNumber.DOFade(0, 0);
+        PlayerVehicleManager.Instance.HoverChanged.AddListener(HandleHoverChange);
+
+        _hoverSequence = DOTween.Sequence();
+        _hoverSequence.Append(transform.DOMoveY(3f, .2f).SetRelative(true));
+        _hoverSequence.SetAutoKill(false).Pause();
+    }
+
+    private void HandleHoverChange(GameObject go)
+    {
+        var isHovering = go == gameObject && !_selected;
+        SetHover(isHovering);
     }
 
     private void Update()
@@ -73,6 +86,7 @@ public class Pin : MonoBehaviour
         if (_selected != selected)
         {
             _selected = selected;
+            HoverAnimation(false);
             SelectAnimation(selected, index);
         }
         else
@@ -81,28 +95,48 @@ public class Pin : MonoBehaviour
         }
     }
 
+    public void SetHover(bool hover)
+    {
+        if (_hover != hover)
+        {
+            _hover = hover;
+            HoverAnimation(hover);
+        }
+    }
+
+    private void HoverAnimation(bool hover)
+    {
+        if (hover)
+        {
+            _hoverSequence.PlayForward();
+        }
+        else
+        {
+            _hoverSequence.PlayBackwards();
+        }
+    }
+
     public void SelectAnimation(bool selected, int index)
     {
-        _sequence?.Kill();
-        _sequence = DOTween.Sequence();
-
+        _selectionSequence?.Kill();
+        _selectionSequence = DOTween.Sequence();
 
         if (selected)
         {
             SelectionNumber.text = index.ToString();
-            _sequence.Append(transform.DOMoveY(-2f, .1f).SetRelative(true));
-            _sequence.Append(transform.DOMoveY(17f, .5f).SetRelative(true));
-            _sequence.Append(Sprite.GetComponent<SpriteRenderer>().DOFade(0f, .2f));
-            _sequence.Join(SelectionNumber.DOFade(1f, .2f));
+            _selectionSequence.Append(transform.DOLocalMoveY(-2f, .1f).SetRelative(true));
+            _selectionSequence.Append(transform.DOLocalMoveY(17f, .5f).SetRelative(true));
+            _selectionSequence.Append(Sprite.GetComponent<SpriteRenderer>().DOFade(0f, .2f));
+            _selectionSequence.Join(SelectionNumber.DOFade(1f, .2f));
         }
         else
         {
-            _sequence.Append(transform.DOMoveY(-15f, .5f).SetRelative(true));
-            _sequence.Join(SelectionNumber.DOFade(0f, .1f));
-            _sequence.Join(Sprite.GetComponent<SpriteRenderer>().DOFade(1f, .2f));
+            _selectionSequence.Append(transform.DOLocalMoveY(-15f, .5f).SetRelative(true));
+            _selectionSequence.Join(SelectionNumber.DOFade(0f, .1f));
+            _selectionSequence.Join(Sprite.GetComponent<SpriteRenderer>().DOFade(1f, .2f));
         }
         
-        _sequence.Play();
+        _selectionSequence.Play();
     }
 
 

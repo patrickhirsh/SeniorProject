@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 4227944570947516}
   - component: {fileID: 114815016359275104}
   m_Layer: 0
-  m_Name: Point 0
+  m_Name: Point 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -786,7 +786,7 @@ GameObject:
   - component: {fileID: 4852601733357368}
   - component: {fileID: 114309120528339064}
   m_Layer: 0
-  m_Name: Point 2
+  m_Name: Point 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1815,9 +1815,9 @@ Transform:
   m_LocalPosition: {x: -0.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4227944570947516}
-  - {fileID: 4034212016492010}
   - {fileID: 4852601733357368}
+  - {fileID: 4034212016492010}
+  - {fileID: 4227944570947516}
   m_Father: {fileID: 4023576218499250}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1856,9 +1856,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792980702454646}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000034272668}
-  m_LocalPosition: {x: -79.568726, y: 0, z: 76.111206}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -51.18, y: 0, z: 50.611206}
+  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
   m_Children:
   - {fileID: 4614810060089646}
   - {fileID: 4893968483092824}
@@ -1869,7 +1869,7 @@ Transform:
   - {fileID: 4315038900908692}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!4 &4173137770174160
 Transform:
   m_ObjectHideFlags: 1
@@ -2006,7 +2006,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4131317694538868}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4246361832162332
 Transform:
@@ -2767,7 +2767,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4131317694538868}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4854148798724476
 Transform:
@@ -2982,9 +2982,9 @@ MonoBehaviour:
   drawColor: {r: 1, g: 1, b: 1, a: 1}
   _close: 0
   points:
-  - {fileID: 114815016359275104}
-  - {fileID: 114744407870319222}
   - {fileID: 114309120528339064}
+  - {fileID: 114744407870319222}
+  - {fileID: 114815016359275104}
 --- !u!114 &114050112169527598
 MonoBehaviour:
   m_ObjectHideFlags: 1
