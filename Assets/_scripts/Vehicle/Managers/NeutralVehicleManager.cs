@@ -37,7 +37,7 @@ namespace Level
         public float SPAWN_TIMER_VARIANCE = 0f;
 
         public List<GameObject> _neutralVehiclePrefabs;     // all neutral vehicle prefabs valid for this scene
-        private List<SpawnRoute> _spawnPoints;              // all valid spawn points in the current level
+        private List<SpawnRoute> _spawnRoutes;              // all valid spawn routes in the current level
         private SpawnState _spawnState;                     // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
         private float proceduralSpawnTimer = 0f;            // timer used for procedural spawning
 
@@ -73,6 +73,25 @@ namespace Level
             Broadcaster.AddListener(GameEvent.SetupBakedPaths, BakePaths);
         }
 
+        public void Update()
+        {
+            switch (_spawnState)
+            {
+                case SpawnState.SpawningOff:
+                    break;
+
+                case SpawnState.SpawningPreDefined:
+                    break;
+
+                case SpawnState.SpawningHybrid:
+                    break;
+
+                case SpawnState.SpawningProcedurally:
+                    handleProceduralSpawning();
+                    break;
+            }
+        }
+
         private void GameStateChanged(GameEvent @event)
         {
             // Begin the simulation
@@ -91,6 +110,16 @@ namespace Level
             }
         }
 
+        /// <summary>
+        /// returns a random spawn route from the list of all spawn routes
+        /// TODO: Spawn Route management should NOT be here
+        /// </summary>
+        public SpawnRoute GetRandomSpawnRoute()
+        {
+            int index = Random.Range(0, _spawnRoutes.Count);
+            return _spawnRoutes[index];
+        }
+
 
         /// <summary>
         /// Handles all GameEvent Broadcasts
@@ -103,32 +132,12 @@ namespace Level
                 case GameEvent.SetupBakedPaths:
 
                     // initialize spawnPoints list
-                    _spawnPoints = new List<SpawnRoute>();
+                    _spawnRoutes = new List<SpawnRoute>();
                     foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
-                        _spawnPoints.Add(spawn);
+                        _spawnRoutes.Add(spawn);
 
                     // determine all paths from all spawn points to all other spawn points 
                     populateSpawnPointReachabilityPaths();
-                    break;
-            }
-        }
-
-
-        public void Update()
-        {
-            switch (_spawnState)
-            {
-                case SpawnState.SpawningOff:
-                    break;
-
-                case SpawnState.SpawningPreDefined:
-                    break;
-
-                case SpawnState.SpawningHybrid:
-                    break;
-
-                case SpawnState.SpawningProcedurally:
-                    handleProceduralSpawning();
                     break;
             }
         }
@@ -204,7 +213,7 @@ namespace Level
             _pathableSpawnPointEntityConnections = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
 
             // observe all spawn points as potential starting points
-            foreach (SpawnRoute spawn1 in _spawnPoints)
+            foreach (SpawnRoute spawn1 in _spawnRoutes)
             {
                 // observe all connections within these spawn points as potential starting points
                 foreach (Connection connection1 in spawn1.Connections)
@@ -220,7 +229,7 @@ namespace Level
             foreach (Connection connection1 in _pathableSpawnPointEntityConnections.Keys)
             {
                 // observe all other spawn points
-                foreach (SpawnRoute spawn2 in _spawnPoints)
+                foreach (SpawnRoute spawn2 in _spawnRoutes)
                 {
                     // only observe connections not inside our current spawn point
                     if (connection1.ParentRoute != spawn2)

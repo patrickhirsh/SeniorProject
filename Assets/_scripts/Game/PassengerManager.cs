@@ -24,7 +24,10 @@ public class PassengerManager : MonoBehaviour
 
     public Passenger PassengerPrefab;
 
-    public float SpawnTime = 20.0f;
+    public static float PassengerTimeout = 60.0f;
+    public float SpawnTime = 30.0f;
+    public int PassengersToSpawn = 30;
+    private int _passengerCount = 0;
     private float _timer;
 
     #region Unity Methods
@@ -46,8 +49,12 @@ public class PassengerManager : MonoBehaviour
 
             if (_timer <= 0)
             {
-                SpawnPassenger();
-                _timer = SpawnTime;
+                if (_passengerCount <= PassengersToSpawn)
+                {
+                    SpawnPassenger();
+                    _passengerCount++;
+                    _timer = SpawnTime;
+                }            
             }
         }
     }
@@ -57,6 +64,9 @@ public class PassengerManager : MonoBehaviour
     private void SpawnPassenger()
     {
         int index = Random.Range(0, _terminals.Length - 1);
-        _terminals[index].SpawnPassenger(PassengerPrefab);
+
+        // keep trying to spawn a passenger until we find an empty terminal
+        while (!_terminals[index].SpawnPassenger(PassengerPrefab))
+            index = Random.Range(0, _terminals.Length - 1); ;
     }
 }

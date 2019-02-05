@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScoreManagerScript : MonoBehaviour {
 
     private int score;
+    private int minScoreVal = (int)(10 / PassengerManager.PassengerTimeout);
 
     public int oneStarNum;
     public int twoStarNum;
@@ -31,10 +32,11 @@ public class ScoreManagerScript : MonoBehaviour {
     /// <param name="timerLeft">This is how long the passenger had left on their timer when they were picked up/dropped off, whichever we decide is better</param>
     /// <param name="carType">This is the type of car the passenger was picked up in</param>
     /// <param name="numDelivered">This is the number of passengers dropped off at the location when this function was called</param>
-    public void ScorePoints(int timerLeft, CarType carType, int numDelivered)
+    public void ScorePoints(float timerLeft, CarType carType, int numDelivered)
     {
-        int retval = 1;   
-        retval = retval * timerLeft/100;
+        float retval = 100;
+
+        retval = retval * ((timerLeft/PassengerManager.PassengerTimeout)*2 + minScoreVal);
         switch (carType)
         {
             case CarType.LX:
@@ -51,7 +53,6 @@ public class ScoreManagerScript : MonoBehaviour {
         }
 
         retval *= numDelivered;
-
         score += Mathf.CeilToInt(retval);
 
     }
@@ -80,5 +81,10 @@ public class ScoreManagerScript : MonoBehaviour {
             return 3;
         }
 
+    }
+
+    public int GetCurrentScore()
+    {
+        return score;
     }
 }

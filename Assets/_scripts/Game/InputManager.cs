@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
 
     public Camera Camera;
+
     public GameObject Level;
     public ARSessionOrigin SessionOrigin;
     public float LevelYOffset;
@@ -17,6 +18,7 @@ public class InputManager : MonoBehaviour
     public float raycastThickness;
 
     private bool _vehicleSelected;
+    private Camera _camera;
 
     private void Awake()
     {
@@ -37,9 +39,14 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Start()
     {
-#if UNITY_ANDROID || UNITY_IOS
+        _camera = Camera.main;
+    }
+
+    private void Update()
+    {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         HandleMobileInput();
 #else
         HandleDesktopInput();
@@ -49,17 +56,18 @@ public class InputManager : MonoBehaviour
     private void HandleLevelSimulating(bool click)
     {
         RaycastHit hitInfo;
-        Vector3 origin = Camera.main.transform.position;
+        var cameraTransform = _camera.transform;
+        var origin = cameraTransform.position;
 
-        var hit = Physics.SphereCast(origin, raycastThickness, Camera.main.transform.forward, out hitInfo);
+        var hit = Physics.SphereCast(origin, raycastThickness, cameraTransform.forward, out hitInfo);
 
         PlayerVehicleManager.HandleHover(hit, hitInfo);
 
-        if (Input.GetMouseButtonDown(0) && hit)
+        if (click && hit)
         {
             PlayerVehicleManager.HandleHit(hitInfo);
         }
-        else if (Input.GetMouseButtonDown(0))
+        else if (click)
         {
             PlayerVehicleManager.HandleNotHit();
         }
@@ -93,25 +101,32 @@ public class InputManager : MonoBehaviour
 
     private void HandleMobileInput()
     {
-        if (Input.touchCount <= 0) return;
-        var touch = Input.GetTouch(0);
-        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
+        Touch touch = new Touch();
+        if (Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+        }
+
+        //        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
 
         switch (GameManager.CurrentGameState)
         {
             case GameState.LevelPlaced:
             case GameState.LevelPlacement:
             case GameState.LevelRePlacement:
-                var hits = new List<ARRaycastHit>();
-                if (SessionOrigin.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
+                if (Input.touchCount > 0)
                 {
-                    var hitPose = hits[0].pose;
-                    var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
-                    MoveLevel(position);
+                    var hits = new List<ARRaycastHit>();
+                    if (SessionOrigin.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
+                    {
+                        var hitPose = hits[0].pose;
+                        var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
+                        MoveLevel(position);
+                    }
                 }
                 break;
             case GameState.LevelSimulating:
-                HandleLevelSimulating(touch.phase == TouchPhase.Began);
+                HandleLevelSimulating(Input.touchCount > 0 && touch.phase == TouchPhase.Began);
                 break;
         }
     }
@@ -129,7 +144,7 @@ public class InputManager : MonoBehaviour
         {
             x.gameObject.SetActive(active);
         }
-        if(!active)
+        if (!active)
             SessionOrigin.GetComponent<ARPlaneManager>().enabled = false;
         //SessionOrigin.GetComponent<ARPointCloud>().gameObject.SetActive(false);
     }
