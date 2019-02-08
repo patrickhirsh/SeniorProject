@@ -38,24 +38,29 @@ public class PlayerVehicleManager : VehicleManager
 
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
+
         if (vehicle.HasPassenger)
         {
             int numDroppedOff = 0;
             float timeLeft = 0;
+            Building.BuildingColors PassColor = Building.BuildingColors.Red;
             //Need to add the code here to score points
             foreach (var passenger in new List<Passenger>(vehicle.Passengers))
             {
                 if (passenger.DestRoute == vehicle.CurrentRoute)
                 {
+                    PassColor = passenger.GetColor();
                     numDroppedOff += 1;
                     timeLeft += passenger.GetTimeRemaining();
                     DeliverPassenger(vehicle, passenger);
                 }
             }
             //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
-            SM.ScorePoints(timeLeft, ScoreManagerScript.CarType.STD, numDroppedOff);
+            SM.ScorePoints(PassColor, numDroppedOff);
 
         }
+
+
         if (vehicle.CurrentRoute.HasTerminals && vehicle.CurrentRoute.Terminals.Any(terminal => terminal.HasPassenger))
         {
             PickupPassenger(vehicle);
