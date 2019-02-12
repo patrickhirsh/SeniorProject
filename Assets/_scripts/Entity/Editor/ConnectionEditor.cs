@@ -17,8 +17,14 @@ namespace Level
             EditorGUILayout.LabelField($"Stats");
             EditorGUILayout.LabelField($"{myTarget.Paths.Count} VehiclePaths");
 
-            EditorGUILayout.ObjectField("Connects To", myTarget.ConnectsTo, typeof(Connection), true);
-            EditorGUILayout.ObjectField("Parent Entity", myTarget.ParentRoute, typeof(Entity), true);
+            EditorGUILayout.ObjectField("Connects To", myTarget.GetConnectsTo, typeof(Connection), true);
+            EditorGUILayout.ObjectField("Parent", myTarget.ParentRoute, typeof(Entity), true);
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Bake Connection"))
+            {
+                myTarget.Bake(true);
+            }
         }
 
         private static void PropertyField(SerializedProperty myIterator)

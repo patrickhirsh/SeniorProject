@@ -252,8 +252,8 @@ namespace Level
                         {
                             // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
                             Queue<Connection> path = new Queue<Connection>();
-                            if (PathfindingManager.Instance.GetPath(connection1, connection2.ConnectsTo, out path))
-                            { _validNeutralPaths[connection1].Add(connection2.ConnectsTo, path); }
+                            if (PathfindingManager.Instance.GetPath(connection1, connection2.GetConnectsTo, out path))
+                            { _validNeutralPaths[connection1].Add(connection2.GetConnectsTo, path); }
                         }
                     }
                 }
