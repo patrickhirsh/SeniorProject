@@ -1,36 +1,92 @@
 fileFormatVersion: 2
 guid: 67368df048a312b48879a92be0c67cbf
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: pCube10
-    100004: pCube11
-    100006: pCube5
-    100008: pCube6
-    100010: pCube7
-    100012: pCube9
-    100014: transform10
-    100016: transform11
-    100018: transform7
-    100020: transform8
-    100022: transform9
-    400000: //RootNode
-    400002: pCube10
-    400004: pCube11
-    400006: pCube5
-    400008: pCube6
-    400010: pCube7
-    400012: pCube9
-    400014: transform10
-    400016: transform11
-    400018: transform7
-    400020: transform8
-    400022: transform9
-    2100000: darkBlue
-    2300000: pCube11
-    3300000: pCube11
-    4300000: pCube11
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: pCube10
+  - first:
+      1: 100004
+    second: pCube11
+  - first:
+      1: 100006
+    second: pCube5
+  - first:
+      1: 100008
+    second: pCube6
+  - first:
+      1: 100010
+    second: pCube7
+  - first:
+      1: 100012
+    second: pCube9
+  - first:
+      1: 100014
+    second: transform10
+  - first:
+      1: 100016
+    second: transform11
+  - first:
+      1: 100018
+    second: transform7
+  - first:
+      1: 100020
+    second: transform8
+  - first:
+      1: 100022
+    second: transform9
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: pCube10
+  - first:
+      4: 400004
+    second: pCube11
+  - first:
+      4: 400006
+    second: pCube5
+  - first:
+      4: 400008
+    second: pCube6
+  - first:
+      4: 400010
+    second: pCube7
+  - first:
+      4: 400012
+    second: pCube9
+  - first:
+      4: 400014
+    second: transform10
+  - first:
+      4: 400016
+    second: transform11
+  - first:
+      4: 400018
+    second: transform7
+  - first:
+      4: 400020
+    second: transform8
+  - first:
+      4: 400022
+    second: transform9
+  - first:
+      21: 2100000
+    second: darkBlue
+  - first:
+      23: 2300000
+    second: pCube11
+  - first:
+      33: 3300000
+    second: pCube11
+  - first:
+      43: 4300000
+    second: pCube11
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -65,6 +121,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -72,27 +129,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -102,6 +164,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

@@ -1,56 +1,152 @@
 fileFormatVersion: 2
 guid: 816277a3606d1bc479a1ab04e750c67d
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: pCube16
-    100002: pCube17
-    100004: pCube18
-    100006: pCube19
-    100008: pCube20
-    100010: pCube21
-    100012: pCube22
-    100014: //RootNode
-    400000: pCube16
-    400002: pCube17
-    400004: pCube18
-    400006: pCube19
-    400008: pCube20
-    400010: pCube21
-    400012: pCube22
-    400014: //RootNode
-    2100000: GreenLight
-    2100002: GreenDark
-    2100004: Green
-    2100006: Orange
-    2100008: greenLight
-    2100010: green
-    2100012: blueLighter
-    2100014: orange
-    2300000: pCube16
-    2300002: pCube17
-    2300004: pCube18
-    2300006: pCube19
-    2300008: pCube20
-    2300010: pCube21
-    2300012: pCube22
-    2300014: //RootNode
-    3300000: pCube16
-    3300002: pCube17
-    3300004: pCube18
-    3300006: pCube19
-    3300008: pCube20
-    3300010: pCube21
-    3300012: pCube22
-    3300014: //RootNode
-    4300000: pCube22
-    4300002: pCube21
-    4300004: pCube20
-    4300006: pCube19
-    4300008: pCube18
-    4300010: pCube17
-    4300012: pCube16
-    4300014: shrub1
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: pCube16
+  - first:
+      1: 100002
+    second: pCube17
+  - first:
+      1: 100004
+    second: pCube18
+  - first:
+      1: 100006
+    second: pCube19
+  - first:
+      1: 100008
+    second: pCube20
+  - first:
+      1: 100010
+    second: pCube21
+  - first:
+      1: 100012
+    second: pCube22
+  - first:
+      1: 100014
+    second: //RootNode
+  - first:
+      4: 400000
+    second: pCube16
+  - first:
+      4: 400002
+    second: pCube17
+  - first:
+      4: 400004
+    second: pCube18
+  - first:
+      4: 400006
+    second: pCube19
+  - first:
+      4: 400008
+    second: pCube20
+  - first:
+      4: 400010
+    second: pCube21
+  - first:
+      4: 400012
+    second: pCube22
+  - first:
+      4: 400014
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: GreenLight
+  - first:
+      21: 2100002
+    second: GreenDark
+  - first:
+      21: 2100004
+    second: Green
+  - first:
+      21: 2100006
+    second: Orange
+  - first:
+      21: 2100008
+    second: greenLight
+  - first:
+      21: 2100010
+    second: green
+  - first:
+      21: 2100012
+    second: blueLighter
+  - first:
+      21: 2100014
+    second: orange
+  - first:
+      23: 2300000
+    second: pCube16
+  - first:
+      23: 2300002
+    second: pCube17
+  - first:
+      23: 2300004
+    second: pCube18
+  - first:
+      23: 2300006
+    second: pCube19
+  - first:
+      23: 2300008
+    second: pCube20
+  - first:
+      23: 2300010
+    second: pCube21
+  - first:
+      23: 2300012
+    second: pCube22
+  - first:
+      23: 2300014
+    second: //RootNode
+  - first:
+      33: 3300000
+    second: pCube16
+  - first:
+      33: 3300002
+    second: pCube17
+  - first:
+      33: 3300004
+    second: pCube18
+  - first:
+      33: 3300006
+    second: pCube19
+  - first:
+      33: 3300008
+    second: pCube20
+  - first:
+      33: 3300010
+    second: pCube21
+  - first:
+      33: 3300012
+    second: pCube22
+  - first:
+      33: 3300014
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: pCube22
+  - first:
+      43: 4300002
+    second: pCube21
+  - first:
+      43: 4300004
+    second: pCube20
+  - first:
+      43: 4300006
+    second: pCube19
+  - first:
+      43: 4300008
+    second: pCube18
+  - first:
+      43: 4300010
+    second: pCube17
+  - first:
+      43: 4300012
+    second: pCube16
+  - first:
+      43: 4300014
+    second: shrub1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -85,6 +181,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -92,27 +189,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -122,6 +224,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

@@ -1,44 +1,116 @@
 fileFormatVersion: 2
 guid: 51083c197c98fc14c8a43987b8b9e760
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: pCube10
-    100004: pCube4
-    100006: pCube5
-    100008: pCube6
-    100010: pCube7
-    100012: pCube8
-    100014: pCube9
-    100016: pCylinder4
-    100018: transform10
-    100020: transform11
-    100022: transform12
-    100024: transform6
-    100026: transform7
-    100028: transform8
-    100030: transform9
-    400000: //RootNode
-    400002: pCube10
-    400004: pCube4
-    400006: pCube5
-    400008: pCube6
-    400010: pCube7
-    400012: pCube8
-    400014: pCube9
-    400016: pCylinder4
-    400018: transform10
-    400020: transform11
-    400022: transform12
-    400024: transform6
-    400026: transform7
-    400028: transform8
-    400030: transform9
-    2100000: lambert1
-    2300000: pCube10
-    3300000: pCube10
-    4300000: pCube10
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: pCube10
+  - first:
+      1: 100004
+    second: pCube4
+  - first:
+      1: 100006
+    second: pCube5
+  - first:
+      1: 100008
+    second: pCube6
+  - first:
+      1: 100010
+    second: pCube7
+  - first:
+      1: 100012
+    second: pCube8
+  - first:
+      1: 100014
+    second: pCube9
+  - first:
+      1: 100016
+    second: pCylinder4
+  - first:
+      1: 100018
+    second: transform10
+  - first:
+      1: 100020
+    second: transform11
+  - first:
+      1: 100022
+    second: transform12
+  - first:
+      1: 100024
+    second: transform6
+  - first:
+      1: 100026
+    second: transform7
+  - first:
+      1: 100028
+    second: transform8
+  - first:
+      1: 100030
+    second: transform9
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: pCube10
+  - first:
+      4: 400004
+    second: pCube4
+  - first:
+      4: 400006
+    second: pCube5
+  - first:
+      4: 400008
+    second: pCube6
+  - first:
+      4: 400010
+    second: pCube7
+  - first:
+      4: 400012
+    second: pCube8
+  - first:
+      4: 400014
+    second: pCube9
+  - first:
+      4: 400016
+    second: pCylinder4
+  - first:
+      4: 400018
+    second: transform10
+  - first:
+      4: 400020
+    second: transform11
+  - first:
+      4: 400022
+    second: transform12
+  - first:
+      4: 400024
+    second: transform6
+  - first:
+      4: 400026
+    second: transform7
+  - first:
+      4: 400028
+    second: transform8
+  - first:
+      4: 400030
+    second: transform9
+  - first:
+      21: 2100000
+    second: lambert1
+  - first:
+      23: 2300000
+    second: pCube10
+  - first:
+      33: 3300000
+    second: pCube10
+  - first:
+      43: 4300000
+    second: pCube10
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -78,6 +150,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -85,27 +158,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -115,6 +193,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

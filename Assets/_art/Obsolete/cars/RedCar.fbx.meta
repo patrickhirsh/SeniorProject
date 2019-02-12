@@ -1,61 +1,167 @@
 fileFormatVersion: 2
 guid: c73a4bd50e1af3149b516992ee288985
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Body
-    100002: DoorHandle
-    100004: DoorHandle1
-    100006: Mirror
-    100008: Mirror1
-    100010: pCylinder1
-    100012: pCylinder2
-    100014: pCylinder3
-    100016: pCylinder4
-    100018: //RootNode
-    400000: Body
-    400002: DoorHandle
-    400004: DoorHandle1
-    400006: Mirror
-    400008: Mirror1
-    400010: pCylinder1
-    400012: pCylinder2
-    400014: pCylinder3
-    400016: pCylinder4
-    400018: //RootNode
-    2100000: Red
-    2100002: RobinsEgg
-    2100004: Orange
-    2100006: Green
-    2100008: Yellow
-    2100010: Navy
-    2300000: Body
-    2300002: DoorHandle
-    2300004: DoorHandle1
-    2300006: Mirror
-    2300008: Mirror1
-    2300010: pCylinder1
-    2300012: pCylinder2
-    2300014: pCylinder3
-    2300016: pCylinder4
-    3300000: Body
-    3300002: DoorHandle
-    3300004: DoorHandle1
-    3300006: Mirror
-    3300008: Mirror1
-    3300010: pCylinder1
-    3300012: pCylinder2
-    3300014: pCylinder3
-    3300016: pCylinder4
-    4300000: DoorHandle
-    4300002: DoorHandle1
-    4300004: Mirror
-    4300006: Mirror1
-    4300008: Body
-    4300010: pCylinder4
-    4300012: pCylinder3
-    4300014: pCylinder2
-    4300016: pCylinder1
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Body
+  - first:
+      1: 100002
+    second: DoorHandle
+  - first:
+      1: 100004
+    second: DoorHandle1
+  - first:
+      1: 100006
+    second: Mirror
+  - first:
+      1: 100008
+    second: Mirror1
+  - first:
+      1: 100010
+    second: pCylinder1
+  - first:
+      1: 100012
+    second: pCylinder2
+  - first:
+      1: 100014
+    second: pCylinder3
+  - first:
+      1: 100016
+    second: pCylinder4
+  - first:
+      1: 100018
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Body
+  - first:
+      4: 400002
+    second: DoorHandle
+  - first:
+      4: 400004
+    second: DoorHandle1
+  - first:
+      4: 400006
+    second: Mirror
+  - first:
+      4: 400008
+    second: Mirror1
+  - first:
+      4: 400010
+    second: pCylinder1
+  - first:
+      4: 400012
+    second: pCylinder2
+  - first:
+      4: 400014
+    second: pCylinder3
+  - first:
+      4: 400016
+    second: pCylinder4
+  - first:
+      4: 400018
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: Red
+  - first:
+      21: 2100002
+    second: RobinsEgg
+  - first:
+      21: 2100004
+    second: Orange
+  - first:
+      21: 2100006
+    second: Green
+  - first:
+      21: 2100008
+    second: Yellow
+  - first:
+      21: 2100010
+    second: Navy
+  - first:
+      23: 2300000
+    second: Body
+  - first:
+      23: 2300002
+    second: DoorHandle
+  - first:
+      23: 2300004
+    second: DoorHandle1
+  - first:
+      23: 2300006
+    second: Mirror
+  - first:
+      23: 2300008
+    second: Mirror1
+  - first:
+      23: 2300010
+    second: pCylinder1
+  - first:
+      23: 2300012
+    second: pCylinder2
+  - first:
+      23: 2300014
+    second: pCylinder3
+  - first:
+      23: 2300016
+    second: pCylinder4
+  - first:
+      33: 3300000
+    second: Body
+  - first:
+      33: 3300002
+    second: DoorHandle
+  - first:
+      33: 3300004
+    second: DoorHandle1
+  - first:
+      33: 3300006
+    second: Mirror
+  - first:
+      33: 3300008
+    second: Mirror1
+  - first:
+      33: 3300010
+    second: pCylinder1
+  - first:
+      33: 3300012
+    second: pCylinder2
+  - first:
+      33: 3300014
+    second: pCylinder3
+  - first:
+      33: 3300016
+    second: pCylinder4
+  - first:
+      43: 4300000
+    second: DoorHandle
+  - first:
+      43: 4300002
+    second: DoorHandle1
+  - first:
+      43: 4300004
+    second: Mirror
+  - first:
+      43: 4300006
+    second: Mirror1
+  - first:
+      43: 4300008
+    second: Body
+  - first:
+      43: 4300010
+    second: pCylinder4
+  - first:
+      43: 4300012
+    second: pCylinder3
+  - first:
+      43: 4300014
+    second: pCylinder2
+  - first:
+      43: 4300016
+    second: pCylinder1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -90,6 +196,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -97,27 +204,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -127,8 +239,8 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

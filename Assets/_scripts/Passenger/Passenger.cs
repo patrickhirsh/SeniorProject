@@ -112,7 +112,10 @@ namespace Level
             return _timeRemaining;
         }
 
-
+        public Building.BuildingColors GetColor()
+        {
+            return _color;
+        }
         #region Reticle Methods
         public void SpawnPickupReticle()
         {

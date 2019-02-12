@@ -1,64 +1,176 @@
 fileFormatVersion: 2
 guid: c15388a13c0fb5a4db611595206b18fa
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: pCube1
-    100004: pCube10
-    100006: pCube11
-    100008: pCube12
-    100010: pCube13
-    100012: pCube2
-    100014: pCube3
-    100016: pCube4
-    100018: pCube5
-    100020: pCube6
-    100022: pCube7
-    100024: pCube8
-    100026: pCube9
-    100028: transform1
-    100030: transform10
-    100032: transform11
-    100034: transform12
-    100036: transform2
-    100038: transform3
-    100040: transform4
-    100042: transform5
-    100044: transform6
-    100046: transform7
-    100048: transform8
-    100050: transform9
-    400000: //RootNode
-    400002: pCube1
-    400004: pCube10
-    400006: pCube11
-    400008: pCube12
-    400010: pCube13
-    400012: pCube2
-    400014: pCube3
-    400016: pCube4
-    400018: pCube5
-    400020: pCube6
-    400022: pCube7
-    400024: pCube8
-    400026: pCube9
-    400028: transform1
-    400030: transform10
-    400032: transform11
-    400034: transform12
-    400036: transform2
-    400038: transform3
-    400040: transform4
-    400042: transform5
-    400044: transform6
-    400046: transform7
-    400048: transform8
-    400050: transform9
-    2100000: lambert2
-    2300000: pCube13
-    3300000: pCube13
-    4300000: pCube13
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: pCube1
+  - first:
+      1: 100004
+    second: pCube10
+  - first:
+      1: 100006
+    second: pCube11
+  - first:
+      1: 100008
+    second: pCube12
+  - first:
+      1: 100010
+    second: pCube13
+  - first:
+      1: 100012
+    second: pCube2
+  - first:
+      1: 100014
+    second: pCube3
+  - first:
+      1: 100016
+    second: pCube4
+  - first:
+      1: 100018
+    second: pCube5
+  - first:
+      1: 100020
+    second: pCube6
+  - first:
+      1: 100022
+    second: pCube7
+  - first:
+      1: 100024
+    second: pCube8
+  - first:
+      1: 100026
+    second: pCube9
+  - first:
+      1: 100028
+    second: transform1
+  - first:
+      1: 100030
+    second: transform10
+  - first:
+      1: 100032
+    second: transform11
+  - first:
+      1: 100034
+    second: transform12
+  - first:
+      1: 100036
+    second: transform2
+  - first:
+      1: 100038
+    second: transform3
+  - first:
+      1: 100040
+    second: transform4
+  - first:
+      1: 100042
+    second: transform5
+  - first:
+      1: 100044
+    second: transform6
+  - first:
+      1: 100046
+    second: transform7
+  - first:
+      1: 100048
+    second: transform8
+  - first:
+      1: 100050
+    second: transform9
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: pCube1
+  - first:
+      4: 400004
+    second: pCube10
+  - first:
+      4: 400006
+    second: pCube11
+  - first:
+      4: 400008
+    second: pCube12
+  - first:
+      4: 400010
+    second: pCube13
+  - first:
+      4: 400012
+    second: pCube2
+  - first:
+      4: 400014
+    second: pCube3
+  - first:
+      4: 400016
+    second: pCube4
+  - first:
+      4: 400018
+    second: pCube5
+  - first:
+      4: 400020
+    second: pCube6
+  - first:
+      4: 400022
+    second: pCube7
+  - first:
+      4: 400024
+    second: pCube8
+  - first:
+      4: 400026
+    second: pCube9
+  - first:
+      4: 400028
+    second: transform1
+  - first:
+      4: 400030
+    second: transform10
+  - first:
+      4: 400032
+    second: transform11
+  - first:
+      4: 400034
+    second: transform12
+  - first:
+      4: 400036
+    second: transform2
+  - first:
+      4: 400038
+    second: transform3
+  - first:
+      4: 400040
+    second: transform4
+  - first:
+      4: 400042
+    second: transform5
+  - first:
+      4: 400044
+    second: transform6
+  - first:
+      4: 400046
+    second: transform7
+  - first:
+      4: 400048
+    second: transform8
+  - first:
+      4: 400050
+    second: transform9
+  - first:
+      21: 2100000
+    second: lambert2
+  - first:
+      23: 2300000
+    second: pCube13
+  - first:
+      33: 3300000
+    second: pCube13
+  - first:
+      43: 4300000
+    second: pCube13
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -98,6 +210,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -105,27 +218,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -135,6 +253,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

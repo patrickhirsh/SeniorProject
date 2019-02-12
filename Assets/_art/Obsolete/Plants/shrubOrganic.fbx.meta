@@ -1,61 +1,167 @@
 fileFormatVersion: 2
 guid: 5f45cb40eb6342b4e956fc8a6e8c8598
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Greenery
-    100002: PrototypeLevelConcept:pCylinder5
-    100004: PrototypeLevelConcept:pSphere10
-    100006: PrototypeLevelConcept:pSphere11
-    100008: PrototypeLevelConcept:pSphere4
-    100010: PrototypeLevelConcept:pSphere5
-    100012: PrototypeLevelConcept:pSphere6
-    100014: PrototypeLevelConcept:pSphere7
-    100016: PrototypeLevelConcept:pSphere8
-    100018: PrototypeLevelConcept:pSphere9
-    100020: Shrub
-    100022: //RootNode
-    400000: Greenery
-    400002: PrototypeLevelConcept:pCylinder5
-    400004: PrototypeLevelConcept:pSphere10
-    400006: PrototypeLevelConcept:pSphere11
-    400008: PrototypeLevelConcept:pSphere4
-    400010: PrototypeLevelConcept:pSphere5
-    400012: PrototypeLevelConcept:pSphere6
-    400014: PrototypeLevelConcept:pSphere7
-    400016: PrototypeLevelConcept:pSphere8
-    400018: PrototypeLevelConcept:pSphere9
-    400020: Shrub
-    400022: //RootNode
-    2100000: PrototypeLevelConcept_Orange
-    2100002: PrototypeLevelConcept_Green
-    2300000: PrototypeLevelConcept:pCylinder5
-    2300002: PrototypeLevelConcept:pSphere10
-    2300004: PrototypeLevelConcept:pSphere11
-    2300006: PrototypeLevelConcept:pSphere4
-    2300008: PrototypeLevelConcept:pSphere5
-    2300010: PrototypeLevelConcept:pSphere6
-    2300012: PrototypeLevelConcept:pSphere7
-    2300014: PrototypeLevelConcept:pSphere8
-    2300016: PrototypeLevelConcept:pSphere9
-    3300000: PrototypeLevelConcept:pCylinder5
-    3300002: PrototypeLevelConcept:pSphere10
-    3300004: PrototypeLevelConcept:pSphere11
-    3300006: PrototypeLevelConcept:pSphere4
-    3300008: PrototypeLevelConcept:pSphere5
-    3300010: PrototypeLevelConcept:pSphere6
-    3300012: PrototypeLevelConcept:pSphere7
-    3300014: PrototypeLevelConcept:pSphere8
-    3300016: PrototypeLevelConcept:pSphere9
-    4300000: PrototypeLevelConcept:pCylinder5
-    4300002: PrototypeLevelConcept:pSphere4
-    4300004: PrototypeLevelConcept:pSphere5
-    4300006: PrototypeLevelConcept:pSphere6
-    4300008: PrototypeLevelConcept:pSphere7
-    4300010: PrototypeLevelConcept:pSphere8
-    4300012: PrototypeLevelConcept:pSphere9
-    4300014: PrototypeLevelConcept:pSphere10
-    4300016: PrototypeLevelConcept:pSphere11
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Greenery
+  - first:
+      1: 100002
+    second: PrototypeLevelConcept:pCylinder5
+  - first:
+      1: 100004
+    second: PrototypeLevelConcept:pSphere10
+  - first:
+      1: 100006
+    second: PrototypeLevelConcept:pSphere11
+  - first:
+      1: 100008
+    second: PrototypeLevelConcept:pSphere4
+  - first:
+      1: 100010
+    second: PrototypeLevelConcept:pSphere5
+  - first:
+      1: 100012
+    second: PrototypeLevelConcept:pSphere6
+  - first:
+      1: 100014
+    second: PrototypeLevelConcept:pSphere7
+  - first:
+      1: 100016
+    second: PrototypeLevelConcept:pSphere8
+  - first:
+      1: 100018
+    second: PrototypeLevelConcept:pSphere9
+  - first:
+      1: 100020
+    second: Shrub
+  - first:
+      1: 100022
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Greenery
+  - first:
+      4: 400002
+    second: PrototypeLevelConcept:pCylinder5
+  - first:
+      4: 400004
+    second: PrototypeLevelConcept:pSphere10
+  - first:
+      4: 400006
+    second: PrototypeLevelConcept:pSphere11
+  - first:
+      4: 400008
+    second: PrototypeLevelConcept:pSphere4
+  - first:
+      4: 400010
+    second: PrototypeLevelConcept:pSphere5
+  - first:
+      4: 400012
+    second: PrototypeLevelConcept:pSphere6
+  - first:
+      4: 400014
+    second: PrototypeLevelConcept:pSphere7
+  - first:
+      4: 400016
+    second: PrototypeLevelConcept:pSphere8
+  - first:
+      4: 400018
+    second: PrototypeLevelConcept:pSphere9
+  - first:
+      4: 400020
+    second: Shrub
+  - first:
+      4: 400022
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: PrototypeLevelConcept_Orange
+  - first:
+      21: 2100002
+    second: PrototypeLevelConcept_Green
+  - first:
+      23: 2300000
+    second: PrototypeLevelConcept:pCylinder5
+  - first:
+      23: 2300002
+    second: PrototypeLevelConcept:pSphere10
+  - first:
+      23: 2300004
+    second: PrototypeLevelConcept:pSphere11
+  - first:
+      23: 2300006
+    second: PrototypeLevelConcept:pSphere4
+  - first:
+      23: 2300008
+    second: PrototypeLevelConcept:pSphere5
+  - first:
+      23: 2300010
+    second: PrototypeLevelConcept:pSphere6
+  - first:
+      23: 2300012
+    second: PrototypeLevelConcept:pSphere7
+  - first:
+      23: 2300014
+    second: PrototypeLevelConcept:pSphere8
+  - first:
+      23: 2300016
+    second: PrototypeLevelConcept:pSphere9
+  - first:
+      33: 3300000
+    second: PrototypeLevelConcept:pCylinder5
+  - first:
+      33: 3300002
+    second: PrototypeLevelConcept:pSphere10
+  - first:
+      33: 3300004
+    second: PrototypeLevelConcept:pSphere11
+  - first:
+      33: 3300006
+    second: PrototypeLevelConcept:pSphere4
+  - first:
+      33: 3300008
+    second: PrototypeLevelConcept:pSphere5
+  - first:
+      33: 3300010
+    second: PrototypeLevelConcept:pSphere6
+  - first:
+      33: 3300012
+    second: PrototypeLevelConcept:pSphere7
+  - first:
+      33: 3300014
+    second: PrototypeLevelConcept:pSphere8
+  - first:
+      33: 3300016
+    second: PrototypeLevelConcept:pSphere9
+  - first:
+      43: 4300000
+    second: PrototypeLevelConcept:pCylinder5
+  - first:
+      43: 4300002
+    second: PrototypeLevelConcept:pSphere4
+  - first:
+      43: 4300004
+    second: PrototypeLevelConcept:pSphere5
+  - first:
+      43: 4300006
+    second: PrototypeLevelConcept:pSphere6
+  - first:
+      43: 4300008
+    second: PrototypeLevelConcept:pSphere7
+  - first:
+      43: 4300010
+    second: PrototypeLevelConcept:pSphere8
+  - first:
+      43: 4300012
+    second: PrototypeLevelConcept:pSphere9
+  - first:
+      43: 4300014
+    second: PrototypeLevelConcept:pSphere10
+  - first:
+      43: 4300016
+    second: PrototypeLevelConcept:pSphere11
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -90,6 +196,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -97,27 +204,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -127,8 +239,8 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
