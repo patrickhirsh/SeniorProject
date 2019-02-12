@@ -11,13 +11,35 @@ using Utility;
 public class EntityManager : Singleton<EntityManager>
 {
     [HideInInspector]
-    public Entity[] Entities;
+    private Entity[] _entities;
+
+    public Entity[] Entities => Application.isPlaying ? _entities : GetComponentsInChildren<Entity>();
 
     private Route[] _routes;
-    public Route[] Routes => _routes ?? (_routes = Entities.OfType<Route>().ToArray()); // Linq is so cool
+    public Route[] Routes
+    {
+        get
+        {
+            if (Application.isPlaying)
+            {
+                return _routes ?? (_routes = Entities.OfType<Route>().ToArray());
+            }
+            return Entities.OfType<Route>().ToArray();
+        }
+    }
 
     private Connection[] _connections;
-    public Connection[] Connections => _connections ?? (_connections = Routes.SelectMany(route => route.Connections).ToArray()); // Linq is so cool
+    public Connection[] Connections
+    {
+        get
+        {
+            if (Application.isPlaying)
+            {
+                return _connections ?? (_connections = Routes.SelectMany(route => route.Connections).ToArray());
+            }
+            return Routes.SelectMany(route => route.Connections).ToArray();
+        }
+    }
 
     // Indexes mapped to entities
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
@@ -40,10 +62,14 @@ public class EntityManager : Singleton<EntityManager>
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
-            // Recover if not Unity Editor
             if (Entities == null || !Entities.Any())
             {
-                Entities = GetComponentsInChildren<Entity>();
+#if UNITY_EDITOR
+                Debug.LogError("EntityManager does not have any entities. Did you bake?");
+#else
+                // Recover if not Unity Editor
+                _entities = GetComponentsInChildren<Entity>();
+#endif
             }
         }
 
@@ -53,7 +79,12 @@ public class EntityManager : Singleton<EntityManager>
 
     public void Bake()
     {
-        Entities = GetComponentsInChildren<Entity>();
+        _entities = GetComponentsInChildren<Entity>();
+    }
+
+    public Connection GetConnectionById(int instanceId)
+    {
+        return Connections.FirstOrDefault(connection => connection.GetInstanceID() == instanceId);
     }
 
     /// <summary>
