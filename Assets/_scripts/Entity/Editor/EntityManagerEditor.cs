@@ -28,7 +28,7 @@ namespace Level
             if (GUILayout.Button("Bake Level"))
             {
                 myTarget.Bake();
-                NeutralVehicleManager.Instance.bakeNeutralPaths();
+                //NeutralVehicleManager.Instance.bakeNeutralPaths();
             }
         }
 

@@ -18,14 +18,17 @@ namespace Level
     /// </summary>
     public enum SpawnState : byte { SpawningOff, SpawningPreDefined, SpawningHybrid, SpawningProcedurally }
 
-
-    public struct SerializablePath
+    [System.Serializable]
+    public class SerializablePath : System.Object
     {
+        [SerializeField]
         public List<int> connectionIDs;
     }
 
-    public struct SerializablePathData
+    [System.Serializable]
+    public class SerializablePathData : System.Object
     {
+        [SerializeField]
         public List<SerializablePath> allPaths;
     }
 
@@ -150,7 +153,8 @@ namespace Level
                         _spawnRoutes.Add(spawn);
 
                     // deserialize pathing data 
-                    DeserializeNeutralPaths();
+                    //DeserializeNeutralPaths();
+                    bakeNeutralPaths();
                     break;
             }
         }
@@ -225,6 +229,11 @@ namespace Level
         {
             _validNeutralPaths = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
 
+            // initialize spawnPoints list
+            _spawnRoutes = new List<SpawnRoute>();
+            foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
+                _spawnRoutes.Add(spawn);
+
             // observe all spawn points as potential starting points
             foreach (SpawnRoute spawn1 in _spawnRoutes)
             {
@@ -268,7 +277,8 @@ namespace Level
                 _validNeutralPaths.Remove(connection);
 
             // convert NeutralPaths to a serializable format
-            SerializeNeutralPaths();
+            //SerializeNeutralPaths();
+            //UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
 
 
@@ -279,6 +289,8 @@ namespace Level
         private void SerializeNeutralPaths()
         {
             var pathSets = _validNeutralPaths.Values;
+            _serializedPaths = new SerializablePathData();
+            _serializedPaths.allPaths = new List<SerializablePath>();
             foreach (Dictionary <Connection, Queue<Connection>> pathSet in pathSets)
             {
                 foreach (Queue<Connection> path in pathSet.Values)
