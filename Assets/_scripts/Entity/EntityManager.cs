@@ -28,6 +28,7 @@ public class EntityManager : Singleton<EntityManager>
         }
     }
 
+    private Dictionary<int, Connection> _connectionsById;
     private Connection[] _connections;
     public Connection[] Connections
     {
@@ -84,6 +85,16 @@ public class EntityManager : Singleton<EntityManager>
 
     public Connection GetConnectionById(int instanceId)
     {
+        if (Application.isPlaying)
+        {
+            if (_connectionsById != null && _connectionsById.Any())
+            {
+                return _connectionsById[instanceId];
+            }
+            _connectionsById = Connections.ToDictionary(connection => connection.GetInstanceID(), connection => connection);
+            return GetConnectionById(instanceId);
+        }
+
         return Connections.FirstOrDefault(connection => connection.GetInstanceID() == instanceId);
     }
 
