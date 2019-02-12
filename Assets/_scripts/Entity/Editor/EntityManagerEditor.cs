@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace Level
@@ -17,7 +18,12 @@ namespace Level
             EditorGUILayout.LabelField($"Stats");
             if (myTarget.Entities != null) EditorGUILayout.LabelField($"{myTarget.Entities.Length} Entities");
             if (myTarget.Connections != null) EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
+            if (myTarget.Routes != null) EditorGUILayout.LabelField($"{myTarget.Routes.Length} Routes");
 
+            if (myTarget.Entities == null || myTarget.Connections == null || myTarget.Routes == null)
+            {
+                EditorGUILayout.LabelField($"Entity Manager needs to be baked!");
+            }
             EditorGUILayout.Space();
             if (GUILayout.Button("Bake Level"))
             {

@@ -83,9 +83,9 @@ namespace Level
                 if (NeighborRoutes != null)
                 {
                     Gizmos.color = Color.green;
-                    foreach (var connection in Connections.Where(connection => connection.ConnectsTo != null))
+                    foreach (var connection in Connections.Where(connection => connection.GetConnectsTo != null))
                     {
-                        Gizmos.DrawSphere(connection.ConnectsTo.transform.position + Vector3.up * .2f, .1f);
+                        Gizmos.DrawSphere(connection.GetConnectsTo.transform.position + Vector3.up * .2f, .1f);
                     }
                 }
             }
@@ -114,15 +114,24 @@ namespace Level
         //            }
         //        }
 
-        public void BakePrefab()
+#if UNITY_EDITOR
+        public void Bake()
         {
+            UnityEditor.Undo.RecordObject(this, "Bake Route");
             Connections = GetComponentsInChildren<Connection>();
             Nodes = GetComponentsInChildren<Node>().ToList();
             VehiclePaths = GetComponentsInChildren<BezierCurve>();
 
+            foreach (var connection in Connections)
+            {
+                connection.Bake();
+            }
+
             BakePaths(Connections, VehiclePaths);
             BakePickupLocations(Connections);
+            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
+#endif
 
         private void BakePickupLocations(Connection[] connections)
         {
@@ -190,11 +199,11 @@ namespace Level
         private Route[] FindNeighborRoutes()
         {
             HashSet<Route> entities = new HashSet<Route>();
-            foreach (var connection in Connections.Where(connection => connection != null && connection.ConnectsTo != null))
+            foreach (var connection in Connections.Where(connection => connection != null && connection.GetConnectsTo != null))
             {
-                if (!entities.Contains(connection.ConnectsTo.ParentRoute))
+                if (!entities.Contains(connection.GetConnectsTo.ParentRoute))
                 {
-                    entities.Add(connection.ConnectsTo.ParentRoute);
+                    entities.Add(connection.GetConnectsTo.ParentRoute);
                 }
             }
             return entities.ToArray();

@@ -43,7 +43,7 @@ namespace Level
 
             // add all valid starting connections leaving the "start" Route to frontier
             foreach (Connection connection in start.Connections)
-                if (connection.ConnectsTo != null)
+                if (connection.GetConnectsTo != null)
                     frontier.Add(new PathNode(connection, 0, null));
 
             PathNode current = frontier[0];
@@ -63,7 +63,7 @@ namespace Level
                 { endRouteDiscovered = true; break; }
 
                 // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
-                if (current.connection.ConnectsTo == null)
+                if (current.connection.GetConnectsTo == null)
                 { processNode = false; }
               
                 // not all nodes need to be processed (see above) but ALL nodes should be added to procesed at this stage
@@ -83,14 +83,14 @@ namespace Level
         private void ProcessNode(ref PathNode current, ref Dictionary<Connection, PathNode> processed, ref List<PathNode> frontier)
         {
             // explore the (current connection => linked inbound connection)'s outbound connections.
-            foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
+            foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
             {
                 // only observe connections we haven't yet processed
                 if (!processed.ContainsKey(connectionPath.Connection))
                 {
                     PathNode discoveredNode;
                     bool newNodeDiscovered = true;
-                    float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                    float distance = Vector3.Distance(current.connection.GetConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
                     // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
 
                     // check if this connection has already been discovered (is it in the frontier?)
@@ -135,7 +135,7 @@ namespace Level
             // traverse backwards through the best path (using prevConnection) to construct the path
             while (current.prevConnection != null)
             {
-                reversePath.Add(current.prevConnection.ConnectsTo);
+                reversePath.Add(current.prevConnection.GetConnectsTo);
                 reversePath.Add(current.prevConnection);
                 current = processed[current.prevConnection];
             }
@@ -215,7 +215,7 @@ namespace Level
                 { endConnectionDiscovered = true; break; }
 
                 // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
-                if (current.connection.ConnectsTo == null)
+                if (current.connection.GetConnectsTo == null)
                 { processNode = false; }
 
 
@@ -225,14 +225,14 @@ namespace Level
                 if (processNode)
                 {
                     // explore the (current connection => linked inbound connection)'s outbound connections.
-                    foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
+                    foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
                     {
                         // only observe connections we haven't yet processed
                         if (!processed.ContainsKey(connectionPath.Connection))
                         {
                             PathNode discoveredNode;
                             bool newNodeDiscovered = true;
-                            float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                            float distance = Vector3.Distance(current.connection.GetConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
                             // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
 
                             // check if this connection has already been discovered (is in the frontier)
@@ -283,7 +283,7 @@ namespace Level
                 // traverse backwards through the best path (using prevConnection) to construct the path
                 while (current.prevConnection != null)
                 {
-                    reversePath.Add(current.prevConnection.ConnectsTo);
+                    reversePath.Add(current.prevConnection.GetConnectsTo);
                     reversePath.Add(current.prevConnection);
                     current = processed[current.prevConnection];
                 }
@@ -339,7 +339,7 @@ namespace Level
             // TODO: Don't consider all paths here... only the paths leaving the source Route?
             // get all valid starting connections based on the "start" Route's connections and add to frontier
             foreach (Connection connection in start.Connections)
-                if (connection.ConnectsTo != null)
+                if (connection.GetConnectsTo != null)
                     frontier.Add(new PathNode(connection, 0, null));
 
             PathNode current = frontier[0];
@@ -391,7 +391,7 @@ namespace Level
                     // CHECK THE NODE WE'RE PROCESSING
 
                     // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
-                    if (current.connection.ConnectsTo == null)
+                    if (current.connection.GetConnectsTo == null)
                     {
                         processNode = false;
                         processed.Add(current.connection, current);
@@ -403,7 +403,7 @@ namespace Level
                         if (!lookForEnd)
                         {
                             // we're looking for "intersection"
-                            if (current.connection.ConnectsTo.ParentRoute == intersection)
+                            if (current.connection.GetConnectsTo.ParentRoute == intersection)
                             {
                                 processNode = false;
                                 destinationPathnodes.Add(current);
@@ -414,7 +414,7 @@ namespace Level
                         else
                         {
                             // we're looking for "end"
-                            if (current.connection.ConnectsTo.ParentRoute == end)
+                            if (current.connection.GetConnectsTo.ParentRoute == end)
                             {
                                 processNode = false;
                                 destinationPathnodes.Add(current);
@@ -423,8 +423,8 @@ namespace Level
                         }
 
                         // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
-                        if ((current.connection.ConnectsTo.ParentRoute.GetType() == typeof(IntersectionRoute)) && (current.connection.ConnectsTo.ParentRoute != end) &&
-                            (current.connection.ConnectsTo.ParentRoute != intersection))
+                        if ((current.connection.GetConnectsTo.ParentRoute.GetType() == typeof(IntersectionRoute)) && (current.connection.GetConnectsTo.ParentRoute != end) &&
+                            (current.connection.GetConnectsTo.ParentRoute != intersection))
                         {
                             processNode = false;
                             processed.Add(current.connection, current);
@@ -439,14 +439,14 @@ namespace Level
                     if (processNode)
                     {
                         // explore the (current connection => linked inbound connection)'s outbound connections.
-                        foreach (Connection.ConnectionPath connectionPath in current.connection.ConnectsTo.Paths)
+                        foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
                         {
                             // only observe connections we haven't yet processed
                             if (!processed.ContainsKey(connectionPath.Connection))
                             {
                                 PathNode discoveredNode;
                                 bool newNodeDiscovered = true;
-                                float distance = Vector3.Distance(current.connection.ConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                                float distance = Vector3.Distance(current.connection.GetConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
                                 // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
 
                                 // check if this connection has already been discovered (is in the frontier)
@@ -503,16 +503,16 @@ namespace Level
                     // note that inbound is actually holding the outbound connection outside the target. Use ConnectsTo to find paths
                     foreach (PathNode inbound in destinationPathnodes)
                     {
-                        foreach (var pathsTo in inbound.connection.ConnectsTo.Paths)
+                        foreach (var pathsTo in inbound.connection.GetConnectsTo.Paths)
                         {
                             // if we've already added a "path", see if this inbound gets there in a shorter path. If so, replace it with this one
-                            float distance = Vector3.Distance(inbound.connection.ConnectsTo.transform.position, pathsTo.Connection.transform.position) + inbound.distance;
+                            float distance = Vector3.Distance(inbound.connection.GetConnectsTo.transform.position, pathsTo.Connection.transform.position) + inbound.distance;
                             if (reachableOutbound.ContainsKey(pathsTo.Connection))
                             {
                                 if (reachableOutbound[pathsTo.Connection].distance > distance)
                                 {
                                     reachableOutbound.Remove(pathsTo.Connection);
-                                    reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection.ConnectsTo));
+                                    reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection.GetConnectsTo));
                                 }
                             }
 
@@ -544,7 +544,7 @@ namespace Level
             // traverse backwards through the best path (using prevConnection) to construct the path
             while (current.prevConnection != null)
             {
-                reversePath.Add(current.prevConnection.ConnectsTo);
+                reversePath.Add(current.prevConnection.GetConnectsTo);
                 reversePath.Add(current.prevConnection);
                 current = processed[current.prevConnection];
             }

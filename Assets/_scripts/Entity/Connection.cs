@@ -18,8 +18,8 @@ namespace Level
         }
 
         [HideInInspector]
-        [SerializeField]
         public Connection ConnectsTo;
+        public Connection GetConnectsTo => ConnectsTo;
 
         [HideInInspector]
         [SerializeField]
@@ -40,11 +40,10 @@ namespace Level
             }
         }
 
+        // This can't be serialized, so we compute once at runtime
         private Dictionary<Connection, BezierCurve> _connectionPaths;
-
         private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
-        public Connection[] InnerConnections => ConnectionPaths.Keys.ToArray();
-        
+
         #region Unity Methods
 
         private void Awake()
@@ -52,7 +51,32 @@ namespace Level
             Broadcaster.AddListener(GameEvent.SetupConnection, Initialize);
         }
 
-        protected virtual void OnDrawGizmosSelected()
+        private void OnValidate()
+        {
+            ValidatePaths();
+        }
+        #endregion
+
+        protected void Initialize(GameEvent gameEvent)
+        {
+        }
+
+#if UNITY_EDITOR
+        public void Bake(bool bakeFromInspector = false)
+        {
+            UnityEditor.Undo.RecordObject(this, "Bake Connection");
+            ParentRoute = GetComponentInParent<Route>();
+            ConnectsTo = FindNeighborConnection(EntityManager.Instance.Connections);
+
+            // Do some validation
+            ValidatePaths();
+
+            if (bakeFromInspector) Debug.Log("Don't forget to bake the Route!");
+            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+        }
+#endif
+
+        private void ValidatePaths()
         {
             foreach (var connectionPath in Paths)
             {
@@ -61,25 +85,6 @@ namespace Level
                     Debug.LogError($"Multiple paths to a connection detected!", gameObject);
                 }
             }
-        }
-
-        private void OnValidate()
-        {
-            foreach (var connectionPath in Paths)
-            {
-                if (Paths.Count(path => path == connectionPath) > 1)
-                {
-                    Paths.Remove(connectionPath);
-                    Debug.LogError($"Removed duplicate path on {gameObject}");
-                }
-            }
-        }
-        #endregion
-
-        protected void Initialize(GameEvent gameEvent)
-        {
-            ParentRoute = transform.GetComponentInParent<Route>();
-            ConnectsTo = FindNeighborConnection(EntityManager.Instance.Connections);
         }
 
         /// <summary>

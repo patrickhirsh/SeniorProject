@@ -10,37 +10,15 @@ using Utility;
 /// </summary>
 public class EntityManager : Singleton<EntityManager>
 {
-    [HideInInspector]
-    private Entity[] _entities;
+    [SerializeField]
+    public Entity[] Entities;
 
-    public Entity[] Entities => Application.isPlaying ? _entities : GetComponentsInChildren<Entity>();
+    [SerializeField]
+    public Route[] Routes;
 
-    private Route[] _routes;
-    public Route[] Routes
-    {
-        get
-        {
-            if (Application.isPlaying)
-            {
-                return _routes ?? (_routes = Entities.OfType<Route>().ToArray());
-            }
-            return Entities.OfType<Route>().ToArray();
-        }
-    }
-
+    [SerializeField]
+    public Connection[] Connections;
     private Dictionary<int, Connection> _connectionsById;
-    private Connection[] _connections;
-    public Connection[] Connections
-    {
-        get
-        {
-            if (Application.isPlaying)
-            {
-                return _connections ?? (_connections = Routes.SelectMany(route => route.Connections).ToArray());
-            }
-            return Routes.SelectMany(route => route.Connections).ToArray();
-        }
-    }
 
     // Indexes mapped to entities
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
@@ -78,10 +56,22 @@ public class EntityManager : Singleton<EntityManager>
         Broadcaster.Broadcast(GameEvent.SetupBakedPaths);
     }
 
+#if UNITY_EDITOR
     public void Bake()
     {
-        _entities = GetComponentsInChildren<Entity>();
+        UnityEditor.Undo.RecordObject(this, "Bake Entity Manager");
+        Entities = GetComponentsInChildren<Entity>();
+        Routes = Entities.OfType<Route>().ToArray();
+        Connections = Routes.SelectMany(route => route.Connections).ToArray();
+
+        foreach (var route in Routes)
+        {
+            route.Bake();
+        }
+
+        UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
     }
+#endif
 
     public Connection GetConnectionById(int instanceId)
     {

@@ -34,7 +34,7 @@ namespace Level
             EditorGUILayout.Space();
             if (GUILayout.Button("Bake Entity For Prefab"))
             {
-                myTarget.BakePrefab();
+                myTarget.Bake();
             }
 
         }
