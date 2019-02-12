@@ -41,7 +41,6 @@ namespace Level
         }
 
         private Dictionary<Connection, BezierCurve> _connectionPaths;
-        private bool debug = false;
 
         private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
         public Connection[] InnerConnections => ConnectionPaths.Keys.ToArray();
@@ -80,16 +79,7 @@ namespace Level
         protected void Initialize(GameEvent gameEvent)
         {
             ParentRoute = transform.GetComponentInParent<Route>();
-            if(debug)
-                Debug.Log("connection: " + this.transform.parent.parent.name);
             ConnectsTo = FindNeighborConnection(EntityManager.Instance.Connections);
-            if(ConnectsTo != null)
-            {
-                if(debug)
-                    Debug.Log(this.transform.parent.parent.name + "NEW CONNECTION" + ConnectsTo.transform.parent.parent.name);
-            }
-
-            
         }
 
         /// <summary>
@@ -97,8 +87,6 @@ namespace Level
         /// </summary>
         private Connection FindNeighborConnection(Connection[] connections)
         {
-            if(debug)
-                Debug.Log("FIND NEIGHBOURS" + connections.FirstOrDefault(CanConnect));
             return connections.FirstOrDefault(CanConnect);
         }
 
@@ -129,26 +117,7 @@ namespace Level
 
         private bool CanConnect(Connection connection)
         {
-            if (connection == this || connection.ParentRoute == ParentRoute)
-            {
-                if(debug)
-                    Debug.Log("Threw a false in first CanConnect Compairson");
-                return false;
-            }
-            if (debug)
-            {
-                if (Vector3.Distance(transform.position, connection.transform.position) < CONNECTION_DISTANCE)
-                {
-                    if ((transform.parent.parent.name == "Lane (1)" && connection.transform.parent.parent.name == "Lane (6)") || (transform.parent.parent.name == "Lane (6)" && connection.transform.parent.parent.name == "Lane (1)"))
-                    {
-
-                            Debug.Log("THIS ONE WORKED");
-                            Debug.Log(transform.parent.parent.name + "     " + connection.transform.parent.parent.name);
-                    }
-                }
-
-            }
-            //Debug.Log(Vector3.Distance(transform.position, connection.transform.position));
+            if (connection == this || connection.ParentRoute == ParentRoute) return false;
             return Vector3.Distance(transform.position, connection.transform.position) < CONNECTION_DISTANCE;
         }
     }
