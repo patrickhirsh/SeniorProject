@@ -8,7 +8,7 @@ public class IconImage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+     //nothing   
     }
 
     // Update is called once per frame

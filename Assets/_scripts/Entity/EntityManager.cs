@@ -47,7 +47,7 @@ public class EntityManager : Singleton<EntityManager>
                 Debug.LogError("EntityManager does not have any entities. Did you bake?");
 #else
                 // Recover if not Unity Editor
-                _entities = GetComponentsInChildren<Entity>();
+                //_entities = GetComponentsInChildren<Entity>();
 #endif
             }
         }
