@@ -42,7 +42,7 @@ public class PlayerVehicleManager : VehicleManager
         if (vehicle.HasPassenger)
         {
             int numDroppedOff = 0;
-            float timeLeft = 0;
+
             Building.BuildingColors PassColor = Building.BuildingColors.Red;
             //Need to add the code here to score points
             foreach (var passenger in new List<Passenger>(vehicle.Passengers))
@@ -50,8 +50,9 @@ public class PlayerVehicleManager : VehicleManager
                 if (passenger.DestRoute == vehicle.CurrentRoute)
                 {
                     PassColor = passenger.GetColor();
+
                     numDroppedOff += 1;
-                    timeLeft += passenger.GetTimeRemaining();
+                    
                     DeliverPassenger(vehicle, passenger);
                 }
             }

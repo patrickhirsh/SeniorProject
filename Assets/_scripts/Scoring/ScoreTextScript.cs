@@ -29,8 +29,13 @@ public class ScoreTextScript : MonoBehaviour {
     void Awake () {
         SM = GameObject.FindObjectOfType<ScoreManagerScript>();
         ScoreIcons = new Dictionary<Building.BuildingColors, GameObject>();
-        CreateScoreIcons();
+        
 	}
+
+    void Start()
+    {
+        CreateScoreIcons();
+    }
 
     /// <summary>
     /// Gets material object that should be assigned to icon from the color enum provided. 
@@ -80,7 +85,7 @@ public class ScoreTextScript : MonoBehaviour {
             {
                 ScoreIcons[kvp.Key].GetComponent<ScoreIcon>().Score = TempScore;
                 //This is a spot we could initiate some kind of cool effect for ticking up the score, I just don't know how to do that
-                ScoreIcons[kvp.Key].GetComponent<TextMesh>().text = TempScore.ToString();
+                ScoreIcons[kvp.Key].GetComponentInChildren<TextMesh>().text = TempScore.ToString();
 
             }
         }
@@ -127,11 +132,15 @@ public class ScoreTextScript : MonoBehaviour {
     /// <param name="adjustmentInt"></param>
     /// <returns></returns>
     private GameObject CreateIcon(Building.BuildingColors color, int adjustmentInt)
-    {
+    {   
+
         GameObject NewIcon = Instantiate(iconPrefab, this.transform.position + new Vector3(adjustmentInt, 0, 0), this.transform.rotation, this.transform);
         NewIcon.GetComponentInChildren<IconImage>().ChangeColr(GetMatFromColorName(color));
-       
-        NewIcon.GetComponent<ScoreIcon>().Score = 0;
+        NewIcon.GetComponentInChildren<TextMesh>().text = "Balls";
+        int initialScoreValue = SM.getNumRequired(color);
+
+        NewIcon.GetComponent<ScoreIcon>().Score = initialScoreValue;
+        NewIcon.GetComponentInChildren<TextMesh>().text = initialScoreValue.ToString();
         return NewIcon;
     }
 }

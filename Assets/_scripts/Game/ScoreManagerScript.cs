@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +10,6 @@ public class ScoreManagerScript : MonoBehaviour {
     private Dictionary<Building.BuildingColors, int> scoreDic;
 
     public List<PassengerTypes> passengerSpecs;
-    public int oneStarNum;
-    public int twoStarNum;
-    public int threeStarNum;
-
 
 
     public enum CarType { LX, STD, VAN };
@@ -22,7 +19,7 @@ public class ScoreManagerScript : MonoBehaviour {
         scoreDic = new Dictionary<Building.BuildingColors, int>();
         foreach(PassengerTypes p in passengerSpecs)
         {
-            scoreDic.Add(p.passColor, 0);
+            scoreDic.Add(p.passColor, p.numRequired);
         }
 
     }
@@ -42,34 +39,9 @@ public class ScoreManagerScript : MonoBehaviour {
     /// <param name="numDelivered">This is the number of passengers dropped off at the location when this function was called</param>
     public void ScorePoints(Building.BuildingColors passengerColor, int numDelivered)
     {
-        scoreDic[passengerColor] += numDelivered;
+        scoreDic[passengerColor] -= numDelivered;
     }
 
-
-    /// <summary>
-    /// Function that returns the current score as a number of stars, indicating success level. 
-    /// </summary>
-    /// <returns></returns>
-    public int GetStars()
-    {
-        if (score <= oneStarNum)
-        {
-            return 0;
-        }
-        else if (score < twoStarNum)
-        {
-            return 1;
-        }
-        else if (score < threeStarNum)
-        {
-            return 2;
-        }
-        else
-        {
-            return 3;
-        }
-
-    }
 
     public int GetCurrentScore(Building.BuildingColors color)
     {
@@ -82,10 +54,16 @@ public class ScoreManagerScript : MonoBehaviour {
         public int numSpawn;
         public int numRequired;
         public Building.BuildingColors passColor;
+
     }
 
     public List<Building.BuildingColors> GetBuildingColors()
     {
         return new List<Building.BuildingColors>(scoreDic.Keys);
+    }
+
+    internal int getNumRequired(Building.BuildingColors color)
+    {
+        return passengerSpecs.Find(x => x.passColor == color).numRequired;
     }
 }

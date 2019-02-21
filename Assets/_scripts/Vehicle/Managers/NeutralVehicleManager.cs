@@ -18,6 +18,20 @@ namespace Level
     /// </summary>
     public enum SpawnState : byte { SpawningOff, SpawningPreDefined, SpawningHybrid, SpawningProcedurally }
 
+    [System.Serializable]
+    public class SerializablePath : System.Object
+    {
+        [SerializeField]
+        public List<int> connectionIDs;
+    }
+
+    [System.Serializable]
+    public class SerializablePathData : System.Object
+    {
+        [SerializeField]
+        public List<SerializablePath> allPaths;
+    }
+
     public class NeutralVehicleManager : VehicleManager
     {
         #region Singleton
@@ -42,12 +56,14 @@ namespace Level
         private float proceduralSpawnTimer = 0f;            // timer used for procedural spawning
 
         /// <summary>
-        /// _pathableSpawnPointEntityConnections keeps a 2D dictionary that maps any SpawnPointEntity connection to a dictionary
+        /// _validNeutralPaths keeps a 2D dictionary that maps any SpawnPointEntity connection to a dictionary
         /// that contains all other reachable SpawnPointEntity connections as Keys, and their values being the path itself. This means
         /// any pathing that needs to be done between two SpawnPointEntities is baked directly into this datastructure at runtime!
         /// </summary>
-        private Dictionary<Connection, Dictionary<Connection, Queue<Connection>>> _pathableSpawnPointEntityConnections;
+        private Dictionary<Connection, Dictionary<Connection, Queue<Connection>>> _validNeutralPaths;
 
+        [SerializeField]
+        private SerializablePathData _serializedPaths;
 
         /// <summary>
         /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
@@ -136,8 +152,9 @@ namespace Level
                     foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
                         _spawnRoutes.Add(spawn);
 
-                    // determine all paths from all spawn points to all other spawn points 
-                    populateSpawnPointReachabilityPaths();
+                    // deserialize pathing data 
+                    //DeserializeNeutralPaths();
+                    bakeNeutralPaths();
                     break;
             }
         }
@@ -166,7 +183,7 @@ namespace Level
 
             // construct a copy of the cached connection Queue
             Queue<Connection> path = new Queue<Connection>();
-            foreach (Connection connection in _pathableSpawnPointEntityConnections[spawnPoint][destination])
+            foreach (Connection connection in _validNeutralPaths[spawnPoint][destination])
                 path.Enqueue(connection);
 
             // assign the pathing task to this new vehicle
@@ -190,10 +207,10 @@ namespace Level
 
                 // get a random prefab, and random start/end connections
                 int randomPrefabIndex = Random.Range(0, _neutralVehiclePrefabs.Count);
-                int startIndex = Random.Range(0, _pathableSpawnPointEntityConnections.Count);
-                Connection startConnection = _pathableSpawnPointEntityConnections.Keys.ToArray()[startIndex];
-                int destinationIndex = Random.Range(0, _pathableSpawnPointEntityConnections[startConnection].Count);
-                Connection endConnection = _pathableSpawnPointEntityConnections[startConnection].Keys.ToArray()[destinationIndex];
+                int startIndex = Random.Range(0, _validNeutralPaths.Count);
+                Connection startConnection = _validNeutralPaths.Keys.ToArray()[startIndex];
+                int destinationIndex = Random.Range(0, _validNeutralPaths[startConnection].Count);
+                Connection endConnection = _validNeutralPaths[startConnection].Keys.ToArray()[destinationIndex];
 
                 // spawn the vehicle
                 SpawnVehicle(startConnection, endConnection, _neutralVehiclePrefabs[randomPrefabIndex]);
@@ -204,13 +221,18 @@ namespace Level
 
         /// <summary>
         /// for each connection within a SpawnPointEntity, look for a path to all other SpawnPointEntity connections.
-        /// We represent this data in "_pathableSpawnPointEntityConnections", which is documented above. Any connection
+        /// We represent this data in "_validNeutralPaths", which is documented above. Any connection
         /// who can't reach any other connection is considered "unPathable" and will therefore be removed as a key within the base dictionary.
-        /// This method caches all pathing information for every single spawn point at runtime, allowing constant-time path assignment!
+        /// This method caches all pathing information for every single spawn point.
         /// </summary>
-        private void populateSpawnPointReachabilityPaths()
+        public void bakeNeutralPaths()
         {
-            _pathableSpawnPointEntityConnections = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
+            _validNeutralPaths = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
+
+            // initialize spawnPoints list
+            _spawnRoutes = new List<SpawnRoute>();
+            foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
+                _spawnRoutes.Add(spawn);
 
             // observe all spawn points as potential starting points
             foreach (SpawnRoute spawn1 in _spawnRoutes)
@@ -220,13 +242,13 @@ namespace Level
                 {
                     // only observe "outbound" connections in the source
                     if (connection1.Paths.Count == 0)
-                        _pathableSpawnPointEntityConnections.Add(connection1, new Dictionary<Connection, Queue<Connection>>());
+                        _validNeutralPaths.Add(connection1, new Dictionary<Connection, Queue<Connection>>());
                 }
             }
 
             // for each of these connections, check if a path exists between this connection and EVERY OTHER connection
             List<Connection> noPaths = new List<Connection>();
-            foreach (Connection connection1 in _pathableSpawnPointEntityConnections.Keys)
+            foreach (Connection connection1 in _validNeutralPaths.Keys)
             {
                 // observe all other spawn points
                 foreach (SpawnRoute spawn2 in _spawnRoutes)
@@ -240,19 +262,74 @@ namespace Level
                             // look for path. If the path exists, add connection2 as a reachable connection (and add its path)
                             Queue<Connection> path = new Queue<Connection>();
                             if (PathfindingManager.Instance.GetPath(connection1, connection2.GetConnectsTo, out path))
-                            { _pathableSpawnPointEntityConnections[connection1].Add(connection2.GetConnectsTo, path); }
+                            { _validNeutralPaths[connection1].Add(connection2.GetConnectsTo, path); }
                         }
                     }
                 }
 
                 // if the only reachable connection from this spawnpoint is itself, mark for removal
-                if (_pathableSpawnPointEntityConnections[connection1].Count <= 1)
+                if (_validNeutralPaths[connection1].Count <= 1)
                     noPaths.Add(connection1);
             }
 
             // remove all unreachable connections
             foreach (Connection connection in noPaths)
-                _pathableSpawnPointEntityConnections.Remove(connection);
+                _validNeutralPaths.Remove(connection);
+
+            // convert NeutralPaths to a serializable format
+            //SerializeNeutralPaths();
+            //UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+        }
+
+
+        /// <summary>
+        /// Converts data from _validNeutralPaths into a serializable format.
+        /// Should be called from the Inspector
+        /// </summary>
+        private void SerializeNeutralPaths()
+        {
+            var pathSets = _validNeutralPaths.Values;
+            _serializedPaths = new SerializablePathData();
+            _serializedPaths.allPaths = new List<SerializablePath>();
+            foreach (Dictionary <Connection, Queue<Connection>> pathSet in pathSets)
+            {
+                foreach (Queue<Connection> path in pathSet.Values)
+                {
+                    SerializablePath serializablePath = new SerializablePath();
+                    serializablePath.connectionIDs = new List<int>();
+                    while(path.Count > 0) { serializablePath.connectionIDs.Add(path.Dequeue().gameObject.GetInstanceID()); }
+                    _serializedPaths.allPaths.Add(serializablePath);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Deserializes _serializedPaths and uses the data to populate _validNeutralPaths
+        /// Should be called at runtime
+        /// </summary>
+        private void DeserializeNeutralPaths()
+        {
+            _validNeutralPaths = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
+            foreach (SerializablePath serializedPath in _serializedPaths.allPaths)
+            {
+                Connection start = EntityManager.Instance.GetConnectionById(serializedPath.connectionIDs[0]);
+                Connection end = EntityManager.Instance.GetConnectionById(serializedPath.connectionIDs[serializedPath.connectionIDs.Count - 1]);
+
+                // if we haven't yet added any paths from this connection (key), initialize its value
+                if (!_validNeutralPaths.ContainsKey(start))
+                {
+                    _validNeutralPaths[start] = new Dictionary<Connection, Queue<Connection>>();
+                }                   
+
+                // populate the path queue at the proper hash in _validNeutralPaths
+                Queue<Connection> path = new Queue<Connection>();
+                _validNeutralPaths[start][end] = new Queue<Connection>();
+                foreach (int objectID in serializedPath.connectionIDs)
+                {
+                    _validNeutralPaths[start][end].Enqueue(EntityManager.Instance.GetConnectionById(objectID));
+                }
+            }
         }
     }
 }
