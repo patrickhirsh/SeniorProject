@@ -16,15 +16,6 @@ namespace Level
             EntityManager.Instance.AddEntity(this);
         }
 
-        protected virtual void Update()
-        {
-            if (transform.hasChanged)
-            {
-//                EntityManager.Instance.UpdateEntity(this);
-                transform.hasChanged = false;
-            }
-        }
-
         protected virtual void OnDestroy()
         {
             // Level Manager
