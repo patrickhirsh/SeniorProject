@@ -10,6 +10,8 @@ namespace UserInterface
         public Slider ScaleSlider;
         public Text HelpText;
 
+        private Sequence _sequence;
+
         #region Unity Methods
 
         private void Awake()
@@ -26,27 +28,45 @@ namespace UserInterface
 
         private void GameStateChanged(GameEvent @event)
         {
+
             if (GameManager.CurrentGameState == GameState.LevelPlacement)
             {
-                ContinueButton.gameObject.SetActive(false);
-                ContinueButton.GetOrAddComponent<CanvasGroup>().alpha = 0;
-
-                ScaleSlider.gameObject.SetActive(false);
-                ScaleSlider.GetOrAddComponent<CanvasGroup>().alpha = 0;
-
-                HelpText.gameObject.SetActive(true);
-                HelpText.GetOrAddComponent<CanvasGroup>().DOFade(1f, 1f);
-                HelpText.DOText("Move your camera around and find a spot to place the level", .5f);
+                KillSequence();
+                _sequence = DOTween.Sequence();
+                _sequence.OnStart(() =>
+                {
+                    ScaleSlider.gameObject.SetActive(false);
+                    HelpText.gameObject.SetActive(true);
+                    ContinueButton.gameObject.SetActive(false);
+                    ContinueButton.GetOrAddComponent<CanvasGroup>().alpha = 0;
+                    ScaleSlider.GetOrAddComponent<CanvasGroup>().alpha = 0;
+                });
+                _sequence.Append(HelpText.GetOrAddComponent<CanvasGroup>().DOFade(1f, 1f));
+                _sequence.Join(HelpText.DOText("Move your camera around and find a spot to place the level", .5f));
+                _sequence.Play();
             }
             else if (GameManager.CurrentGameState == GameState.LevelPlaced || GameManager.CurrentGameState == GameState.LevelRePlacement)
             {
+                KillSequence();
+                _sequence = DOTween.Sequence();
+                _sequence.OnStart(() =>
+                {
+                    ContinueButton.gameObject.SetActive(true);
+                    ScaleSlider.gameObject.SetActive(true);
+                });
+
                 HelpText.DOText("Use the slider below to scale the level. Press continue when you are ready to begin!", .5f);
+                _sequence.Append(ContinueButton.GetOrAddComponent<CanvasGroup>().DOFade(1f, 1f));
+                _sequence.Join(ScaleSlider.GetOrAddComponent<CanvasGroup>().DOFade(1f, 1f));
+                _sequence.Play();
+            }
+        }
 
-                ContinueButton.gameObject.SetActive(true);
-                ContinueButton.GetOrAddComponent<CanvasGroup>().DOFade(1f, 1f);
-
-                ScaleSlider.gameObject.SetActive(true);
-                ScaleSlider.GetOrAddComponent<CanvasGroup>().DOFade(1f, 1f);
+        private void KillSequence()
+        {
+            if (_sequence != null && !_sequence.IsComplete())
+            {
+                _sequence.Kill();
             }
         }
 

@@ -87,7 +87,7 @@ namespace Level
                 float time = _timeRemaining / PassengerManager.PassengerTimeout;
                 Color newRingColor = RingColorGradient.Evaluate(1 - time);
                 Ring.GetComponent<Renderer>().material.SetColor("_Color", newRingColor);
-                Debug.Log("Time is" + time);
+//                Debug.Log("Time is" + time);
                 if(_timeRemaining > 0)
                     Ring.GetComponent<Renderer>().material.SetFloat("_Speed", 6-(time*5));
             }

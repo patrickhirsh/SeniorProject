@@ -12,6 +12,8 @@ namespace UserInterface
         public InfoCanvas InfoCanvas;
 
         private Component[] _all;
+        private Sequence _disableSequence;
+        private Sequence _enableSequence;
 
         private void Awake()
         {
@@ -21,6 +23,8 @@ namespace UserInterface
 
         private void GameStateChanged(GameEvent state)
         {
+            KillDisableSequence();
+            KillEnableSequence();
             switch (GameManager.CurrentGameState)
             {
                 case GameState.LevelPlaced:
@@ -41,28 +45,55 @@ namespace UserInterface
             }
         }
 
+        private void KillDisableSequence()
+        {
+            if (_disableSequence != null && !_disableSequence.IsComplete())
+            {
+                _disableSequence.Kill(true);
+            }
+        }
+
+        private void KillEnableSequence()
+        {
+            if (_enableSequence != null && !_enableSequence.IsComplete())
+            {
+                _enableSequence.Kill();
+            }
+        }
+
         private void DisableCanvases(IEnumerable<Component> canvases)
         {
+            _disableSequence = DOTween.Sequence();
             foreach (var canvas in canvases)
             {
                 var group = canvas.GetOrAddComponent<CanvasGroup>();
-                group.interactable = false;
-                group.blocksRaycasts = false;
-                var tween = group.DOFade(0f, .76f);
-                if (Time.timeSinceLevelLoad < 2f) tween.Complete(true);
+
+                _disableSequence.OnStart(() =>
+                {
+                    group.interactable = false;
+                    group.blocksRaycasts = false;
+                });
+                _disableSequence.Append(group.DOFade(0f, .76f));
+                _disableSequence.Play();
             }
+            if (Time.timeSinceLevelLoad < 2f) _disableSequence.Complete(true);
         }
 
         private void EnableCanvases(IEnumerable<Component> canvases)
         {
+            _enableSequence = DOTween.Sequence();
             foreach (var canvas in canvases)
             {
                 var group = canvas.GetOrAddComponent<CanvasGroup>();
-                group.interactable = true;
-                group.blocksRaycasts = true;
-                var tween = group.DOFade(1f, .76f).SetDelay(0.76f);
-                if (Time.timeSinceLevelLoad < 2f) tween.Complete(true);
+                _enableSequence.OnComplete(() =>
+                {
+                    group.interactable = true;
+                    group.blocksRaycasts = true;
+                });
+                _enableSequence.Append(group.DOFade(1f, .76f).SetDelay(0.76f));
+                _enableSequence.Play();
             }
+            if (Time.timeSinceLevelLoad < 2f) _enableSequence.Complete(true);
         }
     }
 }
