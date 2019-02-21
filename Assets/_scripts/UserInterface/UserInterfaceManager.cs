@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UserInterface
 {
-    public class UserInterfaceManager : MonoBehaviour
+    public class UserInterfaceManager : Singleton<UserInterfaceManager>
     {
         public LevelPlacementCanvas LevelPlacementCanvas;
         public ScoreCanvas ScoreCanvas;
@@ -19,6 +19,11 @@ namespace UserInterface
         {
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
             _all = new Component[] { LevelPlacementCanvas, ScoreCanvas, InfoCanvas };
+        }
+
+        public void HideUI()
+        {
+            DisableCanvases(_all);
         }
 
         private void GameStateChanged(GameEvent state)

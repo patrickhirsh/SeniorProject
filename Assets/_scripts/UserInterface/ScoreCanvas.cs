@@ -8,7 +8,7 @@ namespace UserInterface
 {
     public class ScoreCanvas : MonoBehaviour
     {
-        public Text Score;
+        public Button HideButton;
         public Button RestartButton;
 
         private int _score;
@@ -18,9 +18,16 @@ namespace UserInterface
         private void Start()
         {
             RestartButton.onClick.AddListener(HandleRestartButton);
+            HideButton.onClick.AddListener(HandleHideButton);
+            
         }
 
         #endregion
+
+        private void HandleHideButton()
+        {
+            UserInterfaceManager.Instance.HideUI();
+        }
 
         private void HandleRestartButton()
         {
