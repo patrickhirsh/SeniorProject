@@ -58,7 +58,7 @@ public class InputManager : MonoBehaviour
         RaycastHit hitInfo;
         var cameraTransform = _camera.transform;
         var origin = cameraTransform.position;
-
+        Debug.DrawRay(transform.position, cameraTransform.forward, Color.green);
         var hit = Physics.SphereCast(origin, raycastThickness, cameraTransform.forward, out hitInfo);
 
         PlayerVehicleManager.HandleHover(hit, hitInfo);
@@ -85,6 +85,7 @@ public class InputManager : MonoBehaviour
                 {
                     if (EventSystem.current.IsPointerOverGameObject()) return;
                     List<ARRaycastHit> hits = new List<ARRaycastHit>();
+                    
                     if (SessionOrigin.Raycast(Input.mousePosition, hits, TrackableType.PlaneWithinPolygon))
                     {
                         Pose hitPose = hits[0].pose;
