@@ -26,38 +26,67 @@ public class Osborne_AudioManager : MonoBehaviour {
 	void Update () {
 		
 	}
-
+    //Turn Layer 1 ONLY on
     public void Layer1 (){
         layer1On.TransitionTo(fadeInTime);
         layer2Off.TransitionTo(fadeOutTime);
         layer3Off.TransitionTo(fadeOutTime);
     }
+    //Turn Layer 2 ONLY on
     public void Layer2()
+    {
+        layer1Off.TransitionTo(fadeInTime);
+        layer2On.TransitionTo(fadeInTime);
+        layer3Off.TransitionTo(fadeInTime);
+    }
+    //Turn Layer 3 ONLY on
+    public void Layer3()
+    {
+        layer1Off.TransitionTo(fadeInTime);
+        layer2Off.TransitionTo(fadeInTime);
+        layer3On.TransitionTo(fadeInTime);
+    }
+    //Turn Layers 1 & 2 on
+    public void Layer12()
     {
         layer1On.TransitionTo(fadeInTime);
         layer2On.TransitionTo(fadeInTime);
         layer3Off.TransitionTo(fadeOutTime);
     }
-    public void Layer3()
+    //Turn Layers 1 & 3 On
+    public void Layer13()
+    {
+        layer1On.TransitionTo(fadeInTime);
+        layer2Off.TransitionTo(fadeInTime);
+        layer3On.TransitionTo(fadeInTime);
+    }
+    //Turn Layers 2 & 3 On
+    public void Layer23()
+    {
+        layer1Off.TransitionTo(fadeInTime);
+        layer2On.TransitionTo(fadeInTime);
+        layer3On.TransitionTo(fadeInTime);
+    }
+    //Turn Layers 1, 2, and 3 on
+    public void Layer123()
     {
         layer1On.TransitionTo(fadeInTime);
         layer2On.TransitionTo(fadeInTime);
         layer3On.TransitionTo(fadeInTime);
     }
-
+    //Turn all layers off
     public void StopTheMusic()
     {
         layer1Off.TransitionTo(finalStopFadeTime);
         layer2Off.TransitionTo(finalStopFadeTime);
         layer3Off.TransitionTo(finalStopFadeTime);
     }
-
+    //Initial function, turning layer 1 on and turning layers 2 and 3 to off with 0 second delay
     void StartFirstLayer()
     {
         layer1On.TransitionTo(fadeInTime);
         layer2Off.TransitionTo(0);
         layer3Off.TransitionTo(0);
-
     }
 
 
