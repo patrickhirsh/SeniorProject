@@ -12,6 +12,8 @@ namespace Level
         public Terminal StartTerminal;
 
         public Route StartRoute => StartTerminal.ParentRoute;
+
+
         public Route DestRoute;
         public Pin PassengerPickupReticle;
         public Vector3 AdjustmentVector;
@@ -19,6 +21,7 @@ namespace Level
         public bool EnemyVehicleEnroute;
         public Gradient RingColorGradient;
         public GameObject RingPrefab;
+        public GameObject LevelPrefab { get; internal set; }
 
         private Building.BuildingColors _color;
         private float _timeRemaining;

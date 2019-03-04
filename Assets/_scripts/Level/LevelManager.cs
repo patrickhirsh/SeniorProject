@@ -10,6 +10,8 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class LevelManager : MonoBehaviour
 {
+    public GameObject LevelObject;
+
     private Dictionary<Building.BuildingColors, List<Route>> BuildingDict;
 
     #region Singleton
