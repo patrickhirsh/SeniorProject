@@ -49,6 +49,8 @@ public class GameManager : Singleton<GameManager>
         Broadcaster.Broadcast(GameEvent.GameStateChanged);
     }
 
+
+
     #endregion
 
 
@@ -76,5 +78,7 @@ public class GameManager : Singleton<GameManager>
         UI.GetComponent<UserInterface.ScoreCanvas>().gameObject.SetActive(false);
         UI.GetComponent<GameOverScript>().gameObject.SetActive(true); 
     }
+
+
 
 }

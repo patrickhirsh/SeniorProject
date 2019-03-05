@@ -13,6 +13,7 @@ public class Pin : MonoBehaviour
     public Transform Sprite;
     public LineRenderer LineRenderer;
     public Text SelectionNumber;
+    public Image RadialTimerImg;
 
     private bool _selected;
     private bool _hover;

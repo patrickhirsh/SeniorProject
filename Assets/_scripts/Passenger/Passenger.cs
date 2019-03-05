@@ -4,6 +4,7 @@ using System.Linq;
 using DG.Tweening;
 using Game;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Level
 {
@@ -12,6 +13,8 @@ namespace Level
         public Terminal StartTerminal;
 
         public Route StartRoute => StartTerminal.ParentRoute;
+
+
         public Route DestRoute;
         public Pin PassengerPickupReticle;
         public Vector3 AdjustmentVector;
@@ -19,11 +22,13 @@ namespace Level
         public bool EnemyVehicleEnroute;
         public Gradient RingColorGradient;
         public GameObject RingPrefab;
+        public GameObject LevelPrefab { get; internal set; }
 
         private Building.BuildingColors _color;
         private float _timeRemaining;
         private Pin _pickupPin;
         private GameObject Ring;
+        private Image _RadialTimer;
 
         #region Unity Methods
         private void Awake()
@@ -77,7 +82,17 @@ namespace Level
 
 
             //TODO: visualize passenger time remaining here...
-            if(Ring == null && !PickedUp)
+
+            if (!PickedUp && _RadialTimer != null)
+            {
+                _RadialTimer.fillAmount = _timeRemaining / PassengerManager.PassengerTimeout;
+            }
+            else if (_RadialTimer != null)
+            {
+                _RadialTimer.fillAmount = 0;
+            }
+
+            if (Ring == null && !PickedUp)
             {
                 Ring = SpawnRing(Color.red, 3);
             }
@@ -123,6 +138,8 @@ namespace Level
             _pickupPin.transform.position += AdjustmentVector;
             _pickupPin.Passenger = this;
             _pickupPin.SetColor(ColorKey.GetColor(_color));
+
+            _RadialTimer = _pickupPin.RadialTimerImg;
         }
         #endregion
     }

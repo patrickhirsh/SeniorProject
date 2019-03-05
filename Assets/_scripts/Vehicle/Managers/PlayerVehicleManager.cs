@@ -17,6 +17,8 @@ public class PlayerVehicleManager : VehicleManager
 
     private static ScoreManagerScript SM;
 
+    public static bool MenuLevel;
+
     private static PlayerVehicleManager Create()
     {
         GameObject singleton = FindObjectOfType<PlayerVehicleManager>()?.gameObject;
@@ -56,8 +58,10 @@ public class PlayerVehicleManager : VehicleManager
                     DeliverPassenger(vehicle, passenger);
                 }
             }
-            //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
+
+                //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
             SM.ScorePoints(PassColor, numDroppedOff);
+            
 
         }
 
@@ -101,8 +105,17 @@ public class PlayerVehicleManager : VehicleManager
         vehicle.RemovePassenger(passenger);
         
         Destroy(passenger.gameObject);
+        if (MenuLevel)
+            SwitchLevelPrefab(passenger.DestRoute.gameObject.GetComponent<Menubuilding>().LevelPrefab);
+
         Debug.Log("PASSENGER DELIVERED");
         //GameManager.Instance.AddScore(10);
+    }
+
+    private static void SwitchLevelPrefab(GameObject levelPrefab)
+    {
+        //TODO: Add in Lazy Loading to load desired prefab into position.
+        throw new NotImplementedException();
     }
 
     private void HandlePassiveAi()
