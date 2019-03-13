@@ -9,7 +9,7 @@ namespace Level
     {
         public Vehicle Vehicle;
 
-        public float GodModeWait = 5f;          // how long a vehicle waits before entering godmode
+        public float GodModeWait = 2f;          // how long a vehicle waits before entering godmode
         public float GodModeDuration = 2f;      // how long godmode lasts
         private bool IsVehicleCollision => _collidingVehicles.Any();
         private bool IsAtIntersection => _collidingIntersections.Any();

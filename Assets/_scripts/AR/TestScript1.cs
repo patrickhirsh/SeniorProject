@@ -22,7 +22,6 @@ public class TestScript1 : MonoBehaviour {
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            RaycastHit hitInfo;
 
             if (!placed)
             {

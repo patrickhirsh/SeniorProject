@@ -26,7 +26,7 @@ public class EntityManager : Singleton<EntityManager>
 
     //    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
 
-    public GameObject LevelPrefab;
+    //public GameObject LevelPrefab;
 
     #region Unity Methods
 
