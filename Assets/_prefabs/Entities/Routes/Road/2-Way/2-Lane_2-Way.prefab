@@ -620,7 +620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths: []
   Terminals: []
 --- !u!1 &1101851098307206
@@ -2066,7 +2066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths:
   - Connection: {fileID: 114845394369987700}
     Path: {fileID: 114113627706720164}
@@ -2074,7 +2074,8 @@ MonoBehaviour:
     Path: {fileID: 114273880673332238}
   - Connection: {fileID: 114375002756648736}
     Path: {fileID: 114289390959247948}
-  Terminals: []
+  Terminals:
+  - {fileID: 1637955386385081002}
 --- !u!1 &1584897781396052
 GameObject:
   m_ObjectHideFlags: 0
@@ -2270,7 +2271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths:
   - Connection: {fileID: 114263996141179564}
     Path: {fileID: 114717318343784196}
@@ -2378,7 +2379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths:
   - Connection: {fileID: 114845394369987700}
     Path: {fileID: 114135540618606750}
@@ -2830,7 +2831,7 @@ Transform:
   - {fileID: 4309837895217466}
   - {fileID: 4112403355216276}
   - {fileID: 4405947464413560}
-  - {fileID: 4315038900908692}
+  - {fileID: 8954907572212884115}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2878,7 +2879,7 @@ MonoBehaviour:
   - {fileID: 114297915854773300}
   - {fileID: 114155584476393134}
   - {fileID: 114418411252237804}
-  CenterTransform: {fileID: 0}
+  CenterTransform: {fileID: 4985036164476126}
   Connections:
   - {fileID: 114646918326134228}
   - {fileID: 114263996141179564}
@@ -3388,7 +3389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths:
   - Connection: {fileID: 114263996141179564}
     Path: {fileID: 114716715916060950}
@@ -3396,7 +3397,8 @@ MonoBehaviour:
     Path: {fileID: 114487648379842088}
   - Connection: {fileID: 114635049943636088}
     Path: {fileID: 114451703532048982}
-  Terminals: []
+  Terminals:
+  - {fileID: 6691706738661020367}
 --- !u!1 &1917040755874644
 GameObject:
   m_ObjectHideFlags: 0
@@ -3475,36 +3477,6 @@ MonoBehaviour:
   handleStyle: 0
   _handle1: {x: 0.2, y: 0, z: -0.2}
   _handle2: {x: -0.2, y: -0, z: 0.2}
---- !u!1 &1940493839332348
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4315038900908692}
-  m_Layer: 0
-  m_Name: PickupContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4315038900908692
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940493839332348}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4172409532465272}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1947095018734562
 GameObject:
   m_ObjectHideFlags: 0
@@ -3598,7 +3570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths:
   - Connection: {fileID: 114263996141179564}
     Path: {fileID: 114057120452872516}
@@ -3648,7 +3620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths:
   - Connection: {fileID: 114845394369987700}
     Path: {fileID: 114006561266416050}
@@ -3700,6 +3672,130 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectsTo: {fileID: 0}
-  ParentRoute: {fileID: 0}
+  ParentRoute: {fileID: 114531646185148482}
   Paths: []
   Terminals: []
+--- !u!1 &2408202009341784825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3458412201589305348}
+  - component: {fileID: 1637955386385081002}
+  m_Layer: 0
+  m_Name: PickupLocation 0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3458412201589305348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2408202009341784825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.25, y: 0, z: -1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8954907572212884115}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1637955386385081002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2408202009341784825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 1d7fca02f4bf5f34ba6c691adf79a83a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Connection: {fileID: 114103206690105564}
+  Passenger: {fileID: 0}
+--- !u!1 &4121800238452821768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5156840833454986176}
+  - component: {fileID: 6691706738661020367}
+  m_Layer: 0
+  m_Name: PickupLocation 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5156840833454986176
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4121800238452821768}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.75, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8954907572212884115}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6691706738661020367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4121800238452821768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 1d7fca02f4bf5f34ba6c691adf79a83a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Connection: {fileID: 114646918326134228}
+  Passenger: {fileID: 0}
+--- !u!1 &4404327895129752297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8954907572212884115}
+  m_Layer: 0
+  m_Name: PickupContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8954907572212884115
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4404327895129752297}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000004768371}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 3458412201589305348}
+  - {fileID: 5156840833454986176}
+  m_Father: {fileID: 4172409532465272}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
