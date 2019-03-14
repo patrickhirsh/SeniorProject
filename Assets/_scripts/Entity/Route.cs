@@ -133,7 +133,6 @@ namespace Level
             BakePickupLocations(Connections);
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
-#endif
 
         private void BakePathPoints(Connection[] connections, BezierCurve[] vehiclePaths)
         {
@@ -147,7 +146,7 @@ namespace Level
                 }
             }
         }
-
+#endif
         private void BakePickupLocations(Connection[] connections)
         {
             foreach (var connection in connections)
