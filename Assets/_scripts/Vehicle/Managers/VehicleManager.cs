@@ -27,7 +27,6 @@ namespace Level
                 _vehicles.Add(vehicle);
             }
         }
-
         #endregion
 
         /// <summary>
@@ -43,6 +42,11 @@ namespace Level
         {
             _vehicles = new List<Vehicle>();
             FindVehicles();
+        }
+
+        private void MoveVehicle(Vehicle vehicle)
+        {
+
         }
     }
 }

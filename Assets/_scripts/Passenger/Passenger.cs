@@ -77,7 +77,7 @@ namespace Level
                 EnemyVehicleManager.Instance.PickupPassenger(this);
                 Debug.Log("Enemy Vehicle Spawned!");
                 EnemyVehicleEnroute = true;
-                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
+//                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
             }
 
 
@@ -94,7 +94,7 @@ namespace Level
 
             if (Ring == null && !PickedUp)
             {
-                Ring = SpawnRing(Color.red, 3);
+//                Ring = SpawnRing(Color.red, 3);
             }
                 
             else if(!PickedUp)

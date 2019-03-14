@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 namespace Level
@@ -22,6 +25,7 @@ namespace Level
         private Coroutine _current;
         private List<Collider> _collidingVehicles = new List<Collider>();
         private List<Collider> _collidingIntersections = new List<Collider>();
+        private Tween _speedTween;
 
         private void Update()
         {
@@ -126,14 +130,19 @@ namespace Level
 
         private void SpeedUp()
         {
-            Vehicle.Speed = Vehicle.BaseSpeed;
+            _speedTween?.Kill();
+            _speedTween = DOTween.To(() => Vehicle.Speed, value => Vehicle.Speed = value, Vehicle.BaseSpeed, .3f).SetEase(Ease.InSine);
+//            Vehicle.Speed = Vehicle.BaseSpeed;
             _isSlowed = false;
         }
 
         private void SlowDown()
         {
-            Vehicle.Speed = 0;
+            _speedTween?.Kill();
+            _speedTween = DOTween.To(() => Vehicle.Speed, value => Vehicle.Speed = value, 0, .3f).SetEase(Ease.OutSine);
+//            Vehicle.Speed = 0;
             _isSlowed = true;
         }
+
     }
 }

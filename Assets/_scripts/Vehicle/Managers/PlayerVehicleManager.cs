@@ -54,15 +54,13 @@ public class PlayerVehicleManager : VehicleManager
                     PassColor = passenger.GetColor();
 
                     numDroppedOff += 1;
-                    
+
                     DeliverPassenger(vehicle, passenger);
                 }
             }
 
-                //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
+            //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
             SM.ScorePoints(PassColor, numDroppedOff);
-            
-
         }
 
 
@@ -103,7 +101,7 @@ public class PlayerVehicleManager : VehicleManager
     private static void DeliverPassenger(Vehicle vehicle, Passenger passenger)
     {
         vehicle.RemovePassenger(passenger);
-        
+
         Destroy(passenger.gameObject);
         if (MenuLevel)
             SwitchLevelPrefab(passenger.DestRoute.gameObject.GetComponent<Menubuilding>().LevelPrefab);
@@ -166,7 +164,7 @@ public class PlayerVehicleManager : VehicleManager
 
         if (vehicle && HasOwnership(vehicle) && SelectedPins.Any())
         {
-            foreach(Vehicle x in PlayerVehicles)
+            foreach (Vehicle x in PlayerVehicles)
             {
                 x.DeactivateRing();
             }

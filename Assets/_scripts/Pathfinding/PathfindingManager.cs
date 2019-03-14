@@ -568,6 +568,7 @@ namespace Level
         /// <returns>A BezierCurve component</returns>
         public BezierCurve GenerateCurves(Queue<Connection> connections)
         {
+            connections = new Queue<Connection>(connections);
             var obj = new GameObject("BezierCurve", typeof(BezierCurve));
             var objCurve = obj.GetComponent<BezierCurve>();
 

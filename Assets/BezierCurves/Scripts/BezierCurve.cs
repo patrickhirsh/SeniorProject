@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Level;
 
 #endregion
 
@@ -252,6 +253,30 @@ public class BezierCurve : MonoBehaviour {
 		
 		return GetPoint(p1, p2, t / curvePercent);
 	}
+
+    public BezierPoint GetNearestPoint(float t)
+    {
+        if (t <= 0) return points[0];
+        if (t >= 1) return points[points.Length - 1];
+
+        float totalPercent = 0;
+        float curvePercent = 0;
+
+        BezierPoint p2 = null;
+
+        for (int i = 0; i < points.Length - 1; i++)
+        {
+            curvePercent = ApproximateLength(points[i], points[i + 1], 10) / length;
+            if (totalPercent + curvePercent > t)
+            {
+                p2 = points[i + 1];
+                break;
+            }
+            totalPercent += curvePercent;
+        }
+
+        return p2;
+    }
 	
 	/// <summary>
 	/// 	- Get the index of the given point in this curve
@@ -509,10 +534,10 @@ public class BezierCurve : MonoBehaviour {
 		
 		return total;
 	}
-	
-	#endregion
-	
-	/* needs testing
+
+    #endregion
+
+    /* needs testing
 	public Vector3 GetPointAtDistance(float distance)
 	{
 		if(close)
@@ -556,6 +581,9 @@ public class BezierCurve : MonoBehaviour {
 		return GetPoint(distance / curveLength, firstPoint, secondPoint);
 	}
 	*/
+
+    #region RideShareAdditions
+
     public void Clear(bool destroy = false)
     {
         if (destroy && points.Any())
@@ -575,4 +603,7 @@ public class BezierCurve : MonoBehaviour {
             AddPoint(point);
         }
     }
+
+    #endregion
+
 }

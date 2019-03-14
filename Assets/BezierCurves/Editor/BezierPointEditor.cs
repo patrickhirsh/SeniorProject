@@ -30,7 +30,7 @@ public class BezierPointEditor : Editor
         serializedObject.Update();
 
         BezierPoint.HandleStyle newHandleType = (BezierPoint.HandleStyle)EditorGUILayout.EnumPopup("Handle Type", (BezierPoint.HandleStyle)handleTypeProp.intValue);
-
+         EditorGUILayout.ObjectField(serializedObject.FindProperty("Connection"));
         if (newHandleType != (BezierPoint.HandleStyle)handleTypeProp.intValue)
         {
             handleTypeProp.intValue = (int)newHandleType;

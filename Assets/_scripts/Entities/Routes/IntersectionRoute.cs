@@ -16,8 +16,8 @@ namespace Level
         [Serializable]
         public class ColliderGroup
         {
+            public float GreenDuration = 5f;
             public List<Collider> Colliders;
-
             public void SetActive(bool active)
             {
                 foreach (var c in Colliders)
@@ -61,7 +61,7 @@ namespace Level
 
                         activeGroup.SetActive(false);
 
-                        yield return new WaitForSeconds(Random.Range(4f, 10f));
+                        yield return new WaitForSeconds(activeGroup.GreenDuration);
                     }
                 }
             }

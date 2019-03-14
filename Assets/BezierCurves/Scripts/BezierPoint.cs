@@ -3,6 +3,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using Level;
 
 #endregion
 
@@ -160,6 +161,25 @@ public class BezierPoint : MonoBehaviour{
             transform.hasChanged = false;
         }
 	}
-	
-	#endregion
+
+    #endregion
+
+    #region RideShareAdditions
+
+    public Connection Connection;
+    public Route Route => Connection.ParentRoute;
+
+#if UNITY_EDITOR
+    public void BeginBake()
+    {
+        UnityEditor.Undo.RecordObject(this, "Bake Connection");
+    }
+
+    public void EndBake()
+    {
+        UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+    }
+#endif
+
+    #endregion
 }

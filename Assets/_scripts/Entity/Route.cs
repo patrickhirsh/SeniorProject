@@ -10,7 +10,7 @@ namespace Level
 
         [ReadOnly] public Connection[] Connections;
         [ReadOnly] public BezierCurve[] VehiclePaths;
-        public Terminal[] Terminals => Connections.SelectMany(connection => connection.Terminals).ToArray();
+        [ReadOnly] public Terminal[] Terminals;
 
         // An array of all entities this entity can reach
         private Route[] _connectingRoutes;
@@ -121,6 +121,7 @@ namespace Level
             Connections = GetComponentsInChildren<Connection>();
             Nodes = GetComponentsInChildren<Node>().ToList();
             VehiclePaths = GetComponentsInChildren<BezierCurve>();
+            Terminals = GetComponentsInChildren<Terminal>();
 
             foreach (var connection in Connections)
             {
@@ -128,10 +129,24 @@ namespace Level
             }
 
             BakePaths(Connections, VehiclePaths);
+            BakePathPoints(Connections, VehiclePaths);
             BakePickupLocations(Connections);
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
 #endif
+
+        private void BakePathPoints(Connection[] connections, BezierCurve[] vehiclePaths)
+        {
+            foreach (var curve in vehiclePaths)
+            {
+                foreach (var point in curve.GetAnchorPoints())
+                {
+                    point.BeginBake();
+                    point.Connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, point.transform.position)).FirstOrDefault();
+                    point.EndBake();
+                }
+            }
+        }
 
         private void BakePickupLocations(Connection[] connections)
         {

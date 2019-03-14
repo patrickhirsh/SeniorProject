@@ -62,10 +62,6 @@ namespace Level
         public Route CurrentRoute;              // the route this vehicle is currently on
         public Connection CurrentConnection;    // the connection this vehicle is currently on
 
-        //TODO: This is not the value look ahead is being assigned. I had to set it in Awake. Why? 
-        // ^^^^^^^^^^^^^^^^^ It's in the Unity Inspector ... - Jaden
-        public float LookAhead = 1f;           // used to create more natural turn animations
-
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
         public float RecoverySpeed = 5f;        // the speed at which this vehicle will travel to recover when "lost"
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
@@ -74,23 +70,27 @@ namespace Level
         public Gradient DropoffGradient;
         public GameObject RingPrefab;
 
-        private Coroutine _animationTween;      // this coroutine is executed during "travelling"
         private VehicleTask _currentTask;        // the highest-precedence task currently assigned to this vehicle. Determines the vehicle's behavior.
-        private float _position;
+        public bool HasTask => _currentTask != null;
+        private bool _taskReady = false;
+
+        public BezierCurve VehiclePath;
+        public float PathCompletionPercent;
+        public Vector3? NextPosition;
 
         public List<Passenger> Passengers;
         public bool HasPassenger => Passengers != null && Passengers.Any();
+
         public VehicleManager Manager;
         private Vector3 _startingPos;
         private Quaternion _startingRot;
         private GameObject _ring;
 
+        #region Unity Methods
 
         protected void Awake()
         {
-            LookAhead = .003f;
             _currentTask = null;
-            _animationTween = null;
 
             Broadcaster.AddListener(GameEvent.Reset, Reset);
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
@@ -99,6 +99,31 @@ namespace Level
             _ring.transform.parent = transform;
             _ring.SetActive(false);
         }
+
+        protected void Start()
+        {
+            if (Manager.GetType() == typeof(PlayerVehicleManager))
+            {
+                Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
+            }
+        }
+
+        private void Update()
+        {
+            if (!_taskReady) return;
+
+            if (HasTask && PathCompletionPercent < 1)
+            {
+                Move();
+            }
+            else if (HasTask)
+            {
+                CompleteCurrentTask();
+            }
+        }
+
+
+        #endregion
 
         private GameObject SpawnRing(Color color, float speed)
         {
@@ -118,13 +143,7 @@ namespace Level
             }
         }
 
-        protected void Start()
-        {
-            if (Manager.GetType() == typeof(PlayerVehicleManager))
-            {
-                Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
-            }
-        }
+
 
         private void Reset(GameEvent @event)
         {
@@ -164,7 +183,7 @@ namespace Level
             */
 
             // check if the given task takes higher (or equal) precedence to the current task
-            if ((_currentTask == null) || ((int)task.Type <= (int)_currentTask.Type))
+            if (_currentTask == null || (int)task.Type <= (int)_currentTask.Type)
             {
                 // notify the task's source that the task was terminated prematurely
                 if (_currentTask != null)
@@ -173,12 +192,21 @@ namespace Level
                 // give control to the new task
                 StopTraveling();
                 _currentTask = task;
-                StartTraveling(task.Path);
+                _taskReady = false;
+
+                // Set up the new task
+                Debug.Assert(task.Path != null, "Path list is null", gameObject);
+                Debug.Assert(task.Path.Count > 0, "Path has no connections", gameObject);
+                PathCompletionPercent = 0;
+                var firstConnection = task.Path.FirstOrDefault();
+                VehiclePath = PathfindingManager.Instance.GenerateCurves(task.Path);
+                StartCoroutine(TravelTo(firstConnection));
+
                 return true;
             }
 
             // the given task has lower precedence than the current task
-            else { return false; }
+            return false;
         }
 
 
@@ -194,6 +222,14 @@ namespace Level
             }
         }
 
+        public void CompleteCurrentTask()
+        {
+            var task = _currentTask;
+            _currentTask = null;
+            _taskReady = false;
+            task.Callback?.Invoke(task.Type, this, true);
+        }
+
         #region VEHICLE PATHING
 
         /// <summary>
@@ -201,30 +237,24 @@ namespace Level
         /// </summary>
         private void StopTraveling()
         {
-            if (_animationTween != null)
-            {
-                StopCoroutine(_animationTween);
-                CurrentConnection = null;
-                GetComponent<LineRenderer>().enabled = false;
-            }
+            CurrentConnection = null;
+            NextPosition = null;
         }
 
-        /// <summary>
-        /// Moves this vehicle along the given path of connections.
-        /// traversing it by starting the TravelPath() coroutine.
-        /// </summary>
-        private void StartTraveling(Queue<Connection> connections)
+        public void Move()
         {
-            Debug.Assert(connections.Any(), "No connections to path");
+            if (NextPosition != null) transform.position = NextPosition.Value;
 
-            // begin traveling the new path
-            var firstConnection = connections.Peek();
-            _animationTween = StartCoroutine(Travel(connections, firstConnection));
+            PathCompletionPercent += Mathf.Clamp01(Speed * Time.deltaTime / VehiclePath.length);
+            NextPosition = VehiclePath.GetPointAt(PathCompletionPercent);
+            CurrentRoute = VehiclePath.GetNearestPoint(PathCompletionPercent)?.Route;
+
+            // Rotate to look at the future position
+            transform.LookAt(NextPosition.Value);
         }
 
         private IEnumerator Travel(Queue<Connection> connections, Connection firstConnection)
         {
-            Debug.Assert(connections != null, "Connections appears to be null", gameObject);
             // if the last call to StartTraveling was interrupted, recover the vehicle
             if (CurrentConnection == null)
                 yield return TravelTo(firstConnection);
@@ -232,11 +262,10 @@ namespace Level
             if (connections.Count > 1)
             {
                 var destination = connections.Last().ParentRoute;
-                var vehicleCurve = PathfindingManager.Instance.GenerateCurves(connections);
                 // Build a line to visualize on
                 var travelLine = GetComponent<LineRenderer>();
 
-                yield return TravelPath(vehicleCurve, travelLine, destination);
+//                yield return TravelPath(vehicleCurve, travelLine, destination);
             }
             else
             {
@@ -245,8 +274,6 @@ namespace Level
                 task.Callback?.Invoke(task.Type, this, true);
             }
         }
-
-
 
         /// <summary>
         /// A coroutine that moves the vehicle along a BezierCurve path.
@@ -259,20 +286,25 @@ namespace Level
             travelLine.enabled = true;
 
             // traverse the path
-            _position = 0;
-            while (_position <= 1)
+            PathCompletionPercent = 0;
+            var nextPosition = vehicleCurve.GetPointAt(PathCompletionPercent);
+            while (PathCompletionPercent <= 1)
             {
-                _position += (Speed * Time.deltaTime) / vehicleCurve.length;
-                transform.position = vehicleCurve.GetPointAt(Mathf.Clamp01(_position));
+                // Move to the position
+                transform.position = nextPosition;
 
-                if (_position + LookAhead < 1f)
-                    transform.LookAt(vehicleCurve.GetPointAt(_position + LookAhead));
+                // Update the position for the next "frame"
+                PathCompletionPercent += Mathf.Clamp01(Speed * Time.deltaTime / vehicleCurve.length);
+                nextPosition = vehicleCurve.GetPointAt(PathCompletionPercent);
+
+                // Rotate to look at the future position
+                transform.LookAt(nextPosition);
 
 //                if (Manager is PlayerVehicleManager) DrawPath(vehicleCurve, travelLine);
 
 //                Debug.DrawLine(transform.position, vehicleCurve.GetPointAt(_position + LookAhead), Color.cyan, .5f);
 
-                yield return null;
+                yield return new WaitForEndOfFrame();
             }
 
             SetCurrentRoute(destination);
@@ -291,7 +323,7 @@ namespace Level
         {
             // Green if has passenger else purple
             travelLine.colorGradient = HasPassenger ? DropoffGradient : PickupGradient;
-            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, _position);
+            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent);
         }
 
         /// <summary>
@@ -315,6 +347,7 @@ namespace Level
                 yield return null;
             }
             CurrentConnection = connection;
+            _taskReady = true;
         }
 
         #endregion
@@ -348,5 +381,7 @@ namespace Level
         {
             _ring.SetActive(false);
         }
+
+
     }
 }
