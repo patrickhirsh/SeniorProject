@@ -19,6 +19,8 @@ public class PlayerVehicleManager : VehicleManager
 
     public static bool MenuLevel;
 
+    private bool levelTransition;
+
     private static PlayerVehicleManager Create()
     {
         GameObject singleton = FindObjectOfType<PlayerVehicleManager>()?.gameObject;
@@ -103,8 +105,6 @@ public class PlayerVehicleManager : VehicleManager
         vehicle.RemovePassenger(passenger);
 
         Destroy(passenger.gameObject);
-        if (MenuLevel)
-            SwitchLevelPrefab(passenger.DestRoute.gameObject.GetComponent<Menubuilding>().LevelPrefab);
 
         Debug.Log("PASSENGER DELIVERED");
         //GameManager.Instance.AddScore(10);
@@ -161,8 +161,25 @@ public class PlayerVehicleManager : VehicleManager
 
         var vehicle = hitInfo.transform.GetComponent<Vehicle>();
         var pin = hitInfo.transform.GetComponent<Pin>();
+        var menuBuilding = hitInfo.transform.GetComponent<MenuBuilding>();
 
-        if (vehicle && HasOwnership(vehicle) && SelectedPins.Any())
+
+        if (menuBuilding)
+        {
+            //Transtion functions here
+            Debug.Log("Hit building");
+            //have a bool to require 2 clicks on a building to transition levels.
+            if (levelTransition)
+            {
+                LevelManager LM = GameObject.FindObjectOfType<LevelManager>();
+                LM.TransitionLevel(menuBuilding);
+            }
+            else
+            {
+                levelTransition = true;
+            }
+        }
+        else if (vehicle && HasOwnership(vehicle) && SelectedPins.Any())
         {
             foreach (Vehicle x in PlayerVehicles)
             {

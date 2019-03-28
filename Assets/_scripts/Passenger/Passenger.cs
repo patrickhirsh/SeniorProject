@@ -13,6 +13,7 @@ namespace Level
         public Terminal StartTerminal;
 
         public Route StartRoute => StartTerminal.ParentRoute;
+       
 
 
         public Route DestRoute;
@@ -26,7 +27,7 @@ namespace Level
 
         private Building.BuildingColors _color;
         private float _timeRemaining;
-        private Pin _pickupPin;
+        public Pin _pickupPin;
         private GameObject Ring;
         private Image _RadialTimer;
 
@@ -143,4 +144,5 @@ namespace Level
         }
         #endregion
     }
+
 }
