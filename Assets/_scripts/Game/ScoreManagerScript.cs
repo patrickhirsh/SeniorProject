@@ -15,13 +15,19 @@ public class ScoreManagerScript : MonoBehaviour {
     public enum CarType { LX, STD, VAN };
 
     // Use this for initialization
-    void Awake() {
+    void Awake()
+    {
+        SetDictionary();
+
+    }
+
+    private void SetDictionary()
+    {
         scoreDic = new Dictionary<Building.BuildingColors, int>();
-        foreach(PassengerTypes p in passengerSpecs)
+        foreach (PassengerTypes p in passengerSpecs)
         {
             scoreDic.Add(p.passColor, p.numRequired);
         }
-
     }
 
 
@@ -48,14 +54,8 @@ public class ScoreManagerScript : MonoBehaviour {
         return scoreDic[color];
     }
 
-    [System.Serializable]
-    public class PassengerTypes
-    {
-        public int numSpawn;
-        public int numRequired;
-        public Building.BuildingColors passColor;
+   
 
-    }
 
     public List<Building.BuildingColors> GetBuildingColors()
     {
@@ -66,4 +66,19 @@ public class ScoreManagerScript : MonoBehaviour {
     {
         return passengerSpecs.Find(x => x.passColor == color).numRequired;
     }
+
+    internal void SetPassengerSpecs(List<PassengerTypes> newpassengerSpecs)
+    {
+        passengerSpecs = newpassengerSpecs;
+        SetDictionary();
+    }
+}
+
+[System.Serializable]
+public class PassengerTypes
+{
+    public int numSpawn;
+    public int numRequired;
+    public Building.BuildingColors passColor;
+
 }

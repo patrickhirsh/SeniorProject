@@ -45,6 +45,8 @@ public class LevelManager : MonoBehaviour
             else
                 BuildingDict.Add(x.BuildingColor, new List<Route> { x.DeliveryLocation });
         }
+
+        LevelObject = GameObject.Find("[LEVEL]");
     }
 
     #endregion
@@ -95,6 +97,24 @@ public class LevelManager : MonoBehaviour
             //If we decide to do that I'll program in the distance thing later, that'll just be a bunch more work. 
             return null;
         }
+    }
+
+    public void TransitionLevel(MenuBuilding newLevel)
+    {
+        //Destroy old level object
+        Transform oldTransform = LevelObject.transform;
+        Destroy(LevelObject);
+        //Need to reset passenger manager
+        ScoreManagerScript SM = GameObject.FindObjectOfType<ScoreManagerScript>();
+        SM.SetPassengerSpecs(newLevel.passengerSpecs);
+
+        PassengerManager PM = GameObject.FindObjectOfType<PassengerManager>();
+        //Switch music to music of new level
+        Osborne_AudioManager AM = GameObject.FindObjectOfType<Osborne_AudioManager>();
+        AM.SwitchLevels(newLevel.NewLayer1, newLevel.NewLayer2, newLevel.NewLayer3);
+        //Spawn and place new level prefab in that spot.
+        LevelObject = Instantiate(newLevel.RepresentedLevel, oldTransform.position, oldTransform.rotation);
+        
     }
 
 }

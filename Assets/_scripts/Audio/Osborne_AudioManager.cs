@@ -89,5 +89,27 @@ public class Osborne_AudioManager : MonoBehaviour {
         layer3Off.TransitionTo(0);
     }
 
+    public void SwitchLevels(AudioClip new1, AudioClip new2, AudioClip new3)
+    {
+        AudioSource[] ASList = this.gameObject.GetComponentsInChildren<AudioSource>();
+        foreach(AudioSource x in ASList)
+        {
+            switch (x.name)
+            {
+                case "Layer1":
+                    x.clip = new1;
+                    break;
+                case "Layer2":
+                    x.clip = new2;
+                    break;
+                case "Layer3":
+                    x.clip = new3;
+                    break;
+                
+            }
+        }
+        Layer1();
+    }
+
 
 }

@@ -1884,7 +1884,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &270367580
 Transform:
   m_ObjectHideFlags: 0
@@ -4870,25 +4870,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
+  m_Script: {fileID: 11500000, guid: a319b11245f40b24caf3812ca4ffdc11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeliveryLocation: {fileID: 87883290}
-  BuildingColor: 0
---- !u!114 &656487516
-MonoBehaviour:
+  RepresentedLevel: {fileID: 1383382813223220297, guid: 5f3a196d06159d24297b4c29301be25a,
+    type: 3}
+  NewLayer1: {fileID: 0}
+  NewLayer2: {fileID: 0}
+  NewLayer3: {fileID: 0}
+  passengerSpecs:
+  - numSpawn: 0
+    numRequired: 0
+    passColor: 0
+  - numSpawn: 0
+    numRequired: 0
+    passColor: 0
+  - numSpawn: 0
+    numRequired: 0
+    passColor: 0
+--- !u!65 &656487518
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 656487513}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: d7ed805d9591c894292a138ada1d834d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LevelPrefab: {fileID: 0}
+  serializedVersion: 2
+  m_Size: {x: 0.027482517, y: 0.013944905, z: 0.011498771}
+  m_Center: {x: 0.0070814216, y: -0.0069724526, z: -0.00022085643}
 --- !u!1001 &658356013
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11634,9 +11646,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37580e4e78cecb145b523ce5013ad04f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Connection: {fileID: 613316749}
-  Passengerprefab: {fileID: 0}
-  Destination: {fileID: 656487515}
 --- !u!1 &1241901190
 GameObject:
   m_ObjectHideFlags: 0
@@ -13806,7 +13815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1516478676
 Transform:
   m_ObjectHideFlags: 0
@@ -15540,7 +15549,6 @@ MonoBehaviour:
   - {fileID: 1823442938}
   - {fileID: 1698869865}
   - {fileID: 404358791}
-  LevelPrefab: {fileID: 587449496}
 --- !u!1 &1631357281
 GameObject:
   m_ObjectHideFlags: 0
