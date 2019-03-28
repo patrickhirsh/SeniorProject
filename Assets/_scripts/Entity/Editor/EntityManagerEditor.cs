@@ -20,7 +20,7 @@ namespace Level
             if (myTarget.Entities != null) EditorGUILayout.LabelField($"{myTarget.Entities.Length} Entities");
             if (myTarget.Connections != null) EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
             if (myTarget.Routes != null) EditorGUILayout.LabelField($"{myTarget.Routes.Length} Routes");
-            if (myTarget.Routes != null) EditorGUILayout.LabelField($"{myTarget.Routes.Sum(route => route.Terminals.Length)} Terminals");
+            if (myTarget.Routes != null) EditorGUILayout.LabelField($"{myTarget.Routes.Sum(route => route.Terminals?.Length ?? 0)} Terminals");
 
             if (myTarget.Entities == null || myTarget.Connections == null || myTarget.Routes == null)
             {
