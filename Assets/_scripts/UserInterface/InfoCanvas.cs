@@ -36,6 +36,7 @@ namespace UserInterface
 
             var vehicle = hoverGameObject.GetComponent<Vehicle>();
             var pin = hoverGameObject.GetComponent<Pin>();
+            var menuBuilding = hoverGameObject.GetComponent<MenuBuilding>();
 
             if (vehicle && Manager.HasOwnership(vehicle) && Manager.SelectedPins.Any())
             {
@@ -52,6 +53,14 @@ namespace UserInterface
             else if (pin && Manager.SelectedPins.Contains(pin))
             {
                 UpdateText("Deselect Passenger");
+            }
+            else if (menuBuilding && Manager.GetLevelTransition())
+            {
+                UpdateText(menuBuilding.LevelText2);
+            }
+            else if (menuBuilding)
+            {
+                UpdateText(menuBuilding.LevelText);
             }
             else
             {

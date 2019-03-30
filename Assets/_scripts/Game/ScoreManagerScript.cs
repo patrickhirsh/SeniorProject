@@ -5,13 +5,17 @@ using UnityEngine;
 
 public class ScoreManagerScript : MonoBehaviour {
 
+    //Score integer (deprecated?)
     private int score;
+    //Minimum score val to complete level (Deprecated?)
     private int minScoreVal = (int)(10 / PassengerManager.PassengerTimeout);
+    //Dictionary of colored passenger requirments and their requirement numbers
     private Dictionary<Building.BuildingColors, int> scoreDic;
-
+    
+    //Designer specified passneger specifications
     public List<PassengerTypes> passengerSpecs;
 
-
+    //Car type enumerations
     public enum CarType { LX, STD, VAN };
 
     // Use this for initialization
@@ -21,6 +25,7 @@ public class ScoreManagerScript : MonoBehaviour {
 
     }
 
+    //Set the scordDic dictionary with updated buildings
     private void SetDictionary()
     {
         scoreDic = new Dictionary<Building.BuildingColors, int>();
@@ -29,8 +34,6 @@ public class ScoreManagerScript : MonoBehaviour {
             scoreDic.Add(p.passColor, p.numRequired);
         }
     }
-
-
 
     // Update is called once per frame
     void Update() {
@@ -46,16 +49,32 @@ public class ScoreManagerScript : MonoBehaviour {
     public void ScorePoints(Building.BuildingColors passengerColor, int numDelivered)
     {
         scoreDic[passengerColor] -= numDelivered;
+        if(scoreDic[passengerColor] == 0)
+        {
+            if (CheckGameEndState())
+            {
+                
+
+            }
+        }
     }
 
+    private bool CheckGameEndState()
+    {
+        foreach (Building.BuildingColors pass in scoreDic.Keys)
+        {
+            if (scoreDic[pass] != 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public int GetCurrentScore(Building.BuildingColors color)
     {
         return scoreDic[color];
     }
-
-   
-
 
     public List<Building.BuildingColors> GetBuildingColors()
     {
@@ -69,6 +88,7 @@ public class ScoreManagerScript : MonoBehaviour {
 
     internal void SetPassengerSpecs(List<PassengerTypes> newpassengerSpecs)
     {
+        passengerSpecs = new List<PassengerTypes>();
         passengerSpecs = newpassengerSpecs;
         SetDictionary();
     }

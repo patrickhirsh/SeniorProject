@@ -91,6 +91,11 @@ public class PlayerVehicleManager : VehicleManager
 
     }
 
+    internal bool GetLevelTransition()
+    {
+        return levelTransition;
+    }
+
     private static void PickupPassenger(Vehicle vehicle)
     {
         var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();

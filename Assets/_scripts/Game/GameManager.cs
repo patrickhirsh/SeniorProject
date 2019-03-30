@@ -75,8 +75,10 @@ public class GameManager : Singleton<GameManager>
 
     public void gameOver()
     {
-        UI.GetComponent<UserInterface.ScoreCanvas>().gameObject.SetActive(false);
-        UI.GetComponent<GameOverScript>().gameObject.SetActive(true); 
+        //UI.GetComponent<UserInterface.ScoreCanvas>().gameObject.SetActive(false);
+        //UI.GetComponent<GameOverScript>().gameObject.SetActive(true); 
+
+
     }
 
 
