@@ -11,7 +11,9 @@ public class ScoreManagerScript : MonoBehaviour {
     private int minScoreVal = (int)(10 / PassengerManager.PassengerTimeout);
     //Dictionary of colored passenger requirments and their requirement numbers
     private Dictionary<Building.BuildingColors, int> scoreDic;
-    
+
+    public float gameTimer;
+
     //Designer specified passneger specifications
     public List<PassengerTypes> passengerSpecs;
 
@@ -37,15 +39,26 @@ public class ScoreManagerScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
+        gameTimer -= Time.deltaTime;
+        if (gameTimer <= 0)
+        {
+            if (CheckGameEndState())
+                VictoryCondition();
+            else
+                FailureCondition();
+        }
     }
 
-    /// <summary>
-    /// This function should be called when passenger(s) are dropped off at a location to increment the score correctly. 
-    /// </summary>
-    /// <param name="timerLeft">This is how long the passenger had left on their timer when they were picked up/dropped off, whichever we decide is better</param>
-    /// <param name="carType">This is the type of car the passenger was picked up in</param>
-    /// <param name="numDelivered">This is the number of passengers dropped off at the location when this function was called</param>
+    private void VictoryCondition()
+    {
+        //throw new NotImplementedException();
+    }
+
+    private void FailureCondition()
+    {
+        //throw new NotImplementedException();
+    }
+
     public void ScorePoints(Building.BuildingColors passengerColor, int numDelivered)
     {
         scoreDic[passengerColor] -= numDelivered;
