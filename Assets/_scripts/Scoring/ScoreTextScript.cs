@@ -136,7 +136,7 @@ public class ScoreTextScript : MonoBehaviour {
 
         GameObject NewIcon = Instantiate(iconPrefab, this.transform.position + new Vector3(adjustmentInt, 0, 0), this.transform.rotation, this.transform);
         NewIcon.GetComponentInChildren<IconImage>().ChangeColr(GetMatFromColorName(color));
-        NewIcon.GetComponentInChildren<TextMesh>().text = "Balls";
+        NewIcon.GetComponentInChildren<TextMesh>().text = "test";
         int initialScoreValue = SM.getNumRequired(color);
 
         NewIcon.GetComponent<ScoreIcon>().Score = initialScoreValue;
