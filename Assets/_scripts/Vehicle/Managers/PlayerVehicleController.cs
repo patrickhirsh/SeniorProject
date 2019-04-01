@@ -89,7 +89,6 @@ public class PlayerVehicleController : VehicleController
                 Debug.LogWarning("Could not find path to passenger for vehicle");
             }
         }
-
     }
 
     private static void PickupPassenger(Vehicle vehicle)

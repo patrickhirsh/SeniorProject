@@ -213,6 +213,11 @@ namespace RideShareLevel
             task.Callback?.Invoke(task.Type, this, true);
         }
 
+								public VehicleTask GetCurrentTask()
+								{
+												return _currentTask;
+								}
+
         #region VEHICLE PATHING
 
         /// <summary>

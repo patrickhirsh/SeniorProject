@@ -60,6 +60,9 @@ public class LevelManager : Singleton<LevelManager>
         CurrentLevel = Instantiate(newLevel.RepresentedLevel, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();
         Destroy(oldLevel);
         CurrentLevel.EntityController.Initialize();
-    }
+
+								//Notify controllers of the new gamestate
+								Broadcaster.Broadcast(GameEvent.GameStateChanged);
+				}
 
 }

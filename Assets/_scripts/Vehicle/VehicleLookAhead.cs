@@ -29,7 +29,6 @@ namespace RideShareLevel
 
         private void Update()
         {
-
             if (IsAtIntersection)
             {
                 if (!_isSlowed) SlowDown();
@@ -54,7 +53,7 @@ namespace RideShareLevel
                     _isWaiting = false;
                 }
             }
-            else if (IsVehicleCollision)
+            else if (IsVehicleCollision && this.Vehicle.GetCurrentTask() != null)
             {
                 if (!_isWaiting)
                 {
