@@ -49,9 +49,12 @@ public class LevelManager : Singleton<LevelManager>
 
         //Need to reset passenger manager
         ScoreManager.Instance.SetPassengerSpecs(newLevel.passengerSpecs);
-
+        //Set game timer
+        ScoreManager.Instance.GameTimer = newLevel.GameTimer;
         //Switch music to music of new level
         Osborne_AudioManager.Instance.SwitchLevels(newLevel.NewLayer1, newLevel.NewLayer2, newLevel.NewLayer3);
+
+        newLevel.RepresentedLevel.GetComponent<Level>().PassengerSpecs = newLevel.passengerSpecs;
 
         //Spawn and place new level prefab in that spot.
         CurrentLevel = Instantiate(newLevel.RepresentedLevel, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();

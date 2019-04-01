@@ -28,27 +28,32 @@ namespace RideShareLevel
         public Pin _pickupPin;
         private GameObject Ring;
         private Image _RadialTimer;
+        private Dictionary<Building.BuildingColors, int> SpawnedDictionary;
+
 
         #region Unity Methods
         private void Awake()
         {
+            SpawnedDictionary = new Dictionary<Building.BuildingColors, int>();
             Broadcaster.AddListener(GameEvent.Reset, Reset);
         }
 
         private void Reset(GameEvent @event)
         {
+            SpawnedDictionary = new Dictionary<Building.BuildingColors, int>();
             Destroy(gameObject);
 
         }
 
         public void Start()
         {
-            _color = CurrentLevel.GetValidColor();
+            _color = CurrentLevel.GetValidColor(SpawnedDictionary);
             DestRoute = CurrentLevel.GetBuildingRoute(_color);
             _timeRemaining = PassengerController.PassengerTimeout;
             PickedUp = false;
             EnemyVehicleEnroute = false;
             SpawnPickupReticle();
+            SpawnedDictionary[_color]+= 1;
         }
 
         private GameObject SpawnRing(Color color, float speed)

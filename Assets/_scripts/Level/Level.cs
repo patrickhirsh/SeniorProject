@@ -11,6 +11,8 @@ namespace RideShareLevel
         public EnemyVehicleController EnemyVehicleController;
         public EntityController EntityController;
 
+        public List<PassengerTypes> PassengerSpecs;
+
         private Dictionary<Building.BuildingColors, List<Route>> BuildingDict;
 
 #if UNITY_EDITOR
@@ -42,9 +44,17 @@ namespace RideShareLevel
         /// Get's a valid color for the current level. 
         /// </summary>
         /// <returns>A color that is assigned to a building</returns>
-        public Building.BuildingColors GetValidColor()
+        public Building.BuildingColors GetValidColor(Dictionary<Building.BuildingColors, int> valuePairs)
         {
             var buildingColors = new List<Building.BuildingColors>(BuildingDict.Keys);
+            //foreach(Building.BuildingColors color in buildingColors)
+            //{
+            //    if(valuePairs[color] >= PassengerSpecs.Find(e => e.passColor == color).numRequired)
+            //    {
+
+            //    }
+            //}
+
             return buildingColors[Random.Range(0, buildingColors.Count)];
         }
 

@@ -11,10 +11,12 @@ public class ScoreManager : Singleton<ScoreManager>
     private int minScoreVal = (int)(10 / PassengerController.PassengerTimeout);
     //Dictionary of colored passenger requirments and their requirement numbers
     private Dictionary<Building.BuildingColors, int> scoreDic;
-
     //Designer specified passneger specifications
     public List<PassengerTypes> passengerSpecs;
-
+    /// <summary>
+    ///Time limit on a given level. 
+    /// </summary>
+    public float GameTimer;
     //Car type enumerations
     public enum CarType { LX, STD, VAN };
 
@@ -38,23 +40,37 @@ public class ScoreManager : Singleton<ScoreManager>
     // Update is called once per frame
     void Update()
     {
+        CheckPassengers();
     }
 
+    private void CheckPassengers()
+    {
+
+    }
+
+   
+
+    /// <summary>
+    /// Function to call on Victory Condition Reached
+    /// </summary>
     private void VictoryCondition()
     {
         //Stop generating new passengers
+            
 
         //Remove all unpicked up passengers from play or let them time out?
 
         //Generate final score (3 stars?) based on timer
 
+
         //Highlight building to use as return menu/just make the score into the return object?
 
         //Fire off fireworks for victory
 
-        //throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Function to call on failure condition (time out without enough delivered passengers)
+    /// </summary>
     private void FailureCondition()
     {
         //Stop generating new passengers
@@ -65,9 +81,6 @@ public class ScoreManager : Singleton<ScoreManager>
 
         //Highlight building to use as return menu/just make the score into the return object?
 
-        //Fire off fireworks for victory
-
-        //throw new NotImplementedException();
 
     }
 
@@ -85,16 +98,18 @@ public class ScoreManager : Singleton<ScoreManager>
             if (CheckGameEndState())
             {
                 VictoryCondition();
-
             }
         }
     }
-
+    /// <summary>
+    /// Called to check whether game victory state requirements have been filled
+    /// </summary>
+    /// <returns>True on victory state requirement fulfilled, False if they have not</returns>
     private bool CheckGameEndState()
     {
         foreach (Building.BuildingColors pass in scoreDic.Keys)
         {
-            if (scoreDic[pass] >= 0)
+            if (scoreDic[pass] > 0)
             {
                 return false;
             }
