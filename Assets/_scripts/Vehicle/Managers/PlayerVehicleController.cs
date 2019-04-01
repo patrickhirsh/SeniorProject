@@ -169,13 +169,13 @@ public class PlayerVehicleController : VehicleController
         {
             //Transition functions here
             //have a bool to require 2 clicks on a building to transition levels.
-            if (menuBuilding.Clicked)
+            if (menuBuilding.getClicked())
             {
                 LevelManager.Instance.TransitionLevel(menuBuilding);
             }
             else
             {
-                menuBuilding.Clicked = true;
+                menuBuilding.setClicked(true);
             }
         }
         else if (vehicle && HasOwnership(vehicle) && SelectedPins.Any())
@@ -209,6 +209,13 @@ public class PlayerVehicleController : VehicleController
         {
             pin.SetSelected(false);
             SelectedPins.Remove(pin);
+            if(SelectedPins.Count == 0)
+            {
+                foreach(Vehicle x in PlayerVehicles)
+                {
+                    x.DeactivateRing();
+                }
+            }
         }
         UpdateSelectedPins();
     }
@@ -274,11 +281,11 @@ public class PlayerVehicleController : VehicleController
 
     public void HandleNotHit(GameObject arg0)
     {
-        foreach (Vehicle x in PlayerVehicles)
-        {
-            x.DeactivateRing();
-        }
-        Deselect();
+        //foreach (Vehicle x in PlayerVehicles)
+        //{
+        //    x.DeactivateRing();
+        //}
+        //Deselect();
     }
 
     private void Deselect()

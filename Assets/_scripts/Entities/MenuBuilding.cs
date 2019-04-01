@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class MenuBuilding : MonoBehaviour
     public string LevelText;
     //Tooltip text for on hover when they've already selected the building and need to tap again to confirm
     public string LevelText2;
-    public bool Clicked;
+    private bool Clicked;
 
     // Start is called before the first frame update
     void Start()
@@ -28,5 +29,15 @@ public class MenuBuilding : MonoBehaviour
     void Update()
     {
         
+    }
+
+    internal void setClicked(bool v)
+    {
+        Clicked = v;
+    }
+
+    internal bool getClicked()
+    {
+        return Clicked;
     }
 }

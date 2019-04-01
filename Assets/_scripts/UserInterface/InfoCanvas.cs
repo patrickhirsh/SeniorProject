@@ -55,7 +55,7 @@ namespace UserInterface
             {
                 UpdateText("Deselect Passenger");
             }
-            else if (menuBuilding && menuBuilding.Clicked)
+            else if (menuBuilding && menuBuilding.getClicked())
             {
                 UpdateText(menuBuilding.LevelText2);
             }

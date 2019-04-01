@@ -1461,19 +1461,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &1067143646 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7727474475019287327, guid: f4a84096b104f4f4fa38586a5479b361,
-    type: 3}
-  m_PrefabInstance: {fileID: 7727474475347176129}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 252f3ce77b841714290b90a390c92466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1105621828
 GameObject:
   m_ObjectHideFlags: 0
@@ -3194,8 +3181,22 @@ MonoBehaviour:
   Level: {fileID: 587449496}
   SessionOrigin: {fileID: 71124185}
   LevelYOffset: 0
-  PlayerVehicleManager: {fileID: 1067143646}
   raycastThickness: 0.5
+  HoverChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: InputManager+HoverEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  Hit:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: InputManager+HitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  NoHit:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: InputManager+HitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!1 &1904432123
 GameObject:
   m_ObjectHideFlags: 0
@@ -3764,7 +3765,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad40488e36d6a9e4d9c8eb4874f9b8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: {fileID: 0}
   Score: {fileID: 510995520}
 --- !u!114 &2139144028
 MonoBehaviour:
@@ -3895,5 +3895,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7727474475605120167, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[1].passColor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[1].numSpawn
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[0].numSpawn
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[0].numRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[1].numRequired
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7727474475157077233, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}

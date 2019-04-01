@@ -78,14 +78,17 @@ public class InputManager : Singleton<InputManager>
     public HitEvent Hit = new HitEvent();
     public HitEvent NoHit = new HitEvent();
 
+    private GameObject LastHit;
+
     public void HandleHit(RaycastHit hitInfo)
     {
         Hit?.Invoke(hitInfo.transform.gameObject);
+        LastHit = hitInfo.transform.gameObject;
     }
 
     public void HandleNoHit(RaycastHit hitInfo)
     {
-        NoHit?.Invoke(hitInfo.transform.gameObject);
+        NoHit?.Invoke(LastHit);
     }
     #endregion
 
