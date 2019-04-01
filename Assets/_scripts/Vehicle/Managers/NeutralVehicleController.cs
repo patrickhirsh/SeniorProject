@@ -4,7 +4,7 @@ using UnityEngine;
 using Utility;
 
 
-namespace Level
+namespace RideShareLevel
 {
     /// <summary>
     /// Represents a (single) @event the NeutralVehicleManager can be in at any time for spawning vehicles
@@ -32,27 +32,16 @@ namespace Level
         public List<SerializablePath> allPaths;
     }
 
-    public class NeutralVehicleManager : VehicleManager
+    public class NeutralVehicleController : VehicleController
     {
-        #region Singleton
-        private static NeutralVehicleManager _instance;
-        public static NeutralVehicleManager Instance => _instance ?? (_instance = Create());
-
-        private static NeutralVehicleManager Create()
-        {
-            GameObject singleton = FindObjectOfType<NeutralVehicleManager>()?.gameObject;
-            if (singleton == null) singleton = new GameObject { name = typeof(NeutralVehicleManager).Name };
-            singleton.AddComponent<NeutralVehicleManager>();
-            return singleton.GetComponent<NeutralVehicleManager>();
-        }
-        #endregion
 
         public float AVG_SPAWN_TIMER = 1f;
         public float SPAWN_TIMER_VARIANCE = 0f;
 
         public List<GameObject> _neutralVehiclePrefabs;     // all neutral vehicle prefabs valid for this scene
         private List<SpawnRoute> _spawnRoutes;              // all valid spawn routes in the current level
-        private SpawnState _spawnState;                     // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
+        private SpawnState _spawnState = SpawnState.SpawningOff;                     // indicates how (or if) the NeutralVehicleManager should be spawning vehicles (defaults to spawningOff on startup)
+        private bool _canSpawn;
         private float proceduralSpawnTimer = 0f;            // timer used for procedural spawning
 
         /// <summary>
@@ -64,6 +53,7 @@ namespace Level
 
         [SerializeField]
         private SerializablePathData _serializedPaths;
+
 
         /// <summary>
         /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
@@ -83,14 +73,17 @@ namespace Level
             }
         }
 
+        #region Unity Methods
+
         public void Awake()
         {
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
-            Broadcaster.AddListener(GameEvent.SetupBakedPaths, BakePaths);
         }
+
 
         public void Update()
         {
+            if (!_canSpawn) return;
             switch (_spawnState)
             {
                 case SpawnState.SpawningOff:
@@ -108,22 +101,35 @@ namespace Level
             }
         }
 
+        #endregion
+
+        #region Initialization
+        public void Initialize()
+        {
+            InitializePaths();
+            _spawnState = SpawnState.SpawningProcedurally;
+
+            // ensure neutral vehicles have been set in the inspector
+            Debug.Assert(_neutralVehiclePrefabs != null);
+        }
+
+        public void InitializePaths()
+        {
+            // initialize spawnPoints list
+            _spawnRoutes = new List<SpawnRoute>();
+            foreach (SpawnRoute spawn in CurrentLevel.EntityController.Routes.OfType<SpawnRoute>())
+                _spawnRoutes.Add(spawn);
+
+            // deserialize pathing data 
+            //DeserializeNeutralPaths();
+            bakeNeutralPaths();
+        }
+        #endregion
+
         private void GameStateChanged(GameEvent @event)
         {
             // Begin the simulation
-            if (GameManager.CurrentGameState == GameState.LevelSimulating)
-            {
-                // spawnState is off by default (waiting for instructions...)
-                //_spawnState = SpawnState.SpawningOff;
-                _spawnState = SpawnState.SpawningProcedurally;
-
-                // ensure neutral vehicles have been set in the inspector
-                Debug.Assert(_neutralVehiclePrefabs != null);
-            }
-            else
-            {
-                _spawnState = SpawnState.SpawningOff;
-            }
+            _canSpawn = GameManager.CurrentGameState == GameState.LevelSimulating;
         }
 
         /// <summary>
@@ -137,27 +143,6 @@ namespace Level
         }
 
 
-        /// <summary>
-        /// Handles all GameEvent Broadcasts
-        /// </summary>
-        /// <param name="gameEvent"></param>
-        public void BakePaths(GameEvent gameEvent)
-        {
-            switch (gameEvent)
-            {
-                case GameEvent.SetupBakedPaths:
-
-                    // initialize spawnPoints list
-                    _spawnRoutes = new List<SpawnRoute>();
-                    foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
-                        _spawnRoutes.Add(spawn);
-
-                    // deserialize pathing data 
-                    //DeserializeNeutralPaths();
-                    bakeNeutralPaths();
-                    break;
-            }
-        }
 
         /// <summary>
         /// Sets the spawnState to the given @event. Only accepts states with exactly one flag set.
@@ -179,7 +164,6 @@ namespace Level
         {
             // instantiate the new vehicle
             var vehicle = Instantiate(vehiclePrefab, spawnPoint.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
-            vehicle.Manager = this;
 
             // construct a copy of the cached connection Queue
             Queue<Connection> path = new Queue<Connection>();
@@ -231,7 +215,7 @@ namespace Level
 
             // initialize spawnPoints list
             _spawnRoutes = new List<SpawnRoute>();
-            foreach (SpawnRoute spawn in Object.FindObjectsOfType<SpawnRoute>())
+            foreach (SpawnRoute spawn in CurrentLevel.EntityController.Routes.OfType<SpawnRoute>())
                 _spawnRoutes.Add(spawn);
 
             // observe all spawn points as potential starting points
@@ -313,8 +297,8 @@ namespace Level
             _validNeutralPaths = new Dictionary<Connection, Dictionary<Connection, Queue<Connection>>>();
             foreach (SerializablePath serializedPath in _serializedPaths.allPaths)
             {
-                Connection start = EntityManager.Instance.GetConnectionById(serializedPath.connectionIDs[0]);
-                Connection end = EntityManager.Instance.GetConnectionById(serializedPath.connectionIDs[serializedPath.connectionIDs.Count - 1]);
+                Connection start = EntityController.GetConnectionById(serializedPath.connectionIDs[0]);
+                Connection end = EntityController.GetConnectionById(serializedPath.connectionIDs[serializedPath.connectionIDs.Count - 1]);
 
                 // if we haven't yet added any paths from this connection (key), initialize its value
                 if (!_validNeutralPaths.ContainsKey(start))
@@ -327,10 +311,12 @@ namespace Level
                 _validNeutralPaths[start][end] = new Queue<Connection>();
                 foreach (int objectID in serializedPath.connectionIDs)
                 {
-                    _validNeutralPaths[start][end].Enqueue(EntityManager.Instance.GetConnectionById(objectID));
+                    _validNeutralPaths[start][end].Enqueue(EntityController.GetConnectionById(objectID));
                 }
             }
         }
+
+
     }
 }
 

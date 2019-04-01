@@ -4,22 +4,22 @@ using UnityEngine;
 using Utility;
 using Grid = Utility.Grid;
 
-namespace Level
+namespace RideShareLevel
 {
-    public abstract class Entity : MonoBehaviour
+    public abstract class Entity : LevelObject
     {
         [ReadOnly] public List<Node> Nodes = new List<Node>();
 
         #region Unity Methods
         protected virtual void Awake()
         {
-            EntityManager.Instance.AddEntity(this);
+            EntityController.AddEntity(this);
         }
 
         protected virtual void OnDestroy()
         {
             // Level Manager
-            EntityManager.Instance.RemoveEntity(this);
+            EntityController.RemoveEntity(this);
         }
 
         protected virtual void OnDrawGizmos()

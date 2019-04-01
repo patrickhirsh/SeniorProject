@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ScoreTextScript : MonoBehaviour {
     //Reference to score manager
-    ScoreManagerScript SM;
+    ScoreManager SM;
     /// <summary>
     /// Icon prefab for insatiating icons
     /// </summary>
@@ -27,7 +27,7 @@ public class ScoreTextScript : MonoBehaviour {
 
     // Use this for initialization
     void Awake () {
-        SM = GameObject.FindObjectOfType<ScoreManagerScript>();
+        SM = GameObject.FindObjectOfType<ScoreManager>();
         ScoreIcons = new Dictionary<Building.BuildingColors, GameObject>();
         
 	}

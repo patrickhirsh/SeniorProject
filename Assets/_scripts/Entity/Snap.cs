@@ -2,7 +2,7 @@
 using UnityEngine;
 using Utility;
 
-namespace Level
+namespace RideShareLevel
 {
     [ExecuteInEditMode]
     public class Snap : MonoBehaviour

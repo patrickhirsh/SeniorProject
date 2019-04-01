@@ -3,11 +3,11 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
-    [CustomEditor(typeof(EntityManager), true)]
+    [CustomEditor(typeof(EntityController), true)]
     [CanEditMultipleObjects]
-    public class EntityManagerEditor : Editor
+    public class EntityControllerEditor : Editor
     {
         public float secs = 10f;
         public float startVal = 0f;
@@ -18,7 +18,7 @@ namespace Level
             DrawDefaultInspector();
             EditorGUILayout.Space();
 
-            EntityManager myTarget = (EntityManager)target;
+            EntityController myTarget = (EntityController)target;
 
             EditorGUILayout.LabelField($"Stats");
             if (myTarget.Entities != null) EditorGUILayout.LabelField($"{myTarget.Entities.Length} Entities");
@@ -29,15 +29,8 @@ namespace Level
             if (myTarget.Entities == null || myTarget.Connections == null || myTarget.Routes == null ||
                 myTarget.Entities.Any(AreNull) || myTarget.Connections.Any(AreNull) || myTarget.Routes.Any(AreNull))
             {
-                Debug.Log("Baking Entity Manager Automatically...");
+                Debug.Log("Detected changes in Entity Manager for level. Baking Entity Manager Automatically...");
                 myTarget.Bake();
-            }
-            EditorGUILayout.Space();
-            if (GUILayout.Button("Bake Level"))
-            {
-                Debug.Log("Baking Entity Manager...");
-                myTarget.Bake();
-                //NeutralVehicleManager.Instance.bakeNeutralPaths();
             }
         }
 

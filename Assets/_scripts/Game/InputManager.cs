@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.XR;
 using UnityEngine.XR.ARFoundation;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
     [SerializeField]
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
@@ -14,7 +16,6 @@ public class InputManager : MonoBehaviour
     public GameObject Level;
     public ARSessionOrigin SessionOrigin;
     public float LevelYOffset;
-    public PlayerVehicleManager PlayerVehicleManager;
     public float raycastThickness;
 
     private bool _vehicleSelected;
@@ -53,6 +54,41 @@ public class InputManager : MonoBehaviour
 #endif
     }
 
+    #region Hover
+    [Serializable]
+    public class HoverEvent : UnityEvent<GameObject> { }
+    public HoverEvent HoverChanged = new HoverEvent();
+
+    public void HandleHover(bool hit, RaycastHit hitInfo)
+    {
+        if (hit)
+        {
+            HoverChanged?.Invoke(hitInfo.transform.gameObject);
+        }
+        else
+        {
+            HoverChanged.Invoke(null);
+        }
+    }
+    #endregion
+
+    #region Hit
+    [Serializable]
+    public class HitEvent : UnityEvent<GameObject> { }
+    public HitEvent Hit = new HitEvent();
+    public HitEvent NoHit = new HitEvent();
+
+    public void HandleHit(RaycastHit hitInfo)
+    {
+        Hit?.Invoke(hitInfo.transform.gameObject);
+    }
+
+    public void HandleNoHit(RaycastHit hitInfo)
+    {
+        NoHit?.Invoke(hitInfo.transform.gameObject);
+    }
+    #endregion
+
     private void HandleLevelSimulating(bool click)
     {
         RaycastHit hitInfo;
@@ -61,15 +97,15 @@ public class InputManager : MonoBehaviour
         Debug.DrawRay(transform.position, cameraTransform.forward, Color.green);
         var hit = Physics.SphereCast(origin, raycastThickness, cameraTransform.forward, out hitInfo);
 
-        PlayerVehicleManager.HandleHover(hit, hitInfo);
+        HandleHover(hit, hitInfo);
 
         if (click && hit)
         {
-            PlayerVehicleManager.HandleHit(hitInfo);
+            HandleHit(hitInfo);
         }
         else if (click)
         {
-            PlayerVehicleManager.HandleNotHit();
+            HandleNoHit(hitInfo);
         }
 
     }

@@ -1,44 +1,45 @@
 ﻿using System;
-using Level;
+using RideShareLevel;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using Utility;
-using Connection = Level.Connection;
+using Connection = RideShareLevel.Connection;
 using Random = UnityEngine.Random;
 
-public class PlayerVehicleManager : VehicleManager
+public class PlayerVehicleController : VehicleController
 {
-    #region Singleton
-    private static PlayerVehicleManager _instance;
-    public static PlayerVehicleManager Instance => _instance ?? (_instance = Create());
-
-    private static ScoreManagerScript SM;
-
-    public static bool MenuLevel;
-
-    private bool levelTransition;
-
-    private static PlayerVehicleManager Create()
-    {
-        GameObject singleton = FindObjectOfType<PlayerVehicleManager>()?.gameObject;
-        SM = FindObjectOfType<ScoreManagerScript>();
-        if (singleton == null)
-        {
-            singleton = new GameObject { name = $"[{typeof(PlayerVehicleManager).Name}]" };
-            singleton.AddComponent<LevelManager>();
-        }
-        return singleton.GetComponent<PlayerVehicleManager>();
-    }
-    #endregion
-
     public List<Pin> SelectedPins = new List<Pin>();
 
     private Dictionary<Vehicle, Queue<VehicleTask>> VehicleTasks = new Dictionary<Vehicle, Queue<VehicleTask>>();
 
-    public List<Vehicle> PlayerVehicles;
+    public Vehicle[] PlayerVehicles;
+
+    #region Unity Methods
+
+    private void Awake()
+    {
+        if (!PlayerVehicles.Any())
+        {
+            Debug.LogWarning("This level is missing vehicles or needs to be baked!");
+        }
+        InputManager.Instance.Hit.AddListener(HandleHit);
+        InputManager.Instance.NoHit.AddListener(HandleNotHit);
+    }
+
+    #endregion
+
+    #region Bake
+
+#if UNITY_EDITOR
+    public void Bake(Level level)
+    {
+        PlayerVehicles = GetComponentsInChildren<Vehicle>();
+    }
+#endif
+
+    #endregion
 
     public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
     {
@@ -62,7 +63,7 @@ public class PlayerVehicleManager : VehicleManager
             }
 
             //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
-            SM.ScorePoints(PassColor, numDroppedOff);
+            ScoreManager.Instance.ScorePoints(PassColor, numDroppedOff);
         }
 
 
@@ -89,11 +90,6 @@ public class PlayerVehicleManager : VehicleManager
             }
         }
 
-    }
-
-    internal bool GetLevelTransition()
-    {
-        return levelTransition;
     }
 
     private static void PickupPassenger(Vehicle vehicle)
@@ -160,28 +156,26 @@ public class PlayerVehicleManager : VehicleManager
 
     #region Selection & Destination Search
 
-    internal void HandleHit(RaycastHit hitInfo)
+    internal void HandleHit(GameObject obj)
     {
-        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Hit: {hitInfo.transform.gameObject}", hitInfo.transform.gameObject);
+        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Hit: {obj.transform.gameObject}", obj.transform.gameObject);
 
-        var vehicle = hitInfo.transform.GetComponent<Vehicle>();
-        var pin = hitInfo.transform.GetComponent<Pin>();
-        var menuBuilding = hitInfo.transform.GetComponent<MenuBuilding>();
+        var vehicle = obj.GetComponent<Vehicle>();
+        var pin = obj.GetComponent<Pin>();
+        var menuBuilding = obj.GetComponent<MenuBuilding>();
 
 
         if (menuBuilding)
         {
-            //Transtion functions here
-            Debug.Log("Hit building");
+            //Transition functions here
             //have a bool to require 2 clicks on a building to transition levels.
-            if (levelTransition)
+            if (menuBuilding.Clicked)
             {
-                LevelManager LM = GameObject.FindObjectOfType<LevelManager>();
-                LM.TransitionLevel(menuBuilding);
+                LevelManager.Instance.TransitionLevel(menuBuilding);
             }
             else
             {
-                levelTransition = true;
+                menuBuilding.Clicked = true;
             }
         }
         else if (vehicle && HasOwnership(vehicle) && SelectedPins.Any())
@@ -275,10 +269,10 @@ public class PlayerVehicleManager : VehicleManager
 
     public bool HasOwnership(Vehicle vehicle)
     {
-        return vehicle.Manager == this;
+        return PlayerVehicles.Contains(vehicle);
     }
 
-    public void HandleNotHit()
+    public void HandleNotHit(GameObject arg0)
     {
         foreach (Vehicle x in PlayerVehicles)
         {
@@ -292,27 +286,6 @@ public class PlayerVehicleManager : VehicleManager
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log("DESELECT");
     }
 
-
     #endregion
-
-
-    #region Hover
-    [Serializable]
-    public class HoverEvent : UnityEvent<GameObject> { }
-    public HoverEvent HoverChanged = new HoverEvent();
-
-    public void HandleHover(bool hit, RaycastHit hitInfo)
-    {
-        if (hit)
-        {
-            HoverChanged?.Invoke(hitInfo.transform.gameObject);
-        }
-        else
-        {
-            HoverChanged.Invoke(null);
-        }
-    }
-    #endregion
-
 
 }

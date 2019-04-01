@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Level;
+using RideShareLevel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,13 +14,14 @@ namespace UserInterface
         public Text Score;
         private Tweener _doFade;
 
-        private PlayerVehicleManager Manager => PlayerVehicleManager.Instance;
+        public Level CurrentLevel => LevelManager.Instance.CurrentLevel;
 
         #region Unity Methods
 
         private void Start()
         {
-            PlayerVehicleManager.Instance.HoverChanged.AddListener(UpdateSelectionInfo);
+            
+            InputManager.Instance.HoverChanged.AddListener(UpdateSelectionInfo);
             _doFade = Score.DOFade(0f, .2f).SetAutoKill(false).Pause();
         }
 
@@ -38,23 +39,23 @@ namespace UserInterface
             var pin = hoverGameObject.GetComponent<Pin>();
             var menuBuilding = hoverGameObject.GetComponent<MenuBuilding>();
 
-            if (vehicle && Manager.HasOwnership(vehicle) && Manager.SelectedPins.Any())
+            if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle) && CurrentLevel.PlayerVehicleController.SelectedPins.Any())
             {
                 UpdateText("Send Vehicle to Pickup Passengers");
             }
-            else if (vehicle && Manager.HasOwnership(vehicle))
+            else if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle))
             {
                 UpdateText("No Passenger Selected");
             }
-            else if (pin && !Manager.SelectedPins.Contains(pin))
+            else if (pin && !CurrentLevel.PlayerVehicleController.SelectedPins.Contains(pin))
             {
                 UpdateText("Select Passenger");
             }
-            else if (pin && Manager.SelectedPins.Contains(pin))
+            else if (pin && CurrentLevel.PlayerVehicleController.SelectedPins.Contains(pin))
             {
                 UpdateText("Deselect Passenger");
             }
-            else if (menuBuilding && Manager.GetLevelTransition())
+            else if (menuBuilding && menuBuilding.Clicked)
             {
                 UpdateText(menuBuilding.LevelText2);
             }

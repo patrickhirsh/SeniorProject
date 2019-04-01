@@ -6,9 +6,9 @@ using Game;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Level
+namespace RideShareLevel
 {
-    public class Passenger : MonoBehaviour
+    public class Passenger : LevelObject
     {
         public Terminal StartTerminal;
 
@@ -43,9 +43,9 @@ namespace Level
 
         public void Start()
         {
-            _color = LevelManager.Instance.GetValidColor();
-            DestRoute = LevelManager.Instance.GetBuildingRoute(_color);
-            _timeRemaining = PassengerManager.PassengerTimeout;
+            _color = CurrentLevel.GetValidColor();
+            DestRoute = CurrentLevel.GetBuildingRoute(_color);
+            _timeRemaining = PassengerController.PassengerTimeout;
             PickedUp = false;
             EnemyVehicleEnroute = false;
             SpawnPickupReticle();
@@ -72,7 +72,7 @@ namespace Level
             // spawn an enemy vehicle if the passenger times out and hasn't yet been picked up
             if (_timeRemaining == 0 && !PickedUp && !EnemyVehicleEnroute)
             {
-                EnemyVehicleManager.Instance.PickupPassenger(this);
+                EnemyVehicleController.Instance.PickupPassenger(this);
                 Debug.Log("Enemy Vehicle Spawned!");
                 EnemyVehicleEnroute = true;
 //                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
@@ -83,7 +83,7 @@ namespace Level
 
             if (!PickedUp && _RadialTimer != null)
             {
-                _RadialTimer.fillAmount = _timeRemaining / PassengerManager.PassengerTimeout;
+                _RadialTimer.fillAmount = _timeRemaining / PassengerController.PassengerTimeout;
             }
             else if (_RadialTimer != null)
             {
@@ -97,7 +97,7 @@ namespace Level
                 
             else if(!PickedUp)
             {
-                float time = _timeRemaining / PassengerManager.PassengerTimeout;
+                float time = _timeRemaining / PassengerController.PassengerTimeout;
                 Color newRingColor = RingColorGradient.Evaluate(1 - time);
                 Ring.GetComponent<Renderer>().material.SetColor("_Color", newRingColor);
 //                Debug.Log("Time is" + time);

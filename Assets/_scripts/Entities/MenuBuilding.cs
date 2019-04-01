@@ -16,6 +16,7 @@ public class MenuBuilding : MonoBehaviour
     public string LevelText;
     //Tooltip text for on hover when they've already selected the building and need to tap again to confirm
     public string LevelText2;
+    public bool Clicked;
 
     // Start is called before the first frame update
     void Start()

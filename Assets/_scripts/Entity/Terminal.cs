@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     public class Terminal : MonoBehaviour
     {

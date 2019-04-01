@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using Level;
+using RideShareLevel;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Pin : MonoBehaviour
+public class Pin : LevelObject
 {
     public Passenger Passenger;
     public Transform Sprite;
@@ -28,12 +28,13 @@ public class Pin : MonoBehaviour
     {
         _camera = Camera.main;
         SelectionNumber.DOFade(0, 0);
-        PlayerVehicleManager.Instance.HoverChanged.AddListener(HandleHoverChange);
+        InputManager.Instance.HoverChanged.AddListener(HandleHoverChange);
 
         _hoverSequence = DOTween.Sequence();
         _hoverSequence.Append(transform.DOMoveY(3f, .2f).SetRelative(true));
         _hoverSequence.SetAutoKill(false).Pause();
     }
+
 
     private void HandleHoverChange(GameObject go)
     {

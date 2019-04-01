@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class Osborne_AudioManager : MonoBehaviour {
+public class Osborne_AudioManager : Singleton<Osborne_AudioManager> {
 
     public AudioMixerSnapshot layer1On;
     public AudioMixerSnapshot layer1Off;

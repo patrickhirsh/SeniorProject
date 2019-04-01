@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     public class PathNodeComparer : IComparer<PathNode>
     {

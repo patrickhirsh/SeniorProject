@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     [CustomEditor(typeof(Connection))]
     [CanEditMultipleObjects]
@@ -19,12 +19,6 @@ namespace Level
 
             EditorGUILayout.ObjectField("Connects To", myTarget.GetConnectsTo, typeof(Connection), true);
             EditorGUILayout.ObjectField("Parent", myTarget.ParentRoute, typeof(Entity), true);
-
-            EditorGUILayout.Space();
-            if (GUILayout.Button("Bake Connection"))
-            {
-                myTarget.Bake(true);
-            }
         }
 
         private static void PropertyField(SerializedProperty myIterator)

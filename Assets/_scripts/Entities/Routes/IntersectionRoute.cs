@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Level
+namespace RideShareLevel
 {
     public class IntersectionRoute : Route
     {

@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreManagerScript : MonoBehaviour {
-
+public class ScoreManager : Singleton<ScoreManager>
+{
     //Score integer (deprecated?)
     private int score;
     //Minimum score val to complete level (Deprecated?)
-    private int minScoreVal = (int)(10 / PassengerManager.PassengerTimeout);
+    private int minScoreVal = (int)(10 / PassengerController.PassengerTimeout);
     //Dictionary of colored passenger requirments and their requirement numbers
     private Dictionary<Building.BuildingColors, int> scoreDic;
-    
+
     //Designer specified passneger specifications
     public List<PassengerTypes> passengerSpecs;
 
@@ -51,7 +51,7 @@ public class ScoreManagerScript : MonoBehaviour {
         //Highlight building to use as return menu/just make the score into the return object?
 
         //Fire off fireworks for victory
-        
+
         //throw new NotImplementedException();
     }
 
@@ -80,7 +80,7 @@ public class ScoreManagerScript : MonoBehaviour {
     public void ScorePoints(Building.BuildingColors passengerColor, int numDelivered)
     {
         scoreDic[passengerColor] -= numDelivered;
-        if(scoreDic[passengerColor] == 0)
+        if (scoreDic[passengerColor] == 0)
         {
             if (CheckGameEndState())
             {

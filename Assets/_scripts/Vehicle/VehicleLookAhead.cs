@@ -6,7 +6,7 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     public class VehicleLookAhead : MonoBehaviour
     {

@@ -1,4 +1,4 @@
-﻿using Level;
+﻿using RideShareLevel;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,22 +6,22 @@ using UnityEngine;
 
 public enum EnemyVehicleStatus { pathingToPassenger, pathingToDestination, pathingToDespawn };
 
-public class EnemyVehicleManager : VehicleManager
+public class EnemyVehicleController : VehicleController
 {
 
     #region Singleton
-    private static EnemyVehicleManager _instance;
-    public static EnemyVehicleManager Instance => _instance ?? (_instance = Create());
+    private static EnemyVehicleController _instance;
+    public static EnemyVehicleController Instance => _instance ?? (_instance = Create());
 
-    private static EnemyVehicleManager Create()
+    private static EnemyVehicleController Create()
     {
-        GameObject singleton = FindObjectOfType<EnemyVehicleManager>()?.gameObject;
+        GameObject singleton = FindObjectOfType<EnemyVehicleController>()?.gameObject;
         if (singleton == null)
         {
-            singleton = new GameObject { name = $"[{typeof(EnemyVehicleManager).Name}]" };
-            singleton.AddComponent<EnemyVehicleManager>();
+            singleton = new GameObject { name = $"[{typeof(EnemyVehicleController).Name}]" };
+            singleton.AddComponent<EnemyVehicleController>();
         }
-        return singleton.GetComponent<EnemyVehicleManager>();
+        return singleton.GetComponent<EnemyVehicleController>();
     }
     #endregion
 
@@ -107,13 +107,12 @@ public class EnemyVehicleManager : VehicleManager
     /// </summary>
     public void PickupPassenger(Passenger passenger)
     {
-        SpawnRoute spawnPoint = NeutralVehicleManager.Instance.GetRandomSpawnRoute();
+        SpawnRoute spawnPoint = CurrentLevel.NeutralVehicleController.GetRandomSpawnRoute();
         Debug.Assert(VehiclePrefab != null);    // if this assert fails, the enemy vehicle has not been set in the inspector!
 
         // instantiate the new vehicle
         Vehicle vehicle = Instantiate(VehiclePrefab, spawnPoint.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
         vehicle.CurrentRoute = spawnPoint;
-        vehicle.Manager = this;
 
         // track the vehicle with a mapping to its task
         EnemyVehicleTask task = new EnemyVehicleTask();
@@ -147,7 +146,7 @@ public class EnemyVehicleManager : VehicleManager
         Debug.Assert(!vehicle.HasPassenger);
 
         // obtain a path to the vehicle's despawn point and assign the task
-        SpawnRoute despawnPoint = NeutralVehicleManager.Instance.GetRandomSpawnRoute();
+        SpawnRoute despawnPoint = CurrentLevel.NeutralVehicleController.GetRandomSpawnRoute();
         Queue<Connection> path = new Queue<Connection>();
         PathfindingManager.Instance.GetPath(vehicle.CurrentRoute, despawnPoint, out path);
         vehicle.AssignTask(new VehicleTask(TaskType.ActiveAi, path, VehicleTaskCallback));

@@ -1,4 +1,4 @@
-﻿using Level;
+﻿using RideShareLevel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using Utility;
 /// <summary>
 /// Manages the state of all the entities in a level
 /// </summary>
-public class EntityManager : Singleton<EntityManager>
+public class EntityController : LevelObject
 {
     [SerializeField]
     public Entity[] Entities;
@@ -51,9 +51,6 @@ public class EntityManager : Singleton<EntityManager>
 #endif
             }
         }
-
-        Broadcaster.Broadcast(GameEvent.SetupConnection);
-        Broadcaster.Broadcast(GameEvent.SetupBakedPaths);
     }
 
 #if UNITY_EDITOR

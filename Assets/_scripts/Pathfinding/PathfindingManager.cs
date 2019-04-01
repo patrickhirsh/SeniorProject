@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 
-namespace Level
+namespace RideShareLevel
 {
     public class PathfindingManager : MonoBehaviour
     {

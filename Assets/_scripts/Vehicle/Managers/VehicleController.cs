@@ -3,29 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     /// <summary>
     /// Vehicle managers for all vehicle types should implement this class. 
     /// </summary>
-    public abstract class VehicleManager : MonoBehaviour
+    public abstract class VehicleController : LevelObject
     {
-        private List<Vehicle> _vehicles = new List<Vehicle>();
+        private Vehicle[] _vehicles;
 
         #region Unity Methods
 
         private void Awake()
         {
             Broadcaster.AddListener(GameEvent.Reset, Reset);
-            FindVehicles();
-        }
-
-        private void FindVehicles()
-        {
-            foreach (var vehicle in FindObjectsOfType<Vehicle>().Where(vehicle => vehicle.Manager == this))
-            {
-                _vehicles.Add(vehicle);
-            }
+            _vehicles = GetComponentsInChildren<Vehicle>();
         }
         #endregion
 
@@ -40,13 +32,7 @@ namespace Level
 
         private void Reset(GameEvent @event)
         {
-            _vehicles = new List<Vehicle>();
-            FindVehicles();
-        }
-
-        private void MoveVehicle(Vehicle vehicle)
-        {
-
+            _vehicles = GetComponentsInChildren<Vehicle>();
         }
     }
 }
