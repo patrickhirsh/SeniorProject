@@ -51,11 +51,31 @@ public class ScoreManagerScript : MonoBehaviour {
 
     private void VictoryCondition()
     {
+        //Stop generating new passengers
+
+        //Remove all unpicked up passengers from play or let them time out?
+
+        //Generate final score (3 stars?) based on timer
+
+        //Highlight building to use as return menu/just make the score into the return object?
+
+        //Fire off fireworks for victory
+        
         //throw new NotImplementedException();
     }
 
     private void FailureCondition()
     {
+        //Stop generating new passengers
+
+        //Remove all unpicked up passengers from play or let them time out?
+
+        //Generate final score (3 stars?) based on timer
+
+        //Highlight building to use as return menu/just make the score into the return object?
+
+        //Fire off fireworks for victory
+
         //throw new NotImplementedException();
     }
 
@@ -66,7 +86,7 @@ public class ScoreManagerScript : MonoBehaviour {
         {
             if (CheckGameEndState())
             {
-                
+                VictoryCondition();
 
             }
         }
@@ -76,7 +96,7 @@ public class ScoreManagerScript : MonoBehaviour {
     {
         foreach (Building.BuildingColors pass in scoreDic.Keys)
         {
-            if (scoreDic[pass] != 0)
+            if (scoreDic[pass] >= 0)
             {
                 return false;
             }
