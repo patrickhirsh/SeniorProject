@@ -14,8 +14,6 @@ namespace Level
 
         public Route StartRoute => StartTerminal.ParentRoute;
        
-
-
         public Route DestRoute;
         public Pin PassengerPickupReticle;
         public Vector3 AdjustmentVector;
@@ -51,7 +49,6 @@ namespace Level
             PickedUp = false;
             EnemyVehicleEnroute = false;
             SpawnPickupReticle();
-
         }
 
         private GameObject SpawnRing(Color color, float speed)
