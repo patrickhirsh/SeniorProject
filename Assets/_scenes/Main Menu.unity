@@ -2388,13 +2388,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc39bfb7c03b38240b80fe8009e3c178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passengerSpecs:
-  - numSpawn: 10
-    numRequired: 4
-    passColor: 0
-  - numSpawn: 10
-    numRequired: 5
-    passColor: 1
   GameTimer: 0
 --- !u!1 &1658272088
 GameObject:
@@ -3930,6 +3923,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menu Selection
       objectReference: {fileID: 0}
+    - target: {fileID: 7727474474826903131, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: PassengerController
+      value: 
+      objectReference: {fileID: 7727474475347176130}
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3985,6 +3983,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: _neutralVehiclePrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: _neutralVehiclePrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1667412018430948, guid: 47aedc68359e82144b5e66b00050ac6a,
+        type: 3}
+    - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: _neutralVehiclePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1667412018430948, guid: effe08e4da079ad4ea8b04a737717901,
+        type: 3}
+    - target: {fileID: 7727474475614736796, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: VehiclePrefab
+      value: 
+      objectReference: {fileID: 1667412018430948, guid: f95318e49525eda4499934cda4e2e279,
+        type: 3}
     - target: {fileID: 7727474475605120167, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_IsActive
@@ -4020,29 +4041,24 @@ PrefabInstance:
       propertyPath: passengerSpecs.Array.data[1].numRequired
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
+    - target: {fileID: 7727474475605120166, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
-      propertyPath: _neutralVehiclePrefabs.Array.size
-      value: 2
+      propertyPath: PassengerSpecs.Array.size
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: _neutralVehiclePrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 1667412018430948, guid: 47aedc68359e82144b5e66b00050ac6a,
-        type: 3}
-    - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: _neutralVehiclePrefabs.Array.data[1]
-      value: 
-      objectReference: {fileID: 1667412018430948, guid: effe08e4da079ad4ea8b04a737717901,
-        type: 3}
-    - target: {fileID: 7727474475614736796, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: VehiclePrefab
-      value: 
-      objectReference: {fileID: 1667412018430948, guid: f95318e49525eda4499934cda4e2e279,
-        type: 3}
     m_RemovedComponents:
     - {fileID: 7727474475157077233, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
+--- !u!114 &7727474475347176130 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7727474475605120166, guid: f4a84096b104f4f4fa38586a5479b361,
+    type: 3}
+  m_PrefabInstance: {fileID: 7727474475347176129}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b1266cbe9b65e4d9ea97664af1b73e85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

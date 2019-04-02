@@ -3,5 +3,7 @@
     GameStateChanged,
     Reset,
     LevelChange,
-    LevelComplete
+    LevelCompleteFail,
+    PassengerDelivered,
+    LevelCompleteSuccess
 }

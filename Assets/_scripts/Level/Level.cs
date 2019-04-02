@@ -12,19 +12,16 @@ namespace RideShareLevel
         public EntityController EntityController;
         public PassengerController PassengerController;
 
-        public List<PassengerTypes> PassengerSpecs;
-
-
 #if UNITY_EDITOR
         public void Bake()
         {
             UnityEditor.Undo.RecordObject(this, "Bake Level");
 
-            PlayerVehicleController = GetComponentInChildren<PlayerVehicleController>();
-            NeutralVehicleController = GetComponentInChildren<NeutralVehicleController>();
-            EnemyVehicleController = GetComponentInChildren<EnemyVehicleController>();
-            EntityController = GetComponentInChildren<EntityController>();
-            PassengerController = GetComponentInChildren<PassengerController>();
+            PlayerVehicleController = GetComponentInChildren<PlayerVehicleController>(true);
+            NeutralVehicleController = GetComponentInChildren<NeutralVehicleController>(true);
+            EnemyVehicleController = GetComponentInChildren<EnemyVehicleController>(true);
+            EntityController = GetComponentInChildren<EntityController>(true);
+            PassengerController = GetComponentInChildren<PassengerController>(true);
 
             Debug.Assert(PlayerVehicleController != null, "Missing a Player Vehicle Controller");
             Debug.Assert(NeutralVehicleController != null, "Missing a Neutral Vehicle Controller");
