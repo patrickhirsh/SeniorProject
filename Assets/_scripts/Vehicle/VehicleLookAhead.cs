@@ -53,7 +53,7 @@ namespace RideShareLevel
                     _isWaiting = false;
                 }
             }
-            else if (IsVehicleCollision && this.Vehicle.GetCurrentTask() != null)
+            else if (IsVehicleCollision)
             {
                 if (!_isWaiting)
                 {
@@ -87,7 +87,7 @@ namespace RideShareLevel
         {
             if (other.GetComponent<Vehicle>())
             {
-                if (!_collidingVehicles.Contains(other) && !_isInGodMode)
+                if (!_collidingVehicles.Contains(other) && !_isInGodMode && (other.GetComponent<Vehicle>().GetCurrentTask() != null))
                 {
                     _collidingVehicles.Add(other);
                 }
