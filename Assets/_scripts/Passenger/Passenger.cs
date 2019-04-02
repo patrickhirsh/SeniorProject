@@ -77,7 +77,7 @@ namespace RideShareLevel
             // spawn an enemy vehicle if the passenger times out and hasn't yet been picked up
             if (_timeRemaining == 0 && !PickedUp && !EnemyVehicleEnroute)
             {
-                EnemyVehicleController.Instance.PickupPassenger(this);
+                CurrentLevel.EnemyVehicleController.PickupPassenger(this);
                 Debug.Log("Enemy Vehicle Spawned!");
                 EnemyVehicleEnroute = true;
 //                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);

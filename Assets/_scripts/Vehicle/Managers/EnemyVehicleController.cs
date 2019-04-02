@@ -9,22 +9,6 @@ public enum EnemyVehicleStatus { pathingToPassenger, pathingToDestination, pathi
 public class EnemyVehicleController : VehicleController
 {
 
-    #region Singleton
-    private static EnemyVehicleController _instance;
-    public static EnemyVehicleController Instance => _instance ?? (_instance = Create());
-
-    private static EnemyVehicleController Create()
-    {
-        GameObject singleton = FindObjectOfType<EnemyVehicleController>()?.gameObject;
-        if (singleton == null)
-        {
-            singleton = new GameObject { name = $"[{typeof(EnemyVehicleController).Name}]" };
-            singleton.AddComponent<EnemyVehicleController>();
-        }
-        return singleton.GetComponent<EnemyVehicleController>();
-    }
-    #endregion
-
     // prefab to be spawned for enemy vehicles
     public GameObject VehiclePrefab;
 
