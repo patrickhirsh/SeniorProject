@@ -3985,6 +3985,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7727474475605120167, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[1].passColor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[1].numSpawn
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[0].numSpawn
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[0].numRequired
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: passengerSpecs.Array.data[1].numRequired
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7727474474434742804, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: _neutralVehiclePrefabs.Array.size
@@ -4008,41 +4043,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1667412018430948, guid: f95318e49525eda4499934cda4e2e279,
         type: 3}
-    - target: {fileID: 7727474475605120167, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: passengerSpecs.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: passengerSpecs.Array.data[1].passColor
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: passengerSpecs.Array.data[1].numSpawn
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: passengerSpecs.Array.data[0].numSpawn
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: passengerSpecs.Array.data[0].numRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: passengerSpecs.Array.data[1].numRequired
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7727474475157077233, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
