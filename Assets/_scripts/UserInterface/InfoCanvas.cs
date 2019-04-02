@@ -39,11 +39,11 @@ namespace UserInterface
             var pin = hoverGameObject.GetComponent<Pin>();
             var menuBuilding = hoverGameObject.GetComponent<MenuBuilding>();
 
-            if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle) && CurrentLevel.PlayerVehicleController.SelectedPins.Any())
+            if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle) && CurrentLevel.PlayerVehicleController.SelectedPins.Any() && vehicle.GetCurrentTask() == null)
             {
                 UpdateText("Send Vehicle to Pickup Passengers");
             }
-            else if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle))
+            else if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle) && vehicle.GetCurrentTask() == null)
             {
                 UpdateText("No Passenger Selected");
             }

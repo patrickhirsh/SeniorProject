@@ -15,7 +15,7 @@ public class PassengerController : LevelObject
     private Dictionary<Building.BuildingColors, int> SpawnedDictionary;
     private Dictionary<Building.BuildingColors, List<Route>> BuildingDict;
 
-    public static float PassengerTimeout = 60.0f;
+    public static float PassengerTimeout = 20.0f;
     public float SpawnTime = 30.0f;
     public int PassengersToSpawn = 30;
     private int _passengerCount = 0;

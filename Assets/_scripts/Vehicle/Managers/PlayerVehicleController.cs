@@ -178,7 +178,7 @@ public class PlayerVehicleController : VehicleController
                 menuBuilding.setClicked(true);
             }
         }
-        else if (vehicle && HasOwnership(vehicle) && SelectedPins.Any())
+        else if (vehicle && HasOwnership(vehicle) && SelectedPins.Any() && vehicle.GetCurrentTask() == null)
         {
             foreach (Vehicle x in PlayerVehicles)
             {
@@ -191,8 +191,7 @@ public class PlayerVehicleController : VehicleController
         {
             foreach (Vehicle x in PlayerVehicles)
             {
-                Debug.Log("IN FOR LOOPS");
-                x.ActivateRing();
+																if (x.GetCurrentTask() == null) { x.ActivateRing(); }             
             }
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Passengers {pin}", pin);
             HandlePinSelect(pin);
