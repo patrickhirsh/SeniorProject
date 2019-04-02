@@ -59,6 +59,7 @@ public class PlayerVehicleController : VehicleController
                     numDroppedOff += 1;
 
                     DeliverPassenger(vehicle, passenger);
+																				ParticleManager.Instance.GenerateFirework(vehicle.transform.position);
                 }
             }
 
