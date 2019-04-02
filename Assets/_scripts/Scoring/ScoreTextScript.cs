@@ -33,6 +33,7 @@ public class ScoreTextScript : LevelObject
     {
         ScoreIcons = new Dictionary<Building.BuildingColors, GameObject>();
         Broadcaster.AddListener(GameEvent.PassengerDelivered, UpdateScore);
+        Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, ShutOffOnVictory);
     }
 
 
@@ -135,5 +136,11 @@ public class ScoreTextScript : LevelObject
         NewIcon.GetComponent<ScoreIcon>().Score = initialScoreValue;
         NewIcon.GetComponentInChildren<TextMesh>().text = initialScoreValue.ToString();
         return NewIcon;
+    }
+
+
+    private void ShutOffOnVictory(GameEvent arg0)
+    {
+        this.GetComponent<Renderer>().enabled = false;
     }
 }

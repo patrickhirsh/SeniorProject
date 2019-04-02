@@ -1981,6 +1981,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ARSessionOrigin: {fileID: 71124185}
   m_DistanceFromPlane: 1
+--- !u!1 &1281930234 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1737382310515665908, guid: f4a84096b104f4f4fa38586a5479b361,
+    type: 3}
+  m_PrefabInstance: {fileID: 7727474475347176129}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1281930238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281930234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: a319b11245f40b24caf3812ca4ffdc11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RepresentedLevel: {fileID: 2823415133944374929, guid: 2db1c5aaf8b0c43419fa696b95aac8fc,
+    type: 3}
+  NewLayer1: {fileID: 0}
+  NewLayer2: {fileID: 0}
+  NewLayer3: {fileID: 0}
+  LevelText: Tap to select Dubai Level
+  LevelText2: Tap again to go to Dubai
+  GameTimer: 0
+--- !u!65 &1281930239
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281930234}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 27.36207, y: 73.76599, z: 26.503393}
+  m_Center: {x: 0, y: 36.910484, z: 0}
 --- !u!1 &1326187239
 GameObject:
   m_ObjectHideFlags: 0
