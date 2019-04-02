@@ -72,6 +72,11 @@ namespace RideShareLevel
                     ColorPool.Add(color);
                 }
             }
+
+            if(ColorPool.Count == 0)
+            {
+                return Building.BuildingColors.BROKENDONOTSELECT;
+            }
             //Return a randomly selected color for the passenger
             return ColorPool[Random.Range(0, buildingColors.Count)];
         }

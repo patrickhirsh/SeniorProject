@@ -48,12 +48,15 @@ namespace RideShareLevel
         public void Start()
         {
             _color = CurrentLevel.GetValidColor(SpawnedDictionary);
-            DestRoute = CurrentLevel.GetBuildingRoute(_color);
-            _timeRemaining = PassengerController.PassengerTimeout;
-            PickedUp = false;
-            EnemyVehicleEnroute = false;
-            SpawnPickupReticle();
-            SpawnedDictionary[_color]+= 1;
+            if(_color != Building.BuildingColors.BROKENDONOTSELECT)
+            {
+                DestRoute = CurrentLevel.GetBuildingRoute(_color);
+                _timeRemaining = PassengerController.PassengerTimeout;
+                PickedUp = false;
+                EnemyVehicleEnroute = false;
+                SpawnPickupReticle();
+                SpawnedDictionary[_color]+= 1;
+            }
         }
 
         private GameObject SpawnRing(Color color, float speed)

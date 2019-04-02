@@ -48,8 +48,6 @@ public class ScoreManager : Singleton<ScoreManager>
 
     }
 
-   
-
     /// <summary>
     /// Function to call on Victory Condition Reached
     /// </summary>
