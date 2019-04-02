@@ -1310,6 +1310,7 @@ MonoBehaviour:
   - {fileID: 7686456585385956372}
   - {fileID: 7686472152069489836}
   - {fileID: 7685519656737731832}
+  Buildings: []
 --- !u!1 &7727474473942443479
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,6 +1618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6274f9bb1c108f4ab36a262e9a5c121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Level: {fileID: 0}
   iconPrefab: {fileID: 1087905868272269997, guid: 45d91bb227bfb9848acc2fc0541997f4,
     type: 3}
   RedMat: {fileID: 2100000, guid: a17143163a688482b8fa7c654e746b0d, type: 2}
@@ -1795,7 +1797,7 @@ MonoBehaviour:
   NeutralVehicleController: {fileID: 7727474474434742804}
   EnemyVehicleController: {fileID: 7727474475614736796}
   EntityController: {fileID: 7727474473734387165}
-  PassengerSpecs: []
+  PassengerController: {fileID: 7727474475605120166}
 --- !u!1 &7727474475019287324
 GameObject:
   m_ObjectHideFlags: 0
@@ -2063,13 +2065,6 @@ MonoBehaviour:
   NewLayer1: {fileID: 0}
   NewLayer2: {fileID: 0}
   NewLayer3: {fileID: 0}
-  passengerSpecs:
-  - numSpawn: 8
-    numRequired: 5
-    passColor: 1
-  - numSpawn: 8
-    numRequired: 5
-    passColor: 0
   LevelText: Tap to select San Francisco
   LevelText2: Tap again to go to San Francisco
   GameTimer: 0
@@ -2248,8 +2243,7 @@ MonoBehaviour:
   Level: {fileID: 7727474474826903131}
   PassengerPrefab: {fileID: 114575948943433876, guid: 002ee8d4b0c874556a8985d17b8e0407,
     type: 3}
-  SpawnTime: 10
-  PassengersToSpawn: 30
+  PassengerSpecs: []
 --- !u!1 &7727474475614736794
 GameObject:
   m_ObjectHideFlags: 0

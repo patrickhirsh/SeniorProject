@@ -4134,21 +4134,18 @@ MonoBehaviour:
   PassengerPrefab: {fileID: 114575948943433876, guid: 002ee8d4b0c874556a8985d17b8e0407,
     type: 3}
   PassengerSpecs:
-  - NumSpawn: 2
-    NumRequired: 1
+  - NumSpawn: 10
+    NumRequired: 4
     InitialDelay: 0
     TimeBetweenSpawn: 15
-    PassengerTimer: 10
+    PassengerTimer: 15
     PassColor: 0
-  - NumSpawn: 2
-    NumRequired: 1
-    InitialDelay: 0
-    TimeBetweenSpawn: 20
+  - NumSpawn: 6
+    NumRequired: 2
+    InitialDelay: 6
+    TimeBetweenSpawn: 25
     PassengerTimer: 30
     PassColor: 1
-  Buildings:
-  - {fileID: 1383382812668727597}
-  - {fileID: 1383382812361675155}
 --- !u!1 &8162377342499303696
 GameObject:
   m_ObjectHideFlags: 0
