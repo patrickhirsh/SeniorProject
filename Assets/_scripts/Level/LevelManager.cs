@@ -61,8 +61,8 @@ public class LevelManager : Singleton<LevelManager>
         Destroy(oldLevel);
         CurrentLevel.EntityController.Initialize();
 
-								//Notify controllers of the new gamestate
-								Broadcaster.Broadcast(GameEvent.GameStateChanged);
-				}
+        //Notify controllers of the new gamestate
+        Broadcaster.Broadcast(GameEvent.GameStateChanged);
+    }
 
 }

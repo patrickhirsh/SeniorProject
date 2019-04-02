@@ -2,5 +2,6 @@
 {
     GameStateChanged,
     Reset,
-    LevelChange
+    LevelChange,
+    LevelComplete
 }

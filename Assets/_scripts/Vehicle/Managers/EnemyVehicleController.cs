@@ -72,6 +72,7 @@ public class EnemyVehicleController : VehicleController
 
             case EnemyVehicleStatus.pathingToDestination:
                 vehicle.RemovePassenger(_enemyVehicles[vehicle].passenger);
+                CurrentLevel.PassengerController.PassengerDelivered(vehicle.Passengers[0]);
                 Destroy(_enemyVehicles[vehicle].passenger.gameObject);
                 PathToDespawn(vehicle);
                 _enemyVehicles[vehicle].status = EnemyVehicleStatus.pathingToDespawn;

@@ -100,13 +100,14 @@ public class PlayerVehicleController : VehicleController
         terminal.RemovePassenger();
     }
 
-    private static void DeliverPassenger(Vehicle vehicle, Passenger passenger)
+    private void DeliverPassenger(Vehicle vehicle, Passenger passenger)
     {
         vehicle.RemovePassenger(passenger);
 
         Destroy(passenger.gameObject);
 
         Debug.Log("PASSENGER DELIVERED");
+        CurrentLevel.PassengerController.PassengerDelivered(passenger);
         //GameManager.Instance.AddScore(10);
     }
 
