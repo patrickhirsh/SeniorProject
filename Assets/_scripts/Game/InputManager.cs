@@ -97,8 +97,7 @@ public class InputManager : Singleton<InputManager>
         RaycastHit hitInfo;
         var cameraTransform = _camera.transform;
         var origin = cameraTransform.position;
-        Debug.DrawRay(transform.position, cameraTransform.forward, Color.green);
-        var hit = Physics.SphereCast(origin, raycastThickness, cameraTransform.forward, out hitInfo);
+        var hit = Physics.Raycast(origin, cameraTransform.forward, out hitInfo);
 
         HandleHover(hit, hitInfo);
 
