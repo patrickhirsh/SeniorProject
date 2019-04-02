@@ -9,22 +9,6 @@ public enum EnemyVehicleStatus { pathingToPassenger, pathingToDestination, pathi
 public class EnemyVehicleController : VehicleController
 {
 
-    #region Singleton
-    private static EnemyVehicleController _instance;
-    public static EnemyVehicleController Instance => _instance ?? (_instance = Create());
-
-    private static EnemyVehicleController Create()
-    {
-        GameObject singleton = FindObjectOfType<EnemyVehicleController>()?.gameObject;
-        if (singleton == null)
-        {
-            singleton = new GameObject { name = $"[{typeof(EnemyVehicleController).Name}]" };
-            singleton.AddComponent<EnemyVehicleController>();
-        }
-        return singleton.GetComponent<EnemyVehicleController>();
-    }
-    #endregion
-
     // prefab to be spawned for enemy vehicles
     public GameObject VehiclePrefab;
 
@@ -68,9 +52,9 @@ public class EnemyVehicleController : VehicleController
                 var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
                 foreach (Terminal terminal in passengerTerminals)
                 {
-                    if (terminal.Passenger == _enemyVehicles[vehicle].passenger)
+                    if (terminal.CurrentPassenger() == _enemyVehicles[vehicle].passenger)
                     {
-                        vehicle.AddPassenger(terminal.Passenger);
+                        vehicle.AddPassenger(terminal.CurrentPassenger());
                         //terminal.Passenger.DestroyRing();
                         terminal.RemovePassenger();
                         DropOffPassenger(vehicle);
@@ -88,6 +72,7 @@ public class EnemyVehicleController : VehicleController
 
             case EnemyVehicleStatus.pathingToDestination:
                 vehicle.RemovePassenger(_enemyVehicles[vehicle].passenger);
+                CurrentLevel.PassengerController.PassengerDelivered(_enemyVehicles[vehicle].passenger);
                 Destroy(_enemyVehicles[vehicle].passenger.gameObject);
                 PathToDespawn(vehicle);
                 _enemyVehicles[vehicle].status = EnemyVehicleStatus.pathingToDespawn;

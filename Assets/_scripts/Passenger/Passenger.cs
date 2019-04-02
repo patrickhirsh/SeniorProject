@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
-using Game;
+﻿using Game;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,51 +17,19 @@ namespace RideShareLevel
         public bool EnemyVehicleEnroute;
         public Gradient RingColorGradient;
         public GameObject RingPrefab;
-        public GameObject LevelPrefab { get; internal set; }
 
         private Building.BuildingColors _color;
         private float _timeRemaining;
+        private float _totalTime;
         public Pin _pickupPin;
         private GameObject Ring;
         private Image _RadialTimer;
-        private Dictionary<Building.BuildingColors, int> SpawnedDictionary;
 
 
         #region Unity Methods
         private void Awake()
         {
-            SpawnedDictionary = new Dictionary<Building.BuildingColors, int>();
             Broadcaster.AddListener(GameEvent.Reset, Reset);
-        }
-
-        private void Reset(GameEvent @event)
-        {
-            SpawnedDictionary = new Dictionary<Building.BuildingColors, int>();
-            Destroy(gameObject);
-
-        }
-
-        public void Start()
-        {
-            _color = CurrentLevel.GetValidColor(SpawnedDictionary);
-            if(_color != Building.BuildingColors.BROKENDONOTSELECT)
-            {
-                DestRoute = CurrentLevel.GetBuildingRoute(_color);
-                _timeRemaining = PassengerController.PassengerTimeout;
-                PickedUp = false;
-                EnemyVehicleEnroute = false;
-                SpawnPickupReticle();
-                SpawnedDictionary[_color]+= 1;
-            }
-        }
-
-        private GameObject SpawnRing(Color color, float speed)
-        {
-            GameObject spawnedObj = Instantiate(RingPrefab, transform, false);
-            Material ringMat = spawnedObj.GetComponent<Renderer>().material;
-            ringMat.SetColor("_Color", color);
-            ringMat.SetFloat("_Speed", speed);
-            return spawnedObj;
         }
 
         public void Update()
@@ -80,10 +44,10 @@ namespace RideShareLevel
             // spawn an enemy vehicle if the passenger times out and hasn't yet been picked up
             if (_timeRemaining == 0 && !PickedUp && !EnemyVehicleEnroute)
             {
-                EnemyVehicleController.Instance.PickupPassenger(this);
+                CurrentLevel.EnemyVehicleController.PickupPassenger(this);
                 Debug.Log("Enemy Vehicle Spawned!");
                 EnemyVehicleEnroute = true;
-//                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
+                //                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
             }
 
 
@@ -91,7 +55,7 @@ namespace RideShareLevel
 
             if (!PickedUp && _RadialTimer != null)
             {
-                _RadialTimer.fillAmount = _timeRemaining / PassengerController.PassengerTimeout;
+                _RadialTimer.fillAmount = _timeRemaining / _totalTime;
             }
             else if (_RadialTimer != null)
             {
@@ -100,17 +64,17 @@ namespace RideShareLevel
 
             if (Ring == null && !PickedUp)
             {
-//                Ring = SpawnRing(Color.red, 3);
+                //                Ring = SpawnRing(Color.red, 3);
             }
-                
-            else if(!PickedUp)
+
+            else if (!PickedUp)
             {
-                float time = _timeRemaining / PassengerController.PassengerTimeout;
+                float time = _timeRemaining / _totalTime;
                 Color newRingColor = RingColorGradient.Evaluate(1 - time);
                 Ring.GetComponent<Renderer>().material.SetColor("_Color", newRingColor);
-//                Debug.Log("Time is" + time);
-                if(_timeRemaining > 0)
-                    Ring.GetComponent<Renderer>().material.SetFloat("_Speed", 6-(time*5));
+                //                Debug.Log("Time is" + time);
+                if (_timeRemaining > 0)
+                    Ring.GetComponent<Renderer>().material.SetFloat("_Speed", 6 - (time * 5));
             }
 
             // NOTE: PickedUp == true when ANY vehicle has picked it up. Once it's picked up, don't show
@@ -121,12 +85,39 @@ namespace RideShareLevel
             // to indicate that the passenger timed out and an enemy vehicle is now on its way to pick it up instead...
 
         }
+        #endregion
+
+        private void Reset(GameEvent @event)
+        {
+            Destroy(gameObject);
+        }
+
+        private GameObject SpawnRing(Color color, float speed)
+        {
+            GameObject spawnedObj = Instantiate(RingPrefab, transform, false);
+            Material ringMat = spawnedObj.GetComponent<Renderer>().material;
+            ringMat.SetColor("_Color", color);
+            ringMat.SetFloat("_Speed", speed);
+            return spawnedObj;
+        }
+
+        public void SetPassengerType(PassengerTypes type)
+        {
+            _totalTime = type.PassengerTimer;
+            _timeRemaining = type.PassengerTimer;
+            _color = type.PassColor;
+
+            DestRoute = CurrentLevel.PassengerController.GetBuildingRoute(_color);
+
+            PickedUp = false;
+            EnemyVehicleEnroute = false;
+            SpawnPickupReticle();
+        }
 
         public void DestroyRing()
         {
             Destroy(Ring);
         }
-        #endregion
 
         public float GetTimeRemaining()
         {
