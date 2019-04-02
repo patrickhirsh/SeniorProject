@@ -20,6 +20,9 @@ public class EntityController : LevelObject
     public Connection[] Connections;
     private Dictionary<int, Connection> _connectionsById;
 
+    [SerializeField]
+    public Building[] Buildings;
+
     // Indexes mapped to entities
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
     private Dictionary<CellIndex, IList<Entity>> _cellIndexToEntities = new Dictionary<CellIndex, IList<Entity>>();
@@ -58,9 +61,10 @@ public class EntityController : LevelObject
     {
         UnityEditor.Undo.RecordObject(this, "Bake Entity Manager");
         Entities = GetComponentsInChildren<Entity>();
+        Buildings = CurrentLevel.GetComponentsInChildren<Building>();
         Routes = Entities.OfType<Route>().ToArray();
         Connections = Routes.SelectMany(route => route.Connections).ToArray();
-
+        
         foreach (var route in Routes)
         {
             route.Bake();

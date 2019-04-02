@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using RideShareLevel;
 using UnityEngine;
 
-public class ScoreTextScript : MonoBehaviour {
-    //Reference to score manager
-    ScoreManager SM;
+public class ScoreTextScript : LevelObject
+{
     /// <summary>
     /// Icon prefab for insatiating icons
     /// </summary>
     public GameObject iconPrefab;
+
     /// <summary>
     /// Dictionary of all scoring icons, key is the color. 
     /// </summary>
     private Dictionary<Building.BuildingColors, GameObject> ScoreIcons;
+
     /// <summary>
     /// Set of icon materials. 
     /// </summary>
@@ -24,18 +26,22 @@ public class ScoreTextScript : MonoBehaviour {
     public Material PurpleMat;
     public Material OrangeMat;
 
+    #region Unity Methods
 
     // Use this for initialization
-    void Awake () {
-        SM = GameObject.FindObjectOfType<ScoreManager>();
+    void Awake()
+    {
         ScoreIcons = new Dictionary<Building.BuildingColors, GameObject>();
-        
-	}
+        Broadcaster.AddListener(GameEvent.PassengerDelivered, UpdateScore);
+    }
+
 
     void Start()
     {
         CreateScoreIcons();
     }
+
+    #endregion
 
     /// <summary>
     /// Gets material object that should be assigned to icon from the color enum provided. 
@@ -63,29 +69,16 @@ public class ScoreTextScript : MonoBehaviour {
         }
     }
 
-
-
-    // Update is called once per frame
-    void Update ()
+    private void UpdateScore(GameEvent @event)
     {
-        UpdateScore();
-    }
-
-    // <summary>
-    // Updates the scoretext object in the scene.
-    // I extracted this so that we can do a explicit update if we want, but it shouldn't be neccessary as long as the score 
-    // manager continues to update it's value. 
-    //</summary>
-    private void UpdateScore()
-    {
-        int TempScore = 0;
-        foreach (KeyValuePair<Building.BuildingColors, GameObject> kvp in ScoreIcons) {
-            TempScore = SM.GetCurrentScore(kvp.Key);
-            if (kvp.Value.GetComponent<ScoreIcon>().Score != TempScore)
+        foreach (KeyValuePair<Building.BuildingColors, GameObject> kvp in ScoreIcons)
+        {
+            var passengersNeeded = CurrentLevel.PassengerController.GetPassengersNeeded(kvp.Key);
+            if (kvp.Value.GetComponent<ScoreIcon>().Score != passengersNeeded)
             {
-                ScoreIcons[kvp.Key].GetComponent<ScoreIcon>().Score = TempScore;
+                ScoreIcons[kvp.Key].GetComponent<ScoreIcon>().Score = passengersNeeded;
                 //This is a spot we could initiate some kind of cool effect for ticking up the score, I just don't know how to do that
-                ScoreIcons[kvp.Key].GetComponentInChildren<TextMesh>().text = TempScore.ToString();
+                ScoreIcons[kvp.Key].GetComponentInChildren<TextMesh>().text = passengersNeeded.ToString();
 
             }
         }
@@ -108,7 +101,7 @@ public class ScoreTextScript : MonoBehaviour {
     {
         int xAdjustment = 0;
         bool direction = true;
-        foreach (Building.BuildingColors color in SM.GetBuildingColors())
+        foreach (Building.BuildingColors color in CurrentLevel.PassengerController.GetBuildingColors())
         {
             ScoreIcons.Add(color, CreateIcon(color, xAdjustment));
             if (direction)
@@ -132,12 +125,12 @@ public class ScoreTextScript : MonoBehaviour {
     /// <param name="adjustmentInt"></param>
     /// <returns></returns>
     private GameObject CreateIcon(Building.BuildingColors color, int adjustmentInt)
-    {   
+    {
 
         GameObject NewIcon = Instantiate(iconPrefab, this.transform.position + new Vector3(adjustmentInt, 0, 0), this.transform.rotation, this.transform);
         NewIcon.GetComponentInChildren<IconImage>().ChangeColr(GetMatFromColorName(color));
         NewIcon.GetComponentInChildren<TextMesh>().text = "Balls";
-        int initialScoreValue = SM.getNumRequired(color);
+        int initialScoreValue = CurrentLevel.PassengerController.GetPassengersRequired(color);
 
         NewIcon.GetComponent<ScoreIcon>().Score = initialScoreValue;
         NewIcon.GetComponentInChildren<TextMesh>().text = initialScoreValue.ToString();

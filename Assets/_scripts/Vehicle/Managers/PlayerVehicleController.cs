@@ -59,11 +59,9 @@ public class PlayerVehicleController : VehicleController
                     numDroppedOff += 1;
 
                     DeliverPassenger(vehicle, passenger);
+																				ParticleManager.Instance.GenerateFirework(vehicle.transform.position);
                 }
             }
-
-            //TODO: give vehicle a CarType so that this can use vehicle.cartype instead of just std vehicles
-            ScoreManager.Instance.ScorePoints(PassColor, numDroppedOff);
         }
 
 
@@ -95,18 +93,19 @@ public class PlayerVehicleController : VehicleController
     {
         var passengerTerminals = vehicle.CurrentRoute.Terminals.Where(t => t.HasPassenger).ToArray();
         var terminal = passengerTerminals[Random.Range(0, passengerTerminals.Length)];
-        vehicle.AddPassenger(terminal.Passenger);
+        vehicle.AddPassenger(terminal.CurrentPassenger());
         //terminal.Passenger.DestroyRing();
         terminal.RemovePassenger();
     }
 
-    private static void DeliverPassenger(Vehicle vehicle, Passenger passenger)
+    private void DeliverPassenger(Vehicle vehicle, Passenger passenger)
     {
         vehicle.RemovePassenger(passenger);
 
         Destroy(passenger.gameObject);
 
         Debug.Log("PASSENGER DELIVERED");
+        CurrentLevel.PassengerController.PassengerDelivered(passenger, true);
         //GameManager.Instance.AddScore(10);
     }
 
