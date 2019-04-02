@@ -23,6 +23,7 @@ namespace RideShareLevel
             EditorGUILayout.LabelField($"Stats");
             if (myTarget.Entities != null) EditorGUILayout.LabelField($"{myTarget.Entities.Length} Entities");
             if (myTarget.Connections != null) EditorGUILayout.LabelField($"{myTarget.Connections.Length} Connections");
+            if (myTarget.Buildings != null) EditorGUILayout.LabelField($"{myTarget.Buildings.Length} Buildings");
             if (myTarget.Routes != null) EditorGUILayout.LabelField($"{myTarget.Routes.Length} Routes");
             if (myTarget.Routes != null) EditorGUILayout.LabelField($"{myTarget.Routes.Where(route => route != null).Sum(route => route.Terminals?.Length ?? 0)} Terminals");
 

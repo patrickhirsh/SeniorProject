@@ -8,7 +8,7 @@ public class Building : MonoBehaviour
     /// </summary>
     public RideShareLevel.Route DeliveryLocation;
 
-    public enum BuildingColors { Red, Green, Blue, Yellow, Purple, Orange }
+    public enum BuildingColors { Red, Green, Blue, Yellow, Purple, Orange, BROKENDONOTSELECT }
 
     public BuildingColors BuildingColor;
 
