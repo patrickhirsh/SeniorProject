@@ -11,12 +11,41 @@ using Random = UnityEngine.Random;
 public class LevelManager : Singleton<LevelManager>
 {
     public Level CurrentLevel;
-
+    //Bool for firing fireworks
+    private bool fireworks = false;
+    //timer for firing fireworks
+    private float fTimer;
+    //interval at which to fire firewors
+    public float FireworkInterval;
+    //interval variance for firing firewors
+    public float FireworkIntervalVariance;
+    //variance of fireworks position
+    public float FireworkPositionVariance;
     #region Unity Methods
 
     private void Start()
     {
+        Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, LaunchSuccessFireworks);
+    }
 
+    private void FixedUpdate()
+    {
+
+        if (fireworks && (fTimer <= 0))
+        {
+            var randPos = CurrentLevel.transform.position;
+            randPos.x += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
+            randPos.y += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
+            randPos.z += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
+            ParticleManager.Instance.GenerateFirework(CurrentLevel.transform.position);
+            fTimer += FireworkInterval + Random.Range(-FireworkIntervalVariance, FireworkIntervalVariance);
+        }
+        fTimer -= .01f;
+    }
+
+    private void LaunchSuccessFireworks(GameEvent arg0)
+    {
+        fireworks = true;
     }
 
     #endregion

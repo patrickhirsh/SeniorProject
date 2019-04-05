@@ -26,6 +26,7 @@ public class PlayerVehicleController : VehicleController
         }
         InputManager.Instance.Hit.AddListener(HandleHit);
         InputManager.Instance.NoHit.AddListener(HandleNotHit);
+        
     }
 
     #endregion

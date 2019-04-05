@@ -383,8 +383,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.2057528, y: 0.19750023, z: 3.3732924}
-  m_Center: {x: -0.03957194, y: -0.077050686, z: 0.29575872}
+  m_Size: {x: 3.2057528, y: 0.4981041, z: 3.984868}
+  m_Center: {x: -0.039572, y: 0.07325125, z: 0.19836783}
 --- !u!1001 &1271171626548354572
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -392,6 +392,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4876875689409500}
     m_Modifications:
+    - target: {fileID: 6276564003210997536, guid: fe771e87723b46c468804e588e803c88,
+        type: 3}
+      propertyPath: m_Name
+      value: 4Seater
+      objectReference: {fileID: 0}
     - target: {fileID: 6666966019303674900, guid: fe771e87723b46c468804e588e803c88,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -446,11 +451,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6276564003210997536, guid: fe771e87723b46c468804e588e803c88,
-        type: 3}
-      propertyPath: m_Name
-      value: 4Seater
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe771e87723b46c468804e588e803c88, type: 3}
