@@ -6,7 +6,7 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     public class VehicleLookAhead : MonoBehaviour
     {
@@ -29,7 +29,6 @@ namespace Level
 
         private void Update()
         {
-
             if (IsAtIntersection)
             {
                 if (!_isSlowed) SlowDown();
@@ -88,7 +87,7 @@ namespace Level
         {
             if (other.GetComponent<Vehicle>())
             {
-                if (!_collidingVehicles.Contains(other) && !_isInGodMode)
+                if (!_collidingVehicles.Contains(other) && !_isInGodMode && (other.GetComponent<Vehicle>().GetCurrentTask() != null))
                 {
                     _collidingVehicles.Add(other);
                 }

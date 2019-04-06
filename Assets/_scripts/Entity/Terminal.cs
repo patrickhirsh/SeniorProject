@@ -1,25 +1,27 @@
 ﻿using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     public class Terminal : MonoBehaviour
     {
         public Route ParentRoute => Connection.ParentRoute;
         public Connection Connection;
-        public Passenger Passenger;
+        private Passenger _passenger;
 
-        public bool HasPassenger => Passenger != null;
+        public bool HasPassenger => _passenger != null;
 
         #region Unity Methods
 
         #endregion
 
-        public bool SpawnPassenger(Passenger prefab)
+        public bool SetPassenger(Passenger passenger)
         {
             if (!this.HasPassenger)
             {
-                Passenger = Instantiate(prefab, ParentRoute.CenterTransform, false);
-                Passenger.StartTerminal = this;
+                _passenger = passenger;
+                _passenger.transform.SetParent(ParentRoute.CenterTransform, false);
+                _passenger.transform.localPosition = Vector3.zero;
+                _passenger.StartTerminal = this;
                 return true;
             }
             return false;
@@ -27,7 +29,12 @@ namespace Level
 
         public void RemovePassenger()
         {
-            Passenger = null;
+            _passenger = null;
+        }
+
+        public Passenger CurrentPassenger()
+        {
+            return _passenger;
         }
     }
 }

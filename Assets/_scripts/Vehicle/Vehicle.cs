@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     /// <summary>
     /// Task type represent the precedence of a received task. Each type starting at the top and
@@ -81,7 +81,6 @@ namespace Level
         public List<Passenger> Passengers;
         public bool HasPassenger => Passengers != null && Passengers.Any();
 
-        public VehicleManager Manager;
         private Vector3 _startingPos;
         private Quaternion _startingRot;
         private GameObject _ring;
@@ -100,13 +99,6 @@ namespace Level
             _ring.SetActive(false);
         }
 
-        protected void Start()
-        {
-            if (Manager.GetType() == typeof(PlayerVehicleManager))
-            {
-                Manager.GetComponent<PlayerVehicleManager>().PlayerVehicles.Add(this);
-            }
-        }
 
         private void Update()
         {
@@ -143,8 +135,6 @@ namespace Level
             }
         }
 
-
-
         private void Reset(GameEvent @event)
         {
             HaltCurrentTask();
@@ -153,15 +143,8 @@ namespace Level
                 Passengers.ForEach(Destroy);
             }
 
-            if (Manager is PlayerVehicleManager)
-            {
-                transform.position = _startingPos;
-                transform.rotation = _startingRot;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            transform.position = _startingPos;
+            transform.rotation = _startingRot;
         }
 
         /// <summary>
@@ -229,6 +212,11 @@ namespace Level
             _taskReady = false;
             task.Callback?.Invoke(task.Type, this, true);
         }
+
+								public VehicleTask GetCurrentTask()
+								{
+												return _currentTask;
+								}
 
         #region VEHICLE PATHING
 

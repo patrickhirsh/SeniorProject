@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     [ExecuteInEditMode]
-    public class Connection : MonoBehaviour
+    public class Connection : LevelObject
     {
         public const float CONNECTION_DISTANCE = .5f;
 
@@ -46,32 +46,21 @@ namespace Level
 
         #region Unity Methods
 
-        private void Awake()
-        {
-            Broadcaster.AddListener(GameEvent.SetupConnection, Initialize);
-        }
-
         private void OnValidate()
         {
             ValidatePaths();
         }
         #endregion
 
-        protected void Initialize(GameEvent gameEvent)
-        {
-        }
-
 #if UNITY_EDITOR
-        public void Bake(bool bakeFromInspector = false)
+        public void Bake()
         {
             UnityEditor.Undo.RecordObject(this, "Bake Connection");
             ParentRoute = GetComponentInParent<Route>();
-            ConnectsTo = FindNeighborConnection(EntityManager.Instance.Connections);
+            ConnectsTo = FindNeighborConnection(CurrentLevel.EntityController.Connections);
 
             // Do some validation
             ValidatePaths();
-
-            if (bakeFromInspector) Debug.Log("Don't forget to bake the Route!");
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
 #endif

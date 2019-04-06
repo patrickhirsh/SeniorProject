@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     [CreateAssetMenu(fileName = "SceneryData", menuName = "ParkingMaster/SceneryData", order = 1)]
     public class SceneryAssets : ScriptableObject

@@ -4,7 +4,7 @@ using UnityEngine;
 using Utility;
 using Grid = Utility.Grid;
 
-namespace Level
+namespace RideShareLevel
 {
     /// <summary>
     /// A physical location for use in the editor

@@ -1,4 +1,4 @@
-﻿namespace Level
+﻿namespace RideShareLevel
 {
     public class Scenery : Entity
     {

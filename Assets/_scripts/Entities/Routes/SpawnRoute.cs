@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     public class SpawnRoute : Route
     {
@@ -64,22 +64,8 @@ namespace Level
         protected override void Start()
         {
             base.Start();
-            Broadcaster.AddListener(GameEvent.SetupConnection, Initialize);
+            _spawnQueue = new List<SpawnDirective>();
         }
-
-        /// <summary>
-        /// Handles all GameEvent Broadcasts
-        /// </summary>
-        public void Initialize(GameEvent gameEvent)
-        {
-            switch (gameEvent)
-            {
-                case GameEvent.SetupConnection:
-                    _spawnQueue = new List<SpawnDirective>();
-                    break;
-            }
-        }
-
 
         /// <summary>
         /// Given a reference vehicle (vehicleTemplate) and a time in seconds,

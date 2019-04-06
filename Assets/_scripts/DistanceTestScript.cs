@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DistanceTestScript : MonoBehaviour {
 
-    public Level.Connection debug;
-    public Level.Connection debug2;
+    public RideShareLevel.Connection debug;
+    public RideShareLevel.Connection debug2;
 
 
     // Use this for initialization

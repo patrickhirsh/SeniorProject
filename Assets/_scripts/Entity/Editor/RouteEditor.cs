@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Level
+namespace RideShareLevel
 {
     [CustomEditor(typeof(Route), true)]
     [CanEditMultipleObjects]

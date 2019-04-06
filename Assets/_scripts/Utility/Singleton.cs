@@ -5,14 +5,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     #region Singleton
     private static T _instance;
-    public static T Instance
-    {
-        get
-        {
-            if (Application.isPlaying) return _instance != null ? _instance : _instance = Create();
-            return Create();
-        }
-    }
+    public static T Instance => _instance != null ? _instance : _instance = Create();
 
     private static T Create()
     {
