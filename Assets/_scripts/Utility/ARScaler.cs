@@ -9,8 +9,8 @@ public class ARScaler : Singleton<ARScaler>
     private ARSessionOrigin _sessionOrigin;
     public GameObject Reference;
 
-    [Range(0f, 5f)]
-    public float ScaleValue = 2.5f;
+    [Range(0f, 150f)]
+    public float ScaleValue = 75f;
     [Range(0f, 360f)]
     public float RotationValue = 0f;
 
@@ -28,13 +28,13 @@ public class ARScaler : Singleton<ARScaler>
         _sessionOrigin = GetComponent<ARSessionOrigin>();
     }
 
-    private void Start()
+    #endregion
+
+    public void ScaleOnPlacement()
     {
         Scale(ScaleValue);
         Rotate(RotationValue);
     }
-
-    #endregion
 
     // Method called by a Slider
     public void Scale(float value)

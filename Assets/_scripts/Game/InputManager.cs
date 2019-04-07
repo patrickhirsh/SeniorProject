@@ -127,10 +127,10 @@ public class InputManager : Singleton<InputManager>
                     {
                         Pose hitPose = hits[0].pose;
                         MoveLevel(hitPose.position);
-                        //                        RotateLevel(hitPose.rotation);
                         if (GameManager.CurrentGameState == GameState.LevelPlacement)
                         {
                             GameManager.SetGameState(GameState.LevelPlaced);
+                            ARScaler.Instance.ScaleOnPlacement();
                         }
                     }
                 }
@@ -162,11 +162,10 @@ public class InputManager : Singleton<InputManager>
                     {
                         var hitPose = hits[0].pose;
                         MoveLevel(hitPose.position);
-                        //                        RotateLevel(hitPose.rotation);
-
                         if (GameManager.CurrentGameState == GameState.LevelPlacement)
                         {
                             GameManager.SetGameState(GameState.LevelPlaced);
+                            ARScaler.Instance.ScaleOnPlacement();
                         }
                     }
                 }

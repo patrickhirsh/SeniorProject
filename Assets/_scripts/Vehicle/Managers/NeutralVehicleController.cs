@@ -34,7 +34,6 @@ namespace RideShareLevel
 
     public class NeutralVehicleController : VehicleController
     {
-
         public float AVG_SPAWN_TIMER = 1f;
         public float SPAWN_TIMER_VARIANCE = 0f;
 
@@ -54,25 +53,6 @@ namespace RideShareLevel
         [SerializeField]
         private SerializablePathData _serializedPaths;
 
-
-        /// <summary>
-        /// NeutralVehicleManager only ever assigns a single task to a neutral vehicle (on spawn) then removes the vehicle
-        /// when it reaches it's destination. If this task is interrupted, unexpected behavior is occuring.
-        /// </summary>
-        public override void VehicleTaskCallback(TaskType type, Vehicle vehicle, bool exitStatus)
-        {
-            // the neutral vehicle reached it's destination spawn point. Destroy it
-            if (exitStatus)
-                Destroy(vehicle.gameObject);
-
-            // log unexpected behavior
-            else
-            {
-                if (Debugger.Profile.DebugNeutralVehicleManager && (type != TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with non-neutral task"); }
-                if (Debugger.Profile.DebugNeutralVehicleManager && (type == TaskType.NeutralAi)) { Debug.LogWarning("Unexpected interrupt of a neutral vehicle task with another neutral vehicle task"); }
-            }
-        }
-
         #region Unity Methods
 
         public void Awake()
@@ -80,6 +60,10 @@ namespace RideShareLevel
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
         }
 
+        public override void IdleVehicle(Vehicle vehicle)
+        {
+            vehicle.Despawn();
+        }
 
         public void Update()
         {
@@ -164,6 +148,7 @@ namespace RideShareLevel
         {
             // instantiate the new vehicle
             var vehicle = Instantiate(vehiclePrefab, spawnPoint.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
+            vehicle.Controller = this;
 
             // construct a copy of the cached connection Queue
             Queue<Connection> path = new Queue<Connection>();
@@ -171,7 +156,8 @@ namespace RideShareLevel
                 path.Enqueue(connection);
 
             // assign the pathing task to this new vehicle
-            vehicle.AssignTask(new VehicleTask(TaskType.NeutralAi, path, VehicleTaskCallback));
+
+            vehicle.AddTask(new PathingTask(vehicle, path));
         }
 
 

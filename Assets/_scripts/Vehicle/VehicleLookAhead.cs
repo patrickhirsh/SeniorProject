@@ -85,9 +85,10 @@ namespace RideShareLevel
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<Vehicle>())
+            var vehicle = other.GetComponent<Vehicle>();
+            if (vehicle)
             {
-                if (!_collidingVehicles.Contains(other) && !_isInGodMode && (other.GetComponent<Vehicle>().GetCurrentTask() != null))
+                if (!_collidingVehicles.Contains(other) && !_isInGodMode && vehicle.HasTask)
                 {
                     _collidingVehicles.Add(other);
                 }

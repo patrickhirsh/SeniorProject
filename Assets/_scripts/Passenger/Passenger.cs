@@ -87,6 +87,12 @@ namespace RideShareLevel
         }
         #endregion
 
+        public void SetVehicle(Vehicle vehicle)
+        {
+            PickedUp = true;
+            DestroyRing();
+        }
+
         private void Reset(GameEvent @event)
         {
             Destroy(gameObject);
@@ -128,6 +134,7 @@ namespace RideShareLevel
         {
             return _color;
         }
+
         #region Reticle Methods
         public void SpawnPickupReticle()
         {
@@ -139,6 +146,14 @@ namespace RideShareLevel
             _RadialTimer = _pickupPin.RadialTimerImg;
         }
         #endregion
+
+        public void Deliver(Vehicle vehicle)
+        {
+            CurrentLevel.PassengerController.PassengerDelivered(this, vehicle.PlayerControlled);
+            
+            // Remove passenger from game
+            Destroy(gameObject);
+        }
     }
 
 }

@@ -76,7 +76,7 @@ namespace UserInterface
 
         private void HandleScaleSlider(float val)
         {
-            ARScaler.Instance.Scale(val);
+            ARScaler.Instance.Scale(ScaleSlider.maxValue - val);
         }
 
         private void HandleRotationSlider(float val)

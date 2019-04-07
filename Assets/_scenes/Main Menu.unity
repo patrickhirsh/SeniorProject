@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Reference: {fileID: 587449496}
-  ScaleValue: 2.5
+  ScaleValue: 75
   RotationValue: 0
 --- !u!114 &71124189
 MonoBehaviour:
@@ -3720,6 +3720,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812960935}
   m_CullTransparentMesh: 0
+--- !u!114 &1827586622 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7727474475019287327, guid: f4a84096b104f4f4fa38586a5479b361,
+    type: 3}
+  m_PrefabInstance: {fileID: 7727474475347176129}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 252f3ce77b841714290b90a390c92466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1854956260
 GameObject:
   m_ObjectHideFlags: 0
@@ -4664,6 +4677,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2146450789 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
+    type: 3}
+  m_PrefabInstance: {fileID: 7727474475347176129}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 6db6f6dca30fbe34eb6b8f5edb92f82e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7727474475347176129
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4731,6 +4757,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7727474475019287327, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: Vehicles.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727474475019287327, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: Vehicles.Array.data[0]
+      value: 
+      objectReference: {fileID: 2146450789}
+    - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: Controller
+      value: 
+      objectReference: {fileID: 1827586622}
+    - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: Level
+      value: 
+      objectReference: {fileID: 587449498}
     - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_Size.x
