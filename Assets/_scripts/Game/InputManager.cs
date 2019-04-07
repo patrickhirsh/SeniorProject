@@ -15,8 +15,7 @@ public class InputManager : Singleton<InputManager>
 
     public GameObject Level;
     public ARSessionOrigin SessionOrigin;
-    public float LevelYOffset;
-    public float raycastThickness;
+    public float RaycastThickness;
 
     private bool _vehicleSelected;
     private Camera _camera;
@@ -123,12 +122,16 @@ public class InputManager : Singleton<InputManager>
                 {
                     if (EventSystem.current.IsPointerOverGameObject()) return;
                     List<ARRaycastHit> hits = new List<ARRaycastHit>();
-                    
+
                     if (SessionOrigin.Raycast(Input.mousePosition, hits, TrackableType.PlaneWithinPolygon))
                     {
                         Pose hitPose = hits[0].pose;
-                        var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
-                        MoveLevel(position);
+                        MoveLevel(hitPose.position);
+                        //                        RotateLevel(hitPose.rotation);
+                        if (GameManager.CurrentGameState == GameState.LevelPlacement)
+                        {
+                            GameManager.SetGameState(GameState.LevelPlaced);
+                        }
                     }
                 }
                 break;
@@ -144,9 +147,8 @@ public class InputManager : Singleton<InputManager>
         if (Input.touchCount > 0)
         {
             touch = Input.GetTouch(0);
+            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
         }
-
-        //        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
 
         switch (GameManager.CurrentGameState)
         {
@@ -159,8 +161,13 @@ public class InputManager : Singleton<InputManager>
                     if (SessionOrigin.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
                     {
                         var hitPose = hits[0].pose;
-                        var position = new Vector3(hitPose.position.x, hitPose.position.y + LevelYOffset, hitPose.position.z);
-                        MoveLevel(position);
+                        MoveLevel(hitPose.position);
+                        //                        RotateLevel(hitPose.rotation);
+
+                        if (GameManager.CurrentGameState == GameState.LevelPlacement)
+                        {
+                            GameManager.SetGameState(GameState.LevelPlaced);
+                        }
                     }
                 }
                 break;
@@ -170,10 +177,15 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
+    private void RotateLevel(Quaternion rotation)
+    {
+        Level.transform.rotation = rotation;
+        ARScaler.Instance.SetRotation(rotation.y);
+    }
+
     private void MoveLevel(Vector3 position)
     {
         Level.transform.position = position;
-        GameManager.SetGameState(GameState.LevelPlaced);
     }
 
     private void SetDebugPlanesActive(bool active)

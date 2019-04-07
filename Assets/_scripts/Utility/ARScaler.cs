@@ -1,40 +1,71 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
+using UserInterface;
 
 [RequireComponent(typeof(ARSessionOrigin))]
 public class ARScaler : Singleton<ARScaler>
 {
-    ARSessionOrigin m_SessionOrigin;
-    public GameObject referenceToScale;
+    private ARSessionOrigin _sessionOrigin;
+    public GameObject Reference;
+
+    [Range(0f, 5f)]
+    public float ScaleValue = 2.5f;
+    [Range(0f, 360f)]
+    public float RotationValue = 0f;
 
     /* Next values must be the same min and max values of
      * the Slider to change the scale */
-    private float m_maxScaleValue = 150f;
-    private float m_minScaleValue = 0.0f;
-    private float m_defaultScaleValue = 5.0f;
+    private float _maxScaleValue = 150f;
+    private float _minScaleValue = 0.0f;
+    private Quaternion _rotationQ;
+
+
+    #region Unity Methods
 
     void Awake()
     {
-        m_SessionOrigin = GetComponent<ARSessionOrigin>();
+        _sessionOrigin = GetComponent<ARSessionOrigin>();
     }
+
+    private void Start()
+    {
+        Scale(ScaleValue);
+        Rotate(RotationValue);
+    }
+
+    #endregion
 
     // Method called by a Slider
     public void Scale(float value)
     {
         Transform t = gameObject.transform;
 
-        m_SessionOrigin.MakeContentAppearAt(
-            referenceToScale.transform,
-            referenceToScale.transform.position,
-            referenceToScale.transform.rotation);
+        _sessionOrigin.MakeContentAppearAt(
+            Reference.transform,
+            Reference.transform.position);
 
-        float scaleValue = Mathf.Clamp(value, m_minScaleValue, m_maxScaleValue);
-        t.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
-
+        ScaleValue = Mathf.Clamp(value, _minScaleValue, _maxScaleValue);
+        t.localScale = Vector3.one * ScaleValue;
     }
 
-    private void Start()
+    public void Rotate(float value)
     {
-        Scale(m_defaultScaleValue);
+        Transform t = gameObject.transform;
+
+        _sessionOrigin.MakeContentAppearAt(
+            Reference.transform,
+            Reference.transform.rotation);
+
+        RotationValue = Mathf.Clamp(value, 0f, 360f);
+        _rotationQ = Quaternion.AngleAxis(RotationValue, Vector3.up);
+        t.rotation = _rotationQ;
+    }
+
+
+    public void SetRotation(float rotationY)
+    {
+        RotationValue = rotationY;
+        UserInterfaceManager.Instance.LevelPlacementCanvas.SetRotation(rotationY);
     }
 }

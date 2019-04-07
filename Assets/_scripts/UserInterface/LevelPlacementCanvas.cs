@@ -8,6 +8,7 @@ namespace UserInterface
     {
         public Button ContinueButton;
         public Slider ScaleSlider;
+        public Slider RotationSlider;
         public Text HelpText;
 
         private Sequence _sequence;
@@ -24,6 +25,7 @@ namespace UserInterface
         {
             ContinueButton.onClick.AddListener(HandleContinueButton);
             ScaleSlider.onValueChanged.AddListener(HandleScaleSlider);
+            RotationSlider.onValueChanged.AddListener(HandleRotationSlider);
         }
 
         private void GameStateChanged(GameEvent @event)
@@ -77,10 +79,20 @@ namespace UserInterface
             ARScaler.Instance.Scale(val);
         }
 
+        private void HandleRotationSlider(float val)
+        {
+            ARScaler.Instance.Rotate(val);
+        }
+
         private void HandleContinueButton()
         {
             // Done with placement, transition to simulation
             GameManager.SetGameState(GameState.LevelSimulating);
+        }
+
+        public void SetRotation(float rotationY)
+        {
+            RotationSlider.value = rotationY;
         }
     }
 }
