@@ -93,6 +93,7 @@ namespace RideShareLevel
 
             Broadcaster.AddListener(GameEvent.Reset, Reset);
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
+            InputManager.Instance.HoverChanged.AddListener(ChangeRingColor);
 
             _ring = SpawnRing(Color.blue, 2);
             _ring.transform.parent = transform;
@@ -124,6 +125,18 @@ namespace RideShareLevel
             ringMat.SetColor("_Color", color);
             ringMat.SetFloat("_Speed", speed);
             return spawnedObj;
+        }
+
+        private void ChangeRingColor(GameObject hoverobject)
+        {
+            if (hoverobject == this.gameObject)
+            {
+                _ring.GetComponent<Renderer>().material.SetColor("_Color", Color.magenta);
+            }
+            else
+            {
+                _ring.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+            }
         }
 
         private void GameStateChanged(GameEvent @event)
