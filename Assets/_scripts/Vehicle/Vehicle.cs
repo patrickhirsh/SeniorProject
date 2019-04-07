@@ -84,6 +84,11 @@ namespace RideShareLevel
         private Vector3 _startingPos;
         private Quaternion _startingRot;
         private GameObject _ring;
+        //the speed at which the selection ring will pulse when it's being hovered on
+        public float ringPulseSpeedDefault;
+        public float ringPulseSpeedOnHover;
+        public Color defaultRingPulseColor;
+        public Color HoverRingPulseColor;
 
         #region Unity Methods
 
@@ -95,7 +100,7 @@ namespace RideShareLevel
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
             InputManager.Instance.HoverChanged.AddListener(ChangeRingColor);
 
-            _ring = SpawnRing(Color.blue, 2);
+            _ring = SpawnRing(defaultRingPulseColor, ringPulseSpeedDefault);
             _ring.transform.parent = transform;
             _ring.SetActive(false);
         }
@@ -131,11 +136,14 @@ namespace RideShareLevel
         {
             if (hoverobject == this.gameObject)
             {
+               
                 _ring.GetComponent<Renderer>().material.SetColor("_Color", Color.magenta);
+                _ring.GetComponent<Renderer>().material.SetFloat("_Speed", ringPulseSpeedOnHover);
             }
             else
             {
                 _ring.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+                _ring.GetComponent<Renderer>().material.SetFloat("_Speed", 2);
             }
         }
 
