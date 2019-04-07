@@ -3072,6 +3072,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: bb63cb44f5e838541bd0fd0fbaf48075, type: 2}
+--- !u!1 &1768088338 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7727474474155855481, guid: f4a84096b104f4f4fa38586a5479b361,
+    type: 3}
+  m_PrefabInstance: {fileID: 7727474475347176129}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1768088340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768088338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: a319b11245f40b24caf3812ca4ffdc11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RepresentedLevel: {fileID: 1014444940273395411, guid: b93eddd6ef430bb4283e88352b5eb79b,
+    type: 3}
+  NewLayer1: {fileID: 8300000, guid: 6b273c7778873384b8775446893b3df0, type: 3}
+  NewLayer2: {fileID: 0}
+  NewLayer3: {fileID: 0}
+  LevelText: Tap to select Salt Lake City
+  LevelText2: Tap again to go to Salt Lake City
+  GameTimer: 0
+--- !u!65 &1768088342
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768088338}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.465285, y: 8.212132, z: 5.0392203}
+  m_Center: {x: 0.59024423, y: 2.3845367, z: 0.3566186}
 --- !u!1 &1791498130
 GameObject:
   m_ObjectHideFlags: 0
@@ -4251,6 +4291,11 @@ PrefabInstance:
       propertyPath: NewLayer3
       value: 
       objectReference: {fileID: 8300000, guid: 64f1b126220ec4c44a0fd1132db7791a, type: 3}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: GameTimer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_Size.x
