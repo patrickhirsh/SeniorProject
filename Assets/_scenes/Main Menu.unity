@@ -1282,7 +1282,7 @@ MonoBehaviour:
   CurrentLevel: {fileID: 587449498}
   FireworkInterval: 1
   FireworkIntervalVariance: 0.3
-  FireworkPositionVariance: 1000
+  FireworkPositionVariance: 20
 --- !u!4 &616401806
 Transform:
   m_ObjectHideFlags: 0
@@ -4767,6 +4767,26 @@ PrefabInstance:
       propertyPath: Vehicles.Array.data[0]
       value: 
       objectReference: {fileID: 2146450789}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: NewLayer1
+      value: 
+      objectReference: {fileID: 8300000, guid: 51732881e57a87141b3ecafc308dc1a1, type: 3}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: NewLayer2
+      value: 
+      objectReference: {fileID: 8300000, guid: 0314e37fdcbee7a488af3594c329ad54, type: 3}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: NewLayer3
+      value: 
+      objectReference: {fileID: 8300000, guid: 64f1b126220ec4c44a0fd1132db7791a, type: 3}
+    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: GameTimer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: Controller
@@ -4796,26 +4816,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Center.z
       value: 0.40265945
-      objectReference: {fileID: 0}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: NewLayer1
-      value: 
-      objectReference: {fileID: 8300000, guid: 51732881e57a87141b3ecafc308dc1a1, type: 3}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: NewLayer2
-      value: 
-      objectReference: {fileID: 8300000, guid: 0314e37fdcbee7a488af3594c329ad54, type: 3}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: NewLayer3
-      value: 
-      objectReference: {fileID: 8300000, guid: 64f1b126220ec4c44a0fd1132db7791a, type: 3}
-    - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: GameTimer
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
