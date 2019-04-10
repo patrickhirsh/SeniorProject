@@ -76,8 +76,6 @@ public class LevelManager : Singleton<LevelManager>
         //Destroy old level object
         var oldLevel = CurrentLevel.gameObject;
 
-        //Set game timer
-        ScoreManager.Instance.GameTimer = newLevel.GameTimer;
         //Switch music to music of new level
         Osborne_AudioManager.Instance.SwitchLevels(newLevel.NewLayer1, newLevel.NewLayer2, newLevel.NewLayer3);
 
@@ -88,6 +86,7 @@ public class LevelManager : Singleton<LevelManager>
 
         //Notify controllers of the new gamestate
         Broadcaster.Broadcast(GameEvent.GameStateChanged);
-    }
+								Broadcaster.Broadcast(GameEvent.LevelChange);
+				}
 
 }

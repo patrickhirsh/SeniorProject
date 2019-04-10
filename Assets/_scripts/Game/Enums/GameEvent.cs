@@ -5,5 +5,6 @@
     LevelChange,
     LevelCompleteFail,
     PassengerDelivered,
+				BuildingComplete,
     LevelCompleteSuccess
 }

@@ -11,9 +11,10 @@ namespace RideShareLevel
         public EnemyVehicleController EnemyVehicleController;
         public EntityController EntityController;
         public PassengerController PassengerController;
+								public ScoreController ScoreController;
 
 #if UNITY_EDITOR
-        public void Bake()
+								public void Bake()
         {
             UnityEditor.Undo.RecordObject(this, "Bake Level");
 
@@ -22,14 +23,16 @@ namespace RideShareLevel
             EnemyVehicleController = GetComponentInChildren<EnemyVehicleController>(true);
             EntityController = GetComponentInChildren<EntityController>(true);
             PassengerController = GetComponentInChildren<PassengerController>(true);
+												ScoreController = GetComponentInChildren<ScoreController>(true);
 
-            Debug.Assert(PlayerVehicleController != null, "Missing a Player Vehicle Controller");
+												Debug.Assert(PlayerVehicleController != null, "Missing a Player Vehicle Controller");
             Debug.Assert(NeutralVehicleController != null, "Missing a Neutral Vehicle Controller");
             Debug.Assert(EnemyVehicleController != null, "Missing an Enemy Vehicle Controller");
             Debug.Assert(EntityController != null, "Missing an Entity Controller");
             Debug.Assert(PassengerController != null, "Missing a Passenger Controller");
+												Debug.Assert(ScoreController != null, "Missing a Score Controller");
 
-            EntityController.Bake();
+												EntityController.Bake();
             PlayerVehicleController.Bake(this);
             PassengerController.Bake();
             foreach (var levelObject in GetComponentsInChildren<LevelObject>())
@@ -47,6 +50,10 @@ namespace RideShareLevel
             EntityController.Initialize();
             PassengerController.Initialize();
             NeutralVehicleController.Initialize();
+
+												// Only initialize ScoreController if we're in a level that contains one
+												if (ScoreController != null)
+																ScoreController.Initialize(PassengerController);
         }
     }
 }

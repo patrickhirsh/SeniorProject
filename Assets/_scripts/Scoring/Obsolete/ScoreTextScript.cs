@@ -74,7 +74,7 @@ public class ScoreTextScript : LevelObject
     {
         foreach (KeyValuePair<Building.BuildingColors, GameObject> kvp in ScoreIcons)
         {
-            var passengersNeeded = CurrentLevel.PassengerController.GetPassengersNeeded(kvp.Key);
+            var passengersNeeded = CurrentLevel.PassengerController.GetPlayerPassengersDelivered(kvp.Key);
             if (kvp.Value.GetComponent<ScoreIcon>().Score != passengersNeeded)
             {
                 ScoreIcons[kvp.Key].GetComponent<ScoreIcon>().Score = passengersNeeded;

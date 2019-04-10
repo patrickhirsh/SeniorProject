@@ -52,26 +52,7 @@ public class GameManager : Singleton<GameManager>
 
 
     #endregion
-
-
-    //All of this should be done by score manager now
-    //[Serializable]
-    //public class ScoreEvent : UnityEvent<int> { }
-
-    //public ScoreEvent ScoreChanged;
-
-    //public int CurrentScore { get; private set; }
-
-    //public void AddScore(int amount)
-    //{
-    //    SetScore(CurrentScore + amount);
-    //}
-
-    //private void SetScore(int i)
-    //{
-    //    CurrentScore = i;
-    //    ScoreChanged?.Invoke(CurrentScore);
-    //}
+    
 
     public void gameOver()
     {

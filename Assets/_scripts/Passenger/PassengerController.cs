@@ -6,6 +6,19 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
+[System.Serializable]
+public class PassengerTypes
+{
+				public int NumSpawn;
+				public int NumRequired;
+				public float InitialDelay;
+				public int TimeBetweenSpawn;
+				public int PassengerTimer;
+				public Building.BuildingColors PassColor;
+}
+
+
 public class PassengerController : LevelObject
 {
     public Passenger PassengerPrefab;
@@ -13,10 +26,12 @@ public class PassengerController : LevelObject
 
     private Terminal[] _terminals;
 
+				private Dictionary<Building.BuildingColors, bool> _active;
     private Dictionary<Building.BuildingColors, int> _spawned;
     private Dictionary<Building.BuildingColors, int> _delivered;
     private Dictionary<Building.BuildingColors, int> _playerDelivered;
-    private Dictionary<Building.BuildingColors, PassengerTypes> _types;
+				private Dictionary<Building.BuildingColors, int> _enemyDelivered;
+				private Dictionary<Building.BuildingColors, PassengerTypes> _types;
     private Dictionary<Building.BuildingColors, float> _spawnTimer;
     private Dictionary<Building.BuildingColors, List<Route>> _buildingRoutes;
 
@@ -25,7 +40,8 @@ public class PassengerController : LevelObject
     private int PassengersInLevel => PassengerSpecs.Sum(types => types.NumSpawn);
     private int TotalDelivered => _delivered.Sum(pair => pair.Value);
     private int PlayerDelivered => _playerDelivered.Sum(pair => pair.Value);
-    public int PassengersNeeded => PassengerSpecs.Sum(types => types.NumRequired);
+				private int EnemyDelivered => _enemyDelivered.Sum(pair => pair.Value);
+				public int PassengersNeeded => PassengerSpecs.Sum(types => types.NumRequired);
 
     #region Unity Methods
     // Update is called once per frame
@@ -35,7 +51,7 @@ public class PassengerController : LevelObject
 
         foreach (var color in _spawnTimer.Keys.ToArray())
         {
-            if (_spawned[color] < _types[color].NumSpawn)
+            if (_active[color])
             {
                 _spawnTimer[color] -= Time.deltaTime;
                 if (_spawnTimer[color] <= 0)
@@ -52,10 +68,8 @@ public class PassengerController : LevelObject
 
     private void SpawnPassenger(PassengerTypes spec)
     {
-
         var passenger = Instantiate(PassengerPrefab, transform, false);
         passenger.SetPassengerType(spec);
-
         StartCoroutine(FindTerminal(passenger));
     }
 
@@ -80,17 +94,33 @@ public class PassengerController : LevelObject
 
     public void PassengerDelivered(Passenger passenger, bool byPlayer = false)
     {
-        _delivered[passenger.GetColor()]++;
-        if (byPlayer) _playerDelivered[passenger.GetColor()]++;
-        Broadcaster.Broadcast(GameEvent.PassengerDelivered);
+								// passenger deliveries enroute during building completion should be ignored
+								if (_active[passenger.GetColor()])
+								{
+												_delivered[passenger.GetColor()]++;
+												if (byPlayer) { _playerDelivered[passenger.GetColor()]++; }
+												else { _enemyDelivered[passenger.GetColor()]++; }
+												Broadcaster.Broadcast(GameEvent.PassengerDelivered);
 
-        if (TotalDelivered >= PassengersInLevel || PlayerDelivered >= PassengersNeeded)
-        {
-            Broadcaster.Broadcast(PlayerDelivered >= PassengersNeeded
-                ? GameEvent.LevelCompleteSuccess
-                : GameEvent.LevelCompleteFail);
-        }
-    }
+												// if the player or enemy has completed the building, stop spawning this type
+												if (_playerDelivered[passenger.GetColor()] >= _types[passenger.GetColor()].NumRequired ||
+																_enemyDelivered[passenger.GetColor()] >= _types[passenger.GetColor()].NumRequired)
+												{
+																_active[passenger.GetColor()] = false;
+																Broadcaster.Broadcast(GameEvent.BuildingComplete);
+												}
+
+												// TODO: check for star system & trigger spawning halt for colors / end state accordingly
+												/*
+												if (TotalDelivered >= PassengersInLevel || PlayerDelivered >= PassengersNeeded)
+												{
+																Broadcaster.Broadcast(PlayerDelivered >= PassengersNeeded
+																				? GameEvent.LevelCompleteSuccess
+																				: GameEvent.LevelCompleteFail);
+												}
+												*/
+								}
+				}
 
 
 #if UNITY_EDITOR
@@ -118,9 +148,11 @@ public class PassengerController : LevelObject
         _buildingRoutes = new Dictionary<Building.BuildingColors, List<Route>>();
         _delivered = new Dictionary<Building.BuildingColors, int>();
         _playerDelivered = new Dictionary<Building.BuildingColors, int>();
-        _spawned = new Dictionary<Building.BuildingColors, int>();
+								_enemyDelivered = new Dictionary<Building.BuildingColors, int>();
+								_spawned = new Dictionary<Building.BuildingColors, int>();
         _spawnTimer = new Dictionary<Building.BuildingColors, float>();
         _types = new Dictionary<Building.BuildingColors, PassengerTypes>();
+								_active = new Dictionary<Building.BuildingColors, bool>();
 
         foreach (var building in CurrentLevel.EntityController.Buildings)
         {
@@ -140,6 +172,7 @@ public class PassengerController : LevelObject
             _playerDelivered[color] = 0;
             _delivered[color] = 0;
             _spawned[color] = 0;
+												_active[color] = true;
         }
 
         _canSpawn = true;
@@ -166,13 +199,23 @@ public class PassengerController : LevelObject
         return _buildingRoutes.Keys;
     }
 
-    public int GetPassengersNeeded(Building.BuildingColors color)
+    public int GetPlayerPassengersDelivered(Building.BuildingColors color)
     {
-        return _types[color].NumRequired - _playerDelivered[color];
-    }
+								return _playerDelivered[color];
+				}
 
-    public int GetPassengersRequired(Building.BuildingColors color)
+				public int GetEnemyPassengersDelivered(Building.BuildingColors color)
+				{
+								return _enemyDelivered[color];
+				}
+
+				public int GetPassengersRequired(Building.BuildingColors color)
     {
         return _types[color].NumRequired;
     }
+
+				public bool GetSpawnStatus(Building.BuildingColors color)
+				{
+								return _active[color];
+				}
 }

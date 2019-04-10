@@ -19,7 +19,6 @@ public class GameEndCanvas : MonoBehaviour
 
     private void OnFailure(GameEvent arg0)
     {
-
         FadeInBlurImage();
     }
 
