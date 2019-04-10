@@ -110,6 +110,7 @@ namespace RideShareLevel
             if (_tasks.Any())
             {
                 CurrentTask = _tasks.Dequeue();
+                ResetTaskStates();
                 if (CurrentTask.IsComplete())
                 {
                     CompleteTask();
@@ -141,6 +142,11 @@ namespace RideShareLevel
                 CurrentTask = null;
                 Controller.IdleVehicle(this);
             }
+        }
+
+        private void ResetTaskStates()
+        {
+            PathCompletionPercent = 0f;
         }
 
         private void HandleDropoffTask(DropoffPassengerTask dropoff)
@@ -243,7 +249,6 @@ namespace RideShareLevel
 
         private void StartPathing(Queue<Connection> connections)
         {
-            PathCompletionPercent = 0;
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
         }
 
