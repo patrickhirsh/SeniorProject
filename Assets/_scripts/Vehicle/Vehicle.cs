@@ -275,12 +275,16 @@ namespace RideShareLevel
         {
             var t = transform;
             var targetPosition = Vector3.MoveTowards(t.position, NextPosition, Speed * Time.deltaTime);
-            var targetRotation = Quaternion.LookRotation(NextPosition - t.position);
+            var difference = NextPosition - t.position;
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+            if (difference.magnitude > Granularity)
+            {
+                var targetRotation = Quaternion.LookRotation(difference);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+            }
+
             t.position = targetPosition;
 
-            // Check if the position of the cube and sphere are approximately equal.
             if (Vector3.Distance(t.position, NextPosition) < Granularity)
             {
                 PathCompletionPercent = PathCompletionPercent + Granularity * 2;
