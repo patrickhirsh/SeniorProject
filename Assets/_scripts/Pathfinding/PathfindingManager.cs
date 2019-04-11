@@ -601,28 +601,18 @@ namespace RideShareLevel
             return objCurve;
         }
 
-        public void DrawCurve(BezierCurve curve, LineRenderer lineRenderer)
+        public void DrawCurve(BezierCurve curve, LineRenderer lineRenderer, float start = 0f, float end = 1f)
         {
+            end = Mathf.Min(1f, end);
+            start = Mathf.Max(0f, start);
+
             if (curve.GetAnchorPoints().Any())
             {
                 var points = new Vector3[lineRenderer.positionCount];
-                for (int i = 0; i < lineRenderer.positionCount; i++)
+                for (int i = 0; i < lineRenderer.positionCount; i += 1)
                 {
-                    points[i] = curve.GetPointAt(i / (float)(lineRenderer.positionCount - 1));
-                }
-
-                lineRenderer.SetPositions(points);
-            }
-        }
-
-        public void DrawCurve(BezierCurve curve, LineRenderer lineRenderer, float startFrom)
-        {
-            if (curve.GetAnchorPoints().Any())
-            {
-                var points = new Vector3[lineRenderer.positionCount];
-                for (int i = 0; i < lineRenderer.positionCount; i++)
-                {
-                    points[i] = curve.GetPointAt(startFrom + i / (float)(lineRenderer.positionCount - 1));
+                    var t = start + i * (end - start) / lineRenderer.positionCount;
+                    points[i] = curve.GetPointAt(t);
                     points[i].y += .1f;
                 }
 

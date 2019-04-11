@@ -12,6 +12,7 @@ namespace RideShareLevel
         public Connection CurrentConnection;    // the connection this vehicle is currently on
 
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
+        public float RotationSpeed = 10f;                // the speed at which this vehicle will traverse it's current path
         public float Granularity = .005f;
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
@@ -255,8 +256,8 @@ namespace RideShareLevel
             NextPosition = VehiclePath.GetPointAt(0);
 
             // Green if has passenger else purple
-            VehiclePathLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
-            VehiclePathLine.positionCount = VehiclePath.pointCount;
+            //            VehiclePathLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
+            VehiclePathLine.positionCount = 20;
             if (!NeutralControlled) DrawPath(VehiclePath, VehiclePathLine);
 
             _canMove = true;
@@ -272,17 +273,17 @@ namespace RideShareLevel
 
         public void Move()
         {
-            float step = Speed * Time.deltaTime;
-            var next = Vector3.MoveTowards(transform.position, NextPosition, step);
-
             var t = transform;
-            t.LookAt(next);
-            t.position = next;
+            var targetPosition = Vector3.MoveTowards(t.position, NextPosition, Speed * Time.deltaTime);
+            var targetRotation = Quaternion.LookRotation(NextPosition - t.position);
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+            t.position = targetPosition;
 
             // Check if the position of the cube and sphere are approximately equal.
-            if (Vector3.Distance(t.position, NextPosition) < 0.001f)
+            if (Vector3.Distance(t.position, NextPosition) < Granularity)
             {
-                PathCompletionPercent = Mathf.Clamp01(PathCompletionPercent + Granularity);
+                PathCompletionPercent = PathCompletionPercent + Granularity * 2;
                 NextPosition = VehiclePath.GetPointAt(PathCompletionPercent);
                 CurrentRoute = VehiclePath.GetNearestPoint(PathCompletionPercent)?.Route;
 
@@ -292,7 +293,7 @@ namespace RideShareLevel
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
         {
-            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent);
+            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent, PathCompletionPercent + .25f);
         }
 
         #endregion
