@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 65671402932093442}
   - component: {fileID: 114867229838792336}
   - component: {fileID: 54024363699632262}
-  - component: {fileID: 120051526904593994}
   m_Layer: 0
   m_Name: EnemyVehicle
   m_TagString: Car
@@ -34,6 +33,7 @@ Transform:
   m_Children:
   - {fileID: 2208271766106322909}
   - {fileID: 5907672342691799039}
+  - {fileID: 2908898896126349209}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -101,24 +101,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db6f6dca30fbe34eb6b8f5edb92f82e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Level: {fileID: 0}
   CurrentRoute: {fileID: 0}
   CurrentConnection: {fileID: 0}
   Speed: 5
-  RecoverySpeed: 4
+  Granularity: 0.005
   BaseSpeed: 5
   PickupGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0, b: 0, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 65535
-    ctime2: 0
+    ctime1: 65150
+    ctime2: 65535
     ctime3: 0
     ctime4: 0
     ctime5: 0
@@ -126,8 +127,8 @@ MonoBehaviour:
     ctime7: 0
     atime0: 0
     atime1: 65535
-    atime2: 0
-    atime3: 0
+    atime2: 65535
+    atime3: 65535
     atime4: 0
     atime5: 0
     atime6: 0
@@ -137,17 +138,17 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   DropoffGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0, b: 0, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 65535
-    ctime2: 0
+    ctime1: 65150
+    ctime2: 65535
     ctime3: 0
     ctime4: 0
     ctime5: 0
@@ -155,8 +156,8 @@ MonoBehaviour:
     ctime7: 0
     atime0: 0
     atime1: 65535
-    atime2: 0
-    atime3: 0
+    atime2: 65535
+    atime3: 65535
     atime4: 0
     atime5: 0
     atime6: 0
@@ -165,10 +166,15 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   RingPrefab: {fileID: 1682238083598936, guid: fe0b55a645d3b42eb927357841328b1a, type: 3}
+  VehiclePathLine: {fileID: 2537926199965577632}
   VehiclePath: {fileID: 0}
   PathCompletionPercent: 0
-  Passengers: []
-  Manager: {fileID: 0}
+  NextPosition: {x: 0, y: 0, z: 0}
+  Controller: {fileID: 0}
+  ringPulseSpeedDefault: 0
+  ringPulseSpeedOnHover: 0
+  defaultRingPulseColor: {r: 0, g: 0, b: 0, a: 0}
+  HoverRingPulseColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!54 &54024363699632262
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -185,13 +191,44 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!120 &120051526904593994
+--- !u!1 &3082951321993969012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2908898896126349209}
+  - component: {fileID: 2537926199965577632}
+  m_Layer: 0
+  m_Name: Line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2908898896126349209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3082951321993969012}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4066096448770726}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!120 &2537926199965577632
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667412018430948}
+  m_GameObject: {fileID: 3082951321993969012}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -431,13 +468,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1191704103234298, guid: f0256945e185c1f49b1e271e1a21a273, type: 3}
-      propertyPath: m_Name
-      value: EnemyPlaceholderUpdate
-      objectReference: {fileID: 0}
     - target: {fileID: 4329306562095996, guid: f0256945e185c1f49b1e271e1a21a273, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.368
+      objectReference: {fileID: 0}
+    - target: {fileID: 1191704103234298, guid: f0256945e185c1f49b1e271e1a21a273, type: 3}
+      propertyPath: m_Name
+      value: EnemyPlaceholderUpdate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0256945e185c1f49b1e271e1a21a273, type: 3}

@@ -12,21 +12,24 @@ namespace RideShareLevel
         public Connection CurrentConnection;    // the connection this vehicle is currently on
 
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
-        public float RecoverySpeed = 5f;        // the speed at which this vehicle will travel to recover when "lost"
+        public float Granularity = .005f;
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
         public Gradient PickupGradient;
         public Gradient DropoffGradient;
         public GameObject RingPrefab;
 
+        public LineRenderer VehiclePathLine;
         public BezierCurve VehiclePath;
         public float PathCompletionPercent;
         public bool PathIsComplete => PathCompletionPercent >= 1;
-        public Vector3? NextPosition;
+        public Vector3 NextPosition;
+        private bool _canMove;
 
         public HashSet<Passenger> Passengers;
         public bool HasPassengers => Passengers != null && Passengers.Any();
         public bool PlayerControlled => Controller.GetType() == typeof(PlayerVehicleController);
+        public bool NeutralControlled => Controller.GetType() == typeof(NeutralVehicleController);
         public VehicleController Controller;
 
         private Vector3 _startingPos;
@@ -70,7 +73,7 @@ namespace RideShareLevel
 
             if (!CurrentTask.IsComplete())
             {
-                if (PathCompletionPercent < 1)
+                if (_canMove && PathCompletionPercent < 1)
                 {
                     Move();
                 }
@@ -93,7 +96,7 @@ namespace RideShareLevel
         public void AddTask(VehicleTask task)
         {
             _tasks.Enqueue(task);
-            if (!HasTask) RunNextTask();
+            RunNextTask();
         }
 
         public void SetTask(VehicleTask task, bool clearQueue = false)
@@ -107,15 +110,12 @@ namespace RideShareLevel
 
         public void RunNextTask()
         {
+            if (HasTask) return;
+
             if (_tasks.Any())
             {
                 CurrentTask = _tasks.Dequeue();
-                ResetTaskStates();
-                if (CurrentTask.IsComplete())
-                {
-                    CompleteTask();
-                }
-                else
+                if (CurrentTask.ShouldStart())
                 {
                     switch (CurrentTask)
                     {
@@ -125,7 +125,7 @@ namespace RideShareLevel
                         case DespawnTask despawn:
                             HandleDespawnTask(despawn);
                             break;
-                        case PathingTask pathing:
+                        case NeutralPathingTask pathing:
                             HandlePathingTask(pathing);
                             break;
                         case DropoffPassengerTask dropoff:
@@ -136,6 +136,12 @@ namespace RideShareLevel
                             break;
                     }
                 }
+                else
+                {
+                    // Task was skipped
+                    CurrentTask = null;
+                    RunNextTask();
+                }
             }
             else
             {
@@ -144,34 +150,30 @@ namespace RideShareLevel
             }
         }
 
-        private void ResetTaskStates()
-        {
-            PathCompletionPercent = 0f;
-        }
-
         private void HandleDropoffTask(DropoffPassengerTask dropoff)
         {
-            StartPathing(dropoff.TargetPassenger.DestRoute);
+            FindPath(dropoff.TargetPassenger.DestRoute);
         }
 
-        private void HandlePathingTask(PathingTask pathing)
+        private void HandlePathingTask(NeutralPathingTask pathing)
         {
             StartPathing(pathing.Path);
         }
 
         private void HandleDespawnTask(DespawnTask despawn)
         {
-            StartPathing(despawn.TargetRoute);
+            FindPath(despawn.TargetRoute);
         }
 
         private void HandlePickupPassengerTask(PickupPassengerTask task)
         {
-            StartPathing(task.TargetPassenger.StartRoute);
+            FindPath(task.TargetPassenger.StartRoute);
         }
 
         private void CompleteTask()
         {
             CurrentTask.Complete();
+            CurrentTask = null;
             RunNextTask();
         }
 
@@ -238,10 +240,9 @@ namespace RideShareLevel
 
         #region VEHICLE PATHING
 
-        public void StartPathing(Route destinationRoute)
+        public void FindPath(Route destinationRoute)
         {
-            Queue<Connection> connections;
-            if (PathfindingManager.Instance.GetPath(CurrentRoute, destinationRoute, out connections))
+            if (PathfindingManager.Instance.GetPath(CurrentRoute, destinationRoute, out var connections))
             {
                 StartPathing(connections);
             }
@@ -249,7 +250,16 @@ namespace RideShareLevel
 
         private void StartPathing(Queue<Connection> connections)
         {
+            PathCompletionPercent = 0;
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
+            NextPosition = VehiclePath.GetPointAt(0);
+
+            // Green if has passenger else purple
+            VehiclePathLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
+            VehiclePathLine.positionCount = VehiclePath.pointCount;
+            if (!NeutralControlled) DrawPath(VehiclePath, VehiclePathLine);
+
+            _canMove = true;
         }
 
         /// <summary>
@@ -257,26 +267,31 @@ namespace RideShareLevel
         /// </summary>
         private void StopTraveling()
         {
-            CurrentConnection = null;
-            NextPosition = null;
+            _canMove = false;
         }
 
         public void Move()
         {
-            if (NextPosition != null) transform.position = NextPosition.Value;
+            float step = Speed * Time.deltaTime;
+            var next = Vector3.MoveTowards(transform.position, NextPosition, step);
 
-            PathCompletionPercent += Mathf.Clamp01(Speed * Time.deltaTime / VehiclePath.length);
-            NextPosition = VehiclePath.GetPointAt(PathCompletionPercent);
-            CurrentRoute = VehiclePath.GetNearestPoint(PathCompletionPercent)?.Route;
+            var t = transform;
+            t.LookAt(next);
+            t.position = next;
 
-            // Rotate to look at the future position
-            transform.LookAt(NextPosition.Value);
+            // Check if the position of the cube and sphere are approximately equal.
+            if (Vector3.Distance(t.position, NextPosition) < 0.001f)
+            {
+                PathCompletionPercent = Mathf.Clamp01(PathCompletionPercent + Granularity);
+                NextPosition = VehiclePath.GetPointAt(PathCompletionPercent);
+                CurrentRoute = VehiclePath.GetNearestPoint(PathCompletionPercent)?.Route;
+
+                if (!NeutralControlled) DrawPath(VehiclePath, VehiclePathLine);
+            }
         }
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
         {
-            // Green if has passenger else purple
-            travelLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
             PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent);
         }
 

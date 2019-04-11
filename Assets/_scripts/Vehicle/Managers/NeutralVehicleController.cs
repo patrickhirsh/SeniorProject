@@ -157,7 +157,7 @@ namespace RideShareLevel
 
             // assign the pathing task to this new vehicle
 
-            vehicle.AddTask(new PathingTask(vehicle, path));
+            vehicle.AddTask(new NeutralPathingTask(vehicle, path));
         }
 
 

@@ -65,14 +65,14 @@ namespace RideShareLevel
                 // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
                 if (current.connection.GetConnectsTo == null)
                 { processNode = false; }
-              
+
                 // not all nodes need to be processed (see above) but ALL nodes should be added to procesed at this stage
                 if (processNode) { ProcessNode(ref current, ref processed, ref frontier); }
                 else { processed.Add(current.connection, current); }
             }
 
             if (endRouteDiscovered) { connections = ConstructPath(ref current, ref processed); return true; }
-            else { return false; }            
+            else { return false; }
         }
 
 
@@ -90,8 +90,8 @@ namespace RideShareLevel
                 {
                     PathNode discoveredNode;
                     bool newNodeDiscovered = true;
-                    float distance = Vector3.Distance(current.connection.GetConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
-                    // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
+                    float distance = Vector3.Distance(current.connection.GetConnectsTo.transform.position, connectionPath.Connection.transform.position) + current.distance;
+                    // TODO: add additional calculated weight here... (vehicles currently in path, etc.)
 
                     // check if this connection has already been discovered (is it in the frontier?)
                     foreach (PathNode node in frontier)
@@ -614,7 +614,6 @@ namespace RideShareLevel
                 lineRenderer.SetPositions(points);
             }
         }
-
 
         public void DrawCurve(BezierCurve curve, LineRenderer lineRenderer, float startFrom)
         {

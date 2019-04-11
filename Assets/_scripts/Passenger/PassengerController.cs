@@ -10,7 +10,6 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class PassengerTypes
 {
-    public int NumSpawn;
     public int NumRequired;
     public float InitialDelay;
     public int TimeBetweenSpawn;
@@ -37,7 +36,6 @@ public class PassengerController : LevelObject
 
     private bool _canSpawn;
 
-    private int PassengersInLevel => PassengerSpecs.Sum(types => types.NumSpawn);
     private int TotalDelivered => _delivered.Sum(pair => pair.Value);
     private int PlayerDelivered => _playerDelivered.Sum(pair => pair.Value);
     private int EnemyDelivered => _enemyDelivered.Sum(pair => pair.Value);

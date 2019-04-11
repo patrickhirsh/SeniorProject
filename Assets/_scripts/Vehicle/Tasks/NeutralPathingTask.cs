@@ -2,11 +2,11 @@
 
 namespace RideShareLevel
 {
-    public class PathingTask : VehicleTask
+    public class NeutralPathingTask : VehicleTask
     {
         public Queue<Connection> Path { get; private set; }
 
-        public PathingTask(Vehicle vehicle, Queue<Connection> path) : base(vehicle)
+        public NeutralPathingTask(Vehicle vehicle, Queue<Connection> path) : base(vehicle)
         {
             Path = path;
         }
@@ -14,6 +14,11 @@ namespace RideShareLevel
         public override bool IsComplete()
         {
             return Vehicle.PathIsComplete;
+        }
+
+        public override bool ShouldStart()
+        {
+            return true;
         }
 
         public override void Complete()

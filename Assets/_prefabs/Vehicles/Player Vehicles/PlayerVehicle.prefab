@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4066096448770726}
   - component: {fileID: 114867229838792336}
-  - component: {fileID: 120809127824822306}
   - component: {fileID: 65671402932093442}
   - component: {fileID: 54024363699632262}
   - component: {fileID: 6548734018972423949}
@@ -157,6 +156,7 @@ Transform:
   m_Children:
   - {fileID: 4876875689409500}
   - {fileID: 4688031468213774}
+  - {fileID: 5467328910273767317}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,15 +173,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db6f6dca30fbe34eb6b8f5edb92f82e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Level: {fileID: 0}
   CurrentRoute: {fileID: 0}
   CurrentConnection: {fileID: 0}
   Speed: 5
-  RecoverySpeed: 4
+  Granularity: 0.005
   BaseSpeed: 5
   PickupGradient:
     serializedVersion: 2
-    key0: {r: 0, g: 0.29218823, b: 0.8862745, a: 1}
-    key1: {r: 0.6735186, g: 0, b: 0.8773585, a: 0.02352941}
+    key0: {r: 0, g: 0.33185863, b: 1, a: 1}
+    key1: {r: 0, g: 0.33333334, b: 1, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -197,7 +198,7 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 32768
+    atime1: 65535
     atime2: 65535
     atime3: 0
     atime4: 0
@@ -206,11 +207,11 @@ MonoBehaviour:
     atime7: 0
     m_Mode: 0
     m_NumColorKeys: 2
-    m_NumAlphaKeys: 3
+    m_NumAlphaKeys: 2
   DropoffGradient:
     serializedVersion: 2
-    key0: {r: 0, g: 1, b: 0.033422947, a: 1}
-    key1: {r: 0, g: 0.6226415, b: 0.012726262, a: 0}
+    key0: {r: 0, g: 0.33185863, b: 1, a: 1}
+    key1: {r: 0, g: 0.33333334, b: 1, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -226,8 +227,8 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 32768
-    atime2: 0
+    atime1: 65535
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
@@ -237,20 +238,95 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   RingPrefab: {fileID: 1682238083598936, guid: fe0b55a645d3b42eb927357841328b1a, type: 3}
+  VehiclePathLine: {fileID: 5921128763630049594}
   VehiclePath: {fileID: 0}
   PathCompletionPercent: 0
-  Passengers: []
+  NextPosition: {x: 0, y: 0, z: 0}
+  Controller: {fileID: 0}
   ringPulseSpeedDefault: 2
   ringPulseSpeedOnHover: 6
   defaultRingPulseColor: {r: 0.36561054, g: 0.6630121, b: 0.9811321, a: 0}
   HoverRingPulseColor: {r: 0.8679245, g: 0.23335704, b: 0.8656557, a: 0}
---- !u!120 &120809127824822306
-LineRenderer:
+--- !u!65 &65671402932093442
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667412018430948}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.9, z: 2.3}
+  m_Center: {x: 0, y: 0.4, z: 0.17}
+--- !u!54 &54024363699632262
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667412018430948}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 1
+  m_AngularDrag: 0.5
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 4
+  m_CollisionDetection: 0
+--- !u!65 &6548734018972423949
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667412018430948}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.2057528, y: 0.4981041, z: 3.984868}
+  m_Center: {x: -0.039572, y: 0.07325125, z: 0.19836783}
+--- !u!1 &557704663639901129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5467328910273767317}
+  - component: {fileID: 5921128763630049594}
+  m_Layer: 0
+  m_Name: Line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5467328910273767317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557704663639901129}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4066096448770726}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!120 &5921128763630049594
+LineRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557704663639901129}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -347,48 +423,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!65 &65671402932093442
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667412018430948}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.9, z: 2.3}
-  m_Center: {x: 0, y: 0.4, z: 0.17}
---- !u!54 &54024363699632262
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667412018430948}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 0.5
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 4
-  m_CollisionDetection: 0
---- !u!65 &6548734018972423949
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667412018430948}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.2057528, y: 0.4981041, z: 3.984868}
-  m_Center: {x: -0.039572, y: 0.07325125, z: 0.19836783}
 --- !u!1001 &1271171626548354572
 PrefabInstance:
   m_ObjectHideFlags: 0
