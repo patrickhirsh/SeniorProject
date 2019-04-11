@@ -37,7 +37,7 @@ public class LevelManager : Singleton<LevelManager>
             randPos.x += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
             randPos.y += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
             randPos.z += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
-            ParticleManager.Instance.GenerateFirework(CurrentLevel.transform.position);
+            ParticleManager.Instance.GenerateFirework(randPos);
             fTimer += FireworkInterval + Random.Range(-FireworkIntervalVariance, FireworkIntervalVariance);
         }
         fTimer -= .01f;
@@ -73,6 +73,7 @@ public class LevelManager : Singleton<LevelManager>
 
     public void TransitionLevel(MenuBuilding newLevel)
     {
+        fireworks = false;
         //Destroy old level object
         var oldLevel = CurrentLevel.gameObject;
 
