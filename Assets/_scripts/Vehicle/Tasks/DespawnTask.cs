@@ -14,6 +14,11 @@
             return Vehicle.CurrentRoute == TargetRoute;
         }
 
+        public override bool ShouldStart()
+        {
+            return true;
+        }
+
         public override void Complete()
         {
             Vehicle.Despawn();

@@ -4,20 +4,15 @@ namespace RideShareLevel
 {
     public abstract class VehicleTask
     {
-        public bool IsDonePathing { get; private set; }
         public abstract bool IsComplete();
-        public Vehicle Vehicle { get; private set; }
+        public Vehicle Vehicle { get; }
 
         protected VehicleTask(Vehicle vehicle)
         {
             Vehicle = vehicle;
         }
 
-        public void SetPathComplete(bool val)
-        {
-            IsDonePathing = val;
-        }
-
+        public abstract bool ShouldStart();
         public abstract void Complete();
     }
 }

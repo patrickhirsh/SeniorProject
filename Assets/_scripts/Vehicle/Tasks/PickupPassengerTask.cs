@@ -12,12 +12,17 @@
 
         public override bool IsComplete()
         {
-            return TargetPassenger.PickedUp || Vehicle.PathIsComplete;
+            return (TargetPassenger != null && TargetPassenger.PickedUp) || Vehicle.PathIsComplete;
+        }
+
+        public override bool ShouldStart()
+        {
+            return TargetPassenger != null && !TargetPassenger.PickedUp;
         }
 
         public override void Complete()
         {
-            if (!TargetPassenger.PickedUp)
+            if (TargetPassenger != null && !TargetPassenger.PickedUp)
             {
                 Vehicle.AddPassenger(TargetPassenger);
                 TargetPassenger.SetVehicle(Vehicle);

@@ -69,6 +69,7 @@ namespace UserInterface
             if (_sequence != null && !_sequence.IsComplete())
             {
                 _sequence.Kill();
+                _sequence = null;
             }
         }
 

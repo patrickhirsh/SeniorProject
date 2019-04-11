@@ -4184,17 +4184,15 @@ MonoBehaviour:
   PassengerPrefab: {fileID: 114575948943433876, guid: 002ee8d4b0c874556a8985d17b8e0407,
     type: 3}
   PassengerSpecs:
-  - NumSpawn: 10
-    NumRequired: 1
+  - NumRequired: 5
     InitialDelay: 0
     TimeBetweenSpawn: 15
     PassengerTimer: 15
     PassColor: 0
-  - NumSpawn: 6
-    NumRequired: 1
-    InitialDelay: 6
+  - NumRequired: 6
+    InitialDelay: 10
     TimeBetweenSpawn: 25
-    PassengerTimer: 30
+    PassengerTimer: 45
     PassColor: 1
 --- !u!1 &8162377342499303696
 GameObject:
@@ -5437,6 +5435,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2708409688362731508}
     m_Modifications:
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: CurrentRoute
+      value: 
+      objectReference: {fileID: 1343662748379527197}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Manager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Controller
+      value: 
+      objectReference: {fileID: 3323572612003480546}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Level
+      value: 
+      objectReference: {fileID: 3651787944845832804}
     - target: {fileID: 4066096448770726, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.640001
@@ -5478,26 +5496,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: CurrentRoute
-      value: 
-      objectReference: {fileID: 1343662748379527197}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Manager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Controller
-      value: 
-      objectReference: {fileID: 3323572612003480546}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Level
-      value: 
-      objectReference: {fileID: 3651787944845832804}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 3}
 --- !u!114 &1345121040065216450 stripped
@@ -40099,6 +40097,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2708409688362731508}
     m_Modifications:
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: CurrentRoute
+      value: 
+      objectReference: {fileID: 1343662750048085794}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Manager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Controller
+      value: 
+      objectReference: {fileID: 3323572612003480546}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Level
+      value: 
+      objectReference: {fileID: 3651787944845832804}
     - target: {fileID: 4066096448770726, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.51
@@ -40144,26 +40162,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: CurrentRoute
-      value: 
-      objectReference: {fileID: 1343662750048085794}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Manager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Controller
-      value: 
-      objectReference: {fileID: 3323572612003480546}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Level
-      value: 
-      objectReference: {fileID: 3651787944845832804}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 3}
 --- !u!114 &1345121041470797307 stripped
@@ -46345,6 +46343,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2708409688362731508}
     m_Modifications:
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: CurrentRoute
+      value: 
+      objectReference: {fileID: 1343662750048085794}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Manager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Controller
+      value: 
+      objectReference: {fileID: 3323572612003480546}
+    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
+        type: 3}
+      propertyPath: Level
+      value: 
+      objectReference: {fileID: 3651787944845832804}
     - target: {fileID: 4066096448770726, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.4
@@ -46390,26 +46408,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: CurrentRoute
-      value: 
-      objectReference: {fileID: 1343662750048085794}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Manager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Controller
-      value: 
-      objectReference: {fileID: 3323572612003480546}
-    - target: {fileID: 114867229838792336, guid: 272086b63aefd0444bd8a4e7c442e9a2,
-        type: 3}
-      propertyPath: Level
-      value: 
-      objectReference: {fileID: 3651787944845832804}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 272086b63aefd0444bd8a4e7c442e9a2, type: 3}
 --- !u!114 &1345121041774161506 stripped
@@ -47260,16 +47258,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1383382813786238133}
     m_Modifications:
-    - target: {fileID: 9203650486766694880, guid: 7b51772aaa03b8a4995dae18b4bf0aed,
-        type: 3}
-      propertyPath: m_Name
-      value: VictoryText
-      objectReference: {fileID: 0}
-    - target: {fileID: 9203650486766694880, guid: 7b51772aaa03b8a4995dae18b4bf0aed,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1008155387113991700, guid: 7b51772aaa03b8a4995dae18b4bf0aed,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -47324,6 +47312,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203650486766694880, guid: 7b51772aaa03b8a4995dae18b4bf0aed,
+        type: 3}
+      propertyPath: m_Name
+      value: VictoryText
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203650486766694880, guid: 7b51772aaa03b8a4995dae18b4bf0aed,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2939245667881188087, guid: 7b51772aaa03b8a4995dae18b4bf0aed, type: 3}
