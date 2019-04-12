@@ -9,12 +9,12 @@ public class ScoreTextScript : LevelObject
     /// <summary>
     /// Icon prefab for insatiating icons
     /// </summary>
-    public GameObject iconPrefab;
+    
 
     /// <summary>
     /// Dictionary of all scoring icons, key is the color. 
     /// </summary>
-    private Dictionary<Building.BuildingColors, GameObject> ScoreIcons;
+    private Dictionary<Building.BuildingColors, GameObject> _scoreIcons;
 
     /// <summary>
     /// Set of icon materials. 
@@ -31,7 +31,7 @@ public class ScoreTextScript : LevelObject
     // Use this for initialization
     void Awake()
     {
-        ScoreIcons = new Dictionary<Building.BuildingColors, GameObject>();
+        _scoreIcons = new Dictionary<Building.BuildingColors, GameObject>();
         Broadcaster.AddListener(GameEvent.PassengerDelivered, UpdateScore);
         Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, ShutOffOnVictory);
     }
@@ -45,10 +45,8 @@ public class ScoreTextScript : LevelObject
     #endregion
 
     /// <summary>
-    /// Gets material object that should be assigned to icon from the color enum provided. 
+    /// Gets material object corresponding to the provided BuildingColor enum val
     /// </summary>
-    /// <param name="color"></param>
-    /// <returns></returns>
     private Material GetMatFromColorName(Building.BuildingColors color)
     {
         switch (color)
@@ -72,14 +70,14 @@ public class ScoreTextScript : LevelObject
 
     private void UpdateScore(GameEvent @event)
     {
-        foreach (KeyValuePair<Building.BuildingColors, GameObject> kvp in ScoreIcons)
+        foreach (KeyValuePair<Building.BuildingColors, GameObject> kvp in _scoreIcons)
         {
             var passengersNeeded = CurrentLevel.PassengerController.GetPlayerPassengersDelivered(kvp.Key);
             if (kvp.Value.GetComponent<ScoreIcon>().Score != passengersNeeded)
             {
-                ScoreIcons[kvp.Key].GetComponent<ScoreIcon>().Score = passengersNeeded;
+                _scoreIcons[kvp.Key].GetComponent<ScoreIcon>().Score = passengersNeeded;
                 //This is a spot we could initiate some kind of cool effect for ticking up the score, I just don't know how to do that
-                ScoreIcons[kvp.Key].GetComponentInChildren<TextMesh>().text = passengersNeeded.ToString();
+                _scoreIcons[kvp.Key].GetComponentInChildren<TextMesh>().text = passengersNeeded.ToString();
 
             }
         }
@@ -90,7 +88,7 @@ public class ScoreTextScript : LevelObject
     /// </summary>
     public void ResetScore()
     {
-        ScoreIcons.Clear();
+        _scoreIcons.Clear();
         CreateScoreIcons();
     }
 
@@ -104,7 +102,7 @@ public class ScoreTextScript : LevelObject
         bool direction = true;
         foreach (Building.BuildingColors color in CurrentLevel.PassengerController.GetBuildingColors())
         {
-            ScoreIcons.Add(color, CreateIcon(color, xAdjustment));
+            _scoreIcons.Add(color, CreateIcon(color, xAdjustment));
             if (direction)
             {
                 xAdjustment += 5;
@@ -127,7 +125,7 @@ public class ScoreTextScript : LevelObject
     /// <returns></returns>
     private GameObject CreateIcon(Building.BuildingColors color, int adjustmentInt)
     {
-
+								/*
         GameObject NewIcon = Instantiate(iconPrefab, this.transform.position + new Vector3(adjustmentInt, 0, 0), this.transform.rotation, this.transform);
         NewIcon.GetComponentInChildren<IconImage>().ChangeColr(GetMatFromColorName(color));
         NewIcon.GetComponentInChildren<TextMesh>().text = "Balls";
@@ -136,6 +134,7 @@ public class ScoreTextScript : LevelObject
         NewIcon.GetComponent<ScoreIcon>().Score = initialScoreValue;
         NewIcon.GetComponentInChildren<TextMesh>().text = initialScoreValue.ToString();
         return NewIcon;
+								*/
     }
 
 

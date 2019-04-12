@@ -8,9 +8,17 @@ public class Building : MonoBehaviour
     /// </summary>
     public RideShareLevel.Route DeliveryLocation;
 
-    public enum BuildingColors { Red, Green, Blue, Yellow, Purple, Orange, BROKENDONOTSELECT,
-        Pink
-    }
+    public enum BuildingColors
+				{
+								Red,
+								Green,
+								Blue,
+								Yellow,
+								Purple,
+								Orange, 
+        Pink,
+								DISABLED
+				}
 
     public BuildingColors BuildingColor;
 
@@ -20,7 +28,6 @@ public class Building : MonoBehaviour
         Debug.Assert(DeliveryLocation != null, $"Delivery location is not set for {gameObject}", gameObject);
         foreach (var rend in GetComponentsInChildren<Renderer>())
         {
-            
             rend.material.color = ColorKey.GetColor(BuildingColor);
         }
     }
