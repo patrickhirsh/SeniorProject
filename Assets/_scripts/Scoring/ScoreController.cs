@@ -22,6 +22,7 @@ public class ScoreController : LevelObject
 				public Material PurpleMat;
 				public Material OrangeMat;
 				public Material PinkMat;
+				public Material DISABLEDMat;
 
 				// UI prefab to display above buildings, used in BuildingScore objects
 				public GameObject BuildingScorePrefab;
@@ -70,7 +71,7 @@ public class ScoreController : LevelObject
 
 								foreach (Building building in _EC.Buildings)
 								{
-												Vector3 buildingScorePosition = building.transform.position + new Vector3(BuildingScoreHeight, 0, 0);
+												Vector3 buildingScorePosition = new Vector3(building.transform.position.x, BuildingScoreHeight, building.transform.position.z);
 												_buildingScores.Add(building.BuildingColor, new BuildingScore(building.BuildingColor, buildingScorePosition, 
 																building.transform.rotation, buildingScoreParent, BuildingScorePrefab));
 								}
@@ -194,8 +195,10 @@ public class ScoreController : LevelObject
 																return PurpleMat;
 												case Building.BuildingColors.Orange:
 																return OrangeMat;
+												case Building.BuildingColors.DISABLED:
+																return OrangeMat;
 												default:
-																return RedMat;
+																return DISABLEDMat;
 								}
 				}
 
