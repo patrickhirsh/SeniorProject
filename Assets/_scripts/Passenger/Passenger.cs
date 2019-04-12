@@ -150,7 +150,14 @@ namespace RideShareLevel
         public void Deliver(Vehicle vehicle)
         {
             CurrentLevel.PassengerController.PassengerDelivered(this, vehicle.PlayerControlled);
-            
+
+            GameObject tutorialObject = GameObject.Find("TutorialManager");
+
+            if (tutorialObject != null)
+            {
+                tutorialObject.GetComponent<TutorialManager>().DeliverPassenger();
+            }
+
             // Remove passenger from game
             Destroy(gameObject);
         }

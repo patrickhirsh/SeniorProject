@@ -73,6 +73,14 @@ public class PlayerVehicleController : VehicleController
         }
         else if (pin)
         {
+            var tutorialObject = GameObject.Find("TutorialManager");
+
+            if (tutorialObject != null)
+            {
+                TutorialManager manager = tutorialObject.GetComponent<TutorialManager>();
+                manager.PickupPassenger();
+            }
+
             foreach (Vehicle v in Vehicles)
             {
                 if (!v.HasTask) { v.ActivateRing(); }
@@ -113,6 +121,14 @@ public class PlayerVehicleController : VehicleController
 
     private void HandleVehicleSelect(Vehicle vehicle)
     {
+        var tutorialObject = GameObject.Find("TutorialManager");
+
+        if (tutorialObject != null)
+        {
+            var tut = tutorialObject.GetComponent<TutorialManager>();
+            tut.SelectVehicle(vehicle);
+        }
+
         BuildTasks(vehicle);
         SelectedPins = new List<Pin>();
     }
