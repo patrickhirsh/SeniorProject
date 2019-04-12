@@ -568,6 +568,9 @@ namespace RideShareLevel
         /// <returns>A BezierCurve component</returns>
         public BezierCurve GenerateCurves(Queue<Connection> connections)
         {
+            Debug.Assert(connections != null, "Connections should not be null");
+            Debug.Assert(connections.Any(), "No connections found in queue");
+
             connections = new Queue<Connection>(connections);
             var obj = new GameObject("BezierCurve", typeof(BezierCurve));
             var objCurve = obj.GetComponent<BezierCurve>();
