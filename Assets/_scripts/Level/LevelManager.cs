@@ -10,7 +10,9 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
-    public Level CurrentLevel;
+				System.Random rnd;
+
+				public Level CurrentLevel;
     //Bool for firing fireworks
     private bool fireworks = false;
     //timer for firing fireworks
@@ -26,6 +28,7 @@ public class LevelManager : Singleton<LevelManager>
     private void Start()
     {
         Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, LaunchSuccessFireworks);
+								rnd = new System.Random();
     }
 
     private void FixedUpdate()
@@ -37,7 +40,11 @@ public class LevelManager : Singleton<LevelManager>
             randPos.x += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
             randPos.y += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
             randPos.z += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
-            ParticleManager.Instance.GenerateFirework(randPos);
+
+												Array colors = Enum.GetValues(typeof(Building.BuildingColors));
+												Building.BuildingColors randomColor = (Building.BuildingColors)colors.GetValue(rnd.Next(colors.Length));
+												ParticleManager.Instance.GenerateFirework(randPos, randomColor);
+
             fTimer += FireworkInterval + Random.Range(-FireworkIntervalVariance, FireworkIntervalVariance);
         }
         fTimer -= .01f;

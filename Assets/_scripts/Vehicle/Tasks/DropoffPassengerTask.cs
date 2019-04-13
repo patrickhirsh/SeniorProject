@@ -21,12 +21,9 @@
 
         public override void Complete()
         {
-            Vehicle.RemovePassenger(TargetPassenger);
+												if (Vehicle.PlayerControlled) { ParticleManager.Instance.GenerateFirework(Vehicle.transform.position, TargetPassenger.GetColor()); }
+												Vehicle.RemovePassenger(TargetPassenger);
             TargetPassenger.Deliver(Vehicle);
-            if (Vehicle.PlayerControlled)
-            {
-                ParticleManager.Instance.GenerateFirework(Vehicle.transform.position);
-            }
         }
     }
 }

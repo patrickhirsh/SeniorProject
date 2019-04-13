@@ -41,7 +41,7 @@ public class GameEndCanvas : MonoBehaviour
     public void TurnOff()
     {
         BlurImage.enabled = false;
-        VOFText.enabled = false;
+        VOFText.gameObject.SetActive(false);
         GameManager.SetGameState(GameState.LevelSimulating);
     }
 
@@ -57,7 +57,7 @@ public class GameEndCanvas : MonoBehaviour
             av += .0000025;
 
         }
-        VOFText.enabled = true;
+        VOFText.gameObject.SetActive(true);
     }
 
     // Update is called once per frame
