@@ -14,16 +14,6 @@ public enum BuildingScoreState { PlayerStar, EnemyStar, TBD };
 /// </summary>
 public class ScoreController : LevelObject
 {
-				// materials to be used with each Building.BuildingColors
-				public Material RedMat;
-				public Material GreenMat;
-				public Material BlueMat;
-				public Material YellowMat;
-				public Material PurpleMat;
-				public Material OrangeMat;
-				public Material PinkMat;
-				public Material DISABLEDMat;
-
 				// UI prefab to display above buildings, used in BuildingScore objects
 				public GameObject BuildingScorePrefab;
 
@@ -112,7 +102,7 @@ public class ScoreController : LevelObject
 												_buildingScorePrefab = Instantiate(buildingScorePrefab, position, rotation, ScoreController);
 												_icon = _buildingScorePrefab.transform.Find("ColorIcon").GetComponent<SpriteRenderer>();
 												_scoreText = _buildingScorePrefab.transform.Find("Score").GetComponent<TextMesh>();
-												_icon.material = _SC.GetMaterial(_color);
+												_icon.material.color = Game.ColorKey.GetColor(_color);
         }
 
 								/// <summary>
@@ -174,33 +164,4 @@ public class ScoreController : LevelObject
 
 				#endregion
 
-				#region UI Helper Methods
-
-				/// <summary>
-				/// Gets material object corresponding to the provided BuildingColor enum val
-				/// </summary>
-				public Material GetMaterial(Building.BuildingColors color)
-				{
-								switch (color)
-								{
-												case Building.BuildingColors.Red:
-																return RedMat;
-												case Building.BuildingColors.Blue:
-																return BlueMat;
-												case Building.BuildingColors.Green:
-																return GreenMat;
-												case Building.BuildingColors.Yellow:
-																return YellowMat;
-												case Building.BuildingColors.Purple:
-																return PurpleMat;
-												case Building.BuildingColors.Orange:
-																return OrangeMat;
-												case Building.BuildingColors.DISABLED:
-																return OrangeMat;
-												default:
-																return DISABLEDMat;
-								}
-				}
-
-				#endregion
 }
