@@ -89,6 +89,7 @@ namespace UserInterface
         {
             // Done with placement, transition to simulation
             GameManager.SetGameState(GameState.LevelSimulating);
+            LevelManager.Instance.CurrentLevel.SetArtActive(true);
         }
 
         public void SetRotation(float rotationY)
