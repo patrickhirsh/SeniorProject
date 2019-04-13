@@ -17,8 +17,8 @@ namespace UserInterface
 
         private void Start()
         {
-            RestartButton.onClick.AddListener(HandleRestartButton);
-            HideButton.onClick.AddListener(HandleHideButton);
+            //RestartButton.onClick.AddListener(HandleRestartButton);
+            //HideButton.onClick.AddListener(HandleHideButton);
             
         }
 
@@ -26,14 +26,9 @@ namespace UserInterface
 
         private void HandleHideButton()
         {
-            UserInterfaceManager.Instance.HideUI();
+            //UserInterfaceManager.Instance.HideUI();
         }
 
-        private void HandleRestartButton()
-        {
-            Broadcaster.Broadcast(GameEvent.Reset);
-            GameManager.SetGameState(GameState.LevelRePlacement);
-        }
     }
 
     //    private void UpdateScore(int score)

@@ -106,16 +106,6 @@ public class PassengerController : LevelObject
                 _active[passenger.GetColor()] = false;
                 Broadcaster.Broadcast(GameEvent.BuildingComplete);
             }
-
-            // TODO: check for star system & trigger spawning halt for colors / end state accordingly
-            /*
-            if (TotalDelivered >= PassengersInLevel || PlayerDelivered >= PassengersNeeded)
-            {
-                            Broadcaster.Broadcast(PlayerDelivered >= PassengersNeeded
-                                            ? GameEvent.LevelCompleteSuccess
-                                            : GameEvent.LevelCompleteFail);
-            }
-            */
         }
     }
 

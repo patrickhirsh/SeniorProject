@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameEndCanvas : MonoBehaviour
 {
     public UnityEngine.UI.Image BlurImage;
+    public UnityEngine.UI.Text VOFText;
 
     // Start is called before the first frame update
     void Start()
@@ -17,15 +18,31 @@ public class GameEndCanvas : MonoBehaviour
         BlurImage.color = tempColor;
     }
 
+    private void SetText(string v)
+    {
+        VOFText.text = v;
+    }
+
     private void OnFailure(GameEvent arg0)
     {
+        GameManager.SetGameState(GameState.GameEndManu);
+        SetText("Failure");
         FadeInBlurImage();
     }
 
 
     private void OnSuccess(GameEvent arg0)
     {
+        GameManager.SetGameState(GameState.GameEndManu);
+        SetText("Success!");
         FadeInBlurImage();
+    }
+
+    public void TurnOff()
+    {
+        BlurImage.enabled = false;
+        VOFText.enabled = false;
+        GameManager.SetGameState(GameState.LevelSimulating);
     }
 
     private void FadeInBlurImage()
@@ -40,6 +57,7 @@ public class GameEndCanvas : MonoBehaviour
             av += .0000025;
 
         }
+        VOFText.enabled = true;
     }
 
     // Update is called once per frame
