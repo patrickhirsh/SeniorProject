@@ -460,7 +460,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -488,7 +488,7 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 0, g: 0.33185863, b: 1, a: 1}
-      key1: {r: 0, g: 0.33333334, b: 1, a: 0}
+      key1: {r: 0, g: 0.33333334, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -504,8 +504,8 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
-      atime2: 39899
+      atime1: 39321
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -513,7 +513,7 @@ LineRenderer:
       atime7: 0
       m_Mode: 0
       m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
+      m_NumAlphaKeys: 3
     numCornerVertices: 2
     numCapVertices: 2
     alignment: 0
@@ -529,11 +529,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4876875689409500}
     m_Modifications:
-    - target: {fileID: 6276564003210997536, guid: fe771e87723b46c468804e588e803c88,
-        type: 3}
-      propertyPath: m_Name
-      value: 4Seater
-      objectReference: {fileID: 0}
     - target: {fileID: 6666966019303674900, guid: fe771e87723b46c468804e588e803c88,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -588,6 +583,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6276564003210997536, guid: fe771e87723b46c468804e588e803c88,
+        type: 3}
+      propertyPath: m_Name
+      value: 4Seater
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe771e87723b46c468804e588e803c88, type: 3}

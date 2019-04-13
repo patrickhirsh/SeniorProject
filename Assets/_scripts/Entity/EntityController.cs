@@ -27,6 +27,8 @@ public class EntityController : LevelObject
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
     private Dictionary<CellIndex, IList<Entity>> _cellIndexToEntities = new Dictionary<CellIndex, IList<Entity>>();
 
+				private bool _initialized = false;
+
     //    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
 
     //public GameObject LevelPrefab;
@@ -37,6 +39,8 @@ public class EntityController : LevelObject
 
     public void Initialize()
     {
+								_initialized = true;
+
         // Verify that we have baked all the entities in the scene
         if (Entities.Length != GetComponentsInChildren<Entity>().Length)
         {
@@ -55,6 +59,14 @@ public class EntityController : LevelObject
             }
         }
     }
+
+				/// <summary>
+				/// Indicates whether this EntityController has been initialized
+				/// </summary>
+				public bool Initialized()
+				{
+								return _initialized;
+				}
 
 #if UNITY_EDITOR
     public void Bake()

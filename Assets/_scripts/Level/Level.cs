@@ -56,7 +56,7 @@ namespace RideShareLevel
             EntityController.Initialize();
             PassengerController.Initialize();
             NeutralVehicleController.Initialize();
-            ScoreController.Initialize(PassengerController);
+            ScoreController.Initialize(PassengerController, EntityController);
         }
     }
 }

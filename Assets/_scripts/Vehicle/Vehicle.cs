@@ -257,7 +257,15 @@ namespace RideShareLevel
         {
             if (PathfindingManager.Instance.GetPath(CurrentRoute, destinationRoute, out var connections))
             {
-                StartPathing(connections);
+                if (connections.Any())
+                {
+                    StartPathing(connections);
+                }
+                else
+                {
+                    // We are already at our destination
+                    PathCompletionPercent = 1;
+                }
             }
         }
 

@@ -22,7 +22,6 @@ public class PassengerController : LevelObject
 {
     public Passenger PassengerPrefab;
     public List<PassengerTypes> PassengerSpecs;
-
     private Terminal[] _terminals;
 
     private Dictionary<Building.BuildingColors, bool> _active;
@@ -176,6 +175,14 @@ public class PassengerController : LevelObject
 
         _canSpawn = true;
     }
+
+				/// <summary>
+				/// Indicates whether this PassengerController has been initialized
+				/// </summary>
+				public bool Initialized()
+				{
+								return _canSpawn;
+				}
 
     public Route GetBuildingRoute(Building.BuildingColors color)
     {
