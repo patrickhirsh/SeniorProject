@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class billboarding : MonoBehaviour {
+public class billboarding : MonoBehaviour
+{
 
     // Use this for initialization
     public Camera m_Camera;
@@ -15,6 +16,6 @@ public class billboarding : MonoBehaviour {
     //Orient the camera after all movement is completed this frame to avoid jittering
     void LateUpdate()
     {
-								transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward);
-				}
+        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward);
+    }
 }

@@ -12,6 +12,8 @@ namespace RideShareLevel
         public EntityController EntityController;
         public PassengerController PassengerController;
         public ScoreController ScoreController;
+        public GameObject ArtContainer;
+    
 
 #if UNITY_EDITOR
         public void Bake()
@@ -57,6 +59,11 @@ namespace RideShareLevel
             PassengerController.Initialize();
             NeutralVehicleController.Initialize();
             ScoreController.Initialize(PassengerController, EntityController);
+        }
+
+        public void SetArtActive(bool b)
+        {
+            ArtContainer.SetActive(b);
         }
     }
 }

@@ -120,6 +120,7 @@ public class TutorialManager : MonoBehaviour
             Destroy(SelectedVehicle.GetComponentInChildren<TextMesh>().gameObject);
 
             ScoreDisplayText = GameObject.Instantiate(TutorialText, ScoreText.transform.position, Quaternion.identity);
+            ScoreDisplayText.transform.parent = ScoreText.transform;
             ScoreDisplayText.GetComponent<TextMesh>().text = "Deliver this many more passengers before your opponent to receive a star!";
             ScoreDisplayText.transform.position += Vector3.up * 3.5f;
 
