@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PauseCanvas : MonoBehaviour
 {
-
+    private bool on;
     public GameObject Children;
     // Start is called before the first frame update
     void Start()
@@ -18,14 +18,28 @@ public class PauseCanvas : MonoBehaviour
         
     }
 
+    public void SetCanvas()
+    {
+        if (on)
+        {
+            TurnOff();
+        }
+        else
+        {
+            TurnOn();
+        }
+    }
+
     public void TurnOn()
     {
         Children.SetActive(true);
+        on = true;
     }
 
     public void TurnOff()
     {
         Children.SetActive(false);
+        on = false;
     }
 
     public void HandleRestartButton()
