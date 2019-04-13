@@ -5,7 +5,11 @@ namespace Game
 {
     public static class ColorKey
     {
-        public static Color GetColor(Building.BuildingColors buildingColor)
+								public static Color32 UIStarTBD = new Color32(255, 255, 255, 150);
+								public static Color32 UIStarPlayer = new Color32(255, 255, 0, 255);
+								public static Color32 UIStarEnemy = new Color32(75, 75, 75, 255);
+
+								public static Color GetColor(Building.BuildingColors buildingColor)
         {
             switch (buildingColor)
             {

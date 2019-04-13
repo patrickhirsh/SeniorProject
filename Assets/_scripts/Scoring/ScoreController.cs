@@ -79,7 +79,9 @@ public class ScoreController : LevelObject
 								BuildingScoreState _state;          // This building's current completion state.
 								GameObject _buildingScorePrefab;    // The UI prefab asociated with this building
 								SpriteRenderer _icon;
-								TextMesh _scoreText;
+								SpriteRenderer _star;
+								TextMesh _playerScoreText;
+								TextMesh _enemyScoreText;
 
 								/// <summary>
 								/// Creates a new BuildingScore object
@@ -97,8 +99,11 @@ public class ScoreController : LevelObject
             _state = BuildingScoreState.TBD;
 												_buildingScorePrefab = Instantiate(buildingScorePrefab, position, rotation, ScoreController);
 												_icon = _buildingScorePrefab.transform.Find("ColorIcon").GetComponent<SpriteRenderer>();
-												_scoreText = _buildingScorePrefab.transform.Find("Score").GetComponent<TextMesh>();
+												_star = _buildingScorePrefab.transform.Find("Star").GetComponent<SpriteRenderer>();
+												_playerScoreText = _buildingScorePrefab.transform.Find("PlayerScore").GetComponent<TextMesh>();
+												_enemyScoreText = _buildingScorePrefab.transform.Find("EnemyScore").GetComponent<TextMesh>();
 												_icon.material.color = Game.ColorKey.GetColor(_color);
+												_star.material.color = Game.ColorKey.UIStarTBD;
         }
 
 								/// <summary>
@@ -109,30 +114,32 @@ public class ScoreController : LevelObject
         {
 												if (_state == BuildingScoreState.TBD)
 												{
-																_scoreText.text =
-																PC.GetPlayerPassengersDelivered(_color).ToString() + "/" + PC.GetPassengersRequired(_color).ToString() +
-																" - " +
-																PC.GetEnemyPassengersDelivered(_color).ToString() + "/" + PC.GetPassengersRequired(_color).ToString();
+																_playerScoreText.text = PC.GetPlayerPassengersDelivered(_color).ToString() + "/" + PC.GetPassengersRequired(_color).ToString();
+																_enemyScoreText.text = PC.GetEnemyPassengersDelivered(_color).ToString() + "/" + PC.GetPassengersRequired(_color).ToString();
 												}
 								}
 
 								/// <summary>
-								/// Updates the star rating UI for this building
+								/// Updates the star rating UI for this building.
+								/// Returns the new state of the building
 								/// </summary>
 								/// <param name="PC"> The PassengerController associated with this level </param>
-								public void UpdateState(PassengerController PC)
+								public BuildingScoreState UpdateState(PassengerController PC)
         {
             if (!PC.GetSpawnStatus(_color))
             {
                 if (PC.GetPlayerPassengersDelivered(_color) > PC.GetEnemyPassengersDelivered(_color))
                 {
                     _state = BuildingScoreState.PlayerStar;
+																				_star.material.color = Game.ColorKey.UIStarPlayer;
                 }
                 else
                 {
                     _state = BuildingScoreState.EnemyStar;
-                }
+																				_star.material.color = Game.ColorKey.UIStarEnemy;
+																}
             }
+												return _state;
         }
     }
 
@@ -141,7 +148,7 @@ public class ScoreController : LevelObject
 				#region Event Handlers
 
 				/// <summary>
-				/// Handles the PassengerDelivered Broadcast
+				/// Handles the PassengerDelivered Broadcast.
 				/// </summary>
 				private void PassengerDelivered(GameEvent action)
     {
@@ -150,12 +157,25 @@ public class ScoreController : LevelObject
     }
 
 				/// <summary>
-				/// Handles the BuildingComplete Broadcast
+				/// Handles the BuildingComplete Broadcast.
+				/// Checks for GameOver and broadcasts accordingly
 				/// </summary>
     private void BuildingComplete(GameEvent action)
     {
+								bool gameOver = true;			// true only if NONE of the buildings are still TBD (active)
+								bool success = false;			// true if the player has AT LEAST 1 star
         foreach (BuildingScore building in _buildingScores.Values)
-            building.UpdateState(_PC);
+								{
+												BuildingScoreState state = building.UpdateState(_PC);
+												if (state == BuildingScoreState.TBD) { gameOver = false; }
+												if (state == BuildingScoreState.PlayerStar) { success = true; }
+								}
+
+								if (gameOver)
+								{
+												if (success) { Debug.Log("Success Broadcasted!"); Broadcaster.Broadcast(GameEvent.LevelCompleteSuccess); }
+												else { Debug.Log("Fail Broadcasted!"); Broadcaster.Broadcast(GameEvent.LevelCompleteFail); }
+								}
     }
 
 				#endregion
