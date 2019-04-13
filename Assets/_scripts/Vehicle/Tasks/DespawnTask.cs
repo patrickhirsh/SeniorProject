@@ -4,14 +4,14 @@
     {
         public Route TargetRoute;
 
-        public DespawnTask(Vehicle vehicle) : base(vehicle)
+        public DespawnTask(Vehicle vehicle, bool drawPath) : base(vehicle, drawPath)
         {
             TargetRoute = vehicle.CurrentLevel.NeutralVehicleController.GetRandomSpawnRoute();
         }
 
         public override bool IsComplete()
         {
-            return Vehicle.CurrentRoute == TargetRoute;
+            return Vehicle.PathIsComplete;
         }
 
         public override bool ShouldStart()

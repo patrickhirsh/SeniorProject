@@ -58,6 +58,11 @@ namespace RideShareLevel
                 frontier.Remove(current);
                 bool processNode = true;
 
+                if (current.connection.ConnectsTo != null && current.connection.ConnectsTo.ParentRoute == destination)
+                {
+                    endRouteDiscovered = true; break;
+                }
+
                 // if we're processing the end node, we've found the shortest path to it!
                 if (current.connection.ParentRoute == destination)
                 { endRouteDiscovered = true; break; }

@@ -78,7 +78,7 @@ public class ScoreController : LevelObject
 								Building.BuildingColors _color;     // This building's color
 								BuildingScoreState _state;          // This building's current completion state.
 								GameObject _buildingScorePrefab;    // The UI prefab asociated with this building
-								SpriteRenderer _icon;
+								//SpriteRenderer _icon;
 								SpriteRenderer _star;
 								TextMesh _playerScoreText;
 								TextMesh _enemyScoreText;
@@ -98,11 +98,12 @@ public class ScoreController : LevelObject
 												_color = color;
             _state = BuildingScoreState.TBD;
 												_buildingScorePrefab = Instantiate(buildingScorePrefab, position, rotation, ScoreController);
-												_icon = _buildingScorePrefab.transform.Find("ColorIcon").GetComponent<SpriteRenderer>();
-												_star = _buildingScorePrefab.transform.Find("Star").GetComponent<SpriteRenderer>();
-												_playerScoreText = _buildingScorePrefab.transform.Find("PlayerScore").GetComponent<TextMesh>();
-												_enemyScoreText = _buildingScorePrefab.transform.Find("EnemyScore").GetComponent<TextMesh>();
-												_icon.material.color = Game.ColorKey.GetColor(_color);
+												//_icon = _buildingScorePrefab.transform.Find("ColorIcon").GetComponent<SpriteRenderer>();
+												Transform ScorePanel = _buildingScorePrefab.transform.Find("ScorePanel");
+												_star = ScorePanel.Find("Star").GetComponent<SpriteRenderer>();
+												_playerScoreText = ScorePanel.Find("PlayerScore").GetComponent<TextMesh>();
+												_enemyScoreText = ScorePanel.Find("EnemyScore").GetComponent<TextMesh>();
+												//_icon.material.color = Game.ColorKey.GetColor(_color);
 												_star.material.color = Game.ColorKey.UIStarTBD;
         }
 

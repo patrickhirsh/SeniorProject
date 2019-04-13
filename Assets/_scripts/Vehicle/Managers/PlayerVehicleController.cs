@@ -141,7 +141,7 @@ public class PlayerVehicleController : VehicleController
         var selectedPassengers = SelectedPins.Select(pin => pin.Passenger).ToArray();
         foreach (var passenger in selectedPassengers)
         {
-            vehicle.AddTask(new PickupPassengerTask(vehicle, passenger));
+            vehicle.AddTask(new PickupPassengerTask(vehicle, true, passenger));
         }
         vehicle.playSound();
     }

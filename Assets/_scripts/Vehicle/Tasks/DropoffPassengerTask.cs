@@ -4,14 +4,14 @@
     {
         public Passenger TargetPassenger { get; }
 
-        public DropoffPassengerTask(Vehicle vehicle, Passenger passenger) : base(vehicle)
+        public DropoffPassengerTask(Vehicle vehicle, bool drawPath, Passenger passenger) : base(vehicle, drawPath)
         {
             TargetPassenger = passenger;
         }
 
         public override bool IsComplete()
         {
-            return Vehicle.PathIsComplete && Vehicle.CurrentRoute == TargetPassenger.DestRoute;
+            return Vehicle.PathIsComplete;
         }
 
         public override bool ShouldStart()

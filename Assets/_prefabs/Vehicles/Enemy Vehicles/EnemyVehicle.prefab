@@ -264,7 +264,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.35
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -291,9 +291,9 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 0}
-      key2: {r: 1, g: 1, b: 1, a: 0.03483212}
+      key0: {r: 1, g: 0, b: 0, a: 0.5882353}
+      key1: {r: 1, g: 0, b: 0, a: 0.5882353}
+      key2: {r: 1, g: 1, b: 1, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -309,7 +309,7 @@ LineRenderer:
       ctime7: 0
       atime0: 0
       atime1: 65535
-      atime2: 38936
+      atime2: 64379
       atime3: 65535
       atime4: 0
       atime5: 0
@@ -425,11 +425,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4066096448770726}
     m_Modifications:
-    - target: {fileID: 4315719378044096409, guid: cf24c0b1a6c370f46b4dcff76364b81d,
-        type: 3}
-      propertyPath: m_Name
-      value: Enemy
-      objectReference: {fileID: 0}
     - target: {fileID: 4006864924750175226, guid: cf24c0b1a6c370f46b4dcff76364b81d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -484,6 +479,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315719378044096409, guid: cf24c0b1a6c370f46b4dcff76364b81d,
+        type: 3}
+      propertyPath: m_Name
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf24c0b1a6c370f46b4dcff76364b81d, type: 3}

@@ -5,7 +5,7 @@
 
         public Passenger TargetPassenger;
 
-        public PickupPassengerTask(Vehicle vehicle, Passenger passenger) : base(vehicle)
+        public PickupPassengerTask(Vehicle vehicle, bool drawPath, Passenger passenger) : base(vehicle, drawPath)
         {
             TargetPassenger = passenger;
         }
