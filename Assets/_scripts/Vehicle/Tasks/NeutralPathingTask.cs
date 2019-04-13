@@ -6,7 +6,7 @@ namespace RideShareLevel
     {
         public Queue<Connection> Path { get; private set; }
 
-        public NeutralPathingTask(Vehicle vehicle, Queue<Connection> path) : base(vehicle)
+        public NeutralPathingTask(Vehicle vehicle, bool drawPath, Queue<Connection> path) : base(vehicle, drawPath)
         {
             Path = path;
         }

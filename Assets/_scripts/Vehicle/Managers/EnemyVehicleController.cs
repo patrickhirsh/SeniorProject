@@ -26,11 +26,11 @@ public class EnemyVehicleController : VehicleController
         vehicle.Controller = this;
 
         // obtain a path to the passenger and assign the task
-        vehicle.AddTask(new PickupPassengerTask(vehicle, passenger));
+        vehicle.AddTask(new PickupPassengerTask(vehicle, true, passenger));
     }
 
     public override void IdleVehicle(Vehicle vehicle)
     {
-        vehicle.AddTask(new DespawnTask(vehicle));
+        vehicle.AddTask(new DespawnTask(vehicle, false));
     }
 }

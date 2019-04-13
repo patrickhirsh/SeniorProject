@@ -211,7 +211,7 @@ namespace RideShareLevel
         {
             Passengers.Add(passenger);
             passenger.transform.SetParent(transform, false);
-            AddTask(new DropoffPassengerTask(this, passenger));
+            AddTask(new DropoffPassengerTask(this, true, passenger));
         }
 
         public void RemovePassenger(Passenger passenger)
@@ -278,7 +278,7 @@ namespace RideShareLevel
             // Green if has passenger else purple
             //            VehiclePathLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
             VehiclePathLine.positionCount = 20;
-            if (!NeutralControlled) DrawPath(VehiclePath, VehiclePathLine);
+            if (CurrentTask.DrawPath) DrawPath(VehiclePath, VehiclePathLine);
 
             _canMove = true;
         }
@@ -317,7 +317,7 @@ namespace RideShareLevel
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
         {
-            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent, PathCompletionPercent + .25f);
+            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent);
         }
 
         #endregion
