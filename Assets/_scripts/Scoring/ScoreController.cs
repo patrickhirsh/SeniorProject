@@ -58,8 +58,10 @@ public class ScoreController : LevelObject
 								foreach (Building building in _EC.Buildings)
 								{
 												Vector3 buildingScorePosition = new Vector3(building.transform.position.x, BuildingScoreHeight, building.transform.position.z);
-												_buildingScores.Add(building.BuildingColor, new BuildingScore(building.BuildingColor, buildingScorePosition, 
-																building.transform.rotation, buildingScoreParent, BuildingScorePrefab));
+												var buildingScore = new BuildingScore(building.BuildingColor, buildingScorePosition, building.transform.rotation, buildingScoreParent, BuildingScorePrefab);
+												buildingScore.UpdateDelivered(_PC);
+												buildingScore.UpdateState(_PC);
+												_buildingScores.Add(building.BuildingColor, buildingScore);
 								}
 				}
 				#endregion
@@ -80,6 +82,7 @@ public class ScoreController : LevelObject
 								GameObject _buildingScorePrefab;    // The UI prefab asociated with this building
 								//SpriteRenderer _icon;
 								SpriteRenderer _star;
+								SpriteRenderer _x;
 								TextMesh _playerScoreText;
 								TextMesh _enemyScoreText;
 
@@ -101,10 +104,12 @@ public class ScoreController : LevelObject
 												//_icon = _buildingScorePrefab.transform.Find("ColorIcon").GetComponent<SpriteRenderer>();
 												Transform ScorePanel = _buildingScorePrefab.transform.Find("ScorePanel");
 												_star = ScorePanel.Find("Star").GetComponent<SpriteRenderer>();
+												_x = ScorePanel.Find("X").GetComponent<SpriteRenderer>();
 												_playerScoreText = ScorePanel.Find("PlayerScore").GetComponent<TextMesh>();
 												_enemyScoreText = ScorePanel.Find("EnemyScore").GetComponent<TextMesh>();
 												//_icon.material.color = Game.ColorKey.GetColor(_color);
 												_star.material.color = Game.ColorKey.UIStarTBD;
+												_x.gameObject.SetActive(false);
         }
 
 								/// <summary>
@@ -129,17 +134,25 @@ public class ScoreController : LevelObject
         {
             if (!PC.GetSpawnStatus(_color))
             {
+																// Player won building
                 if (PC.GetPlayerPassengersDelivered(_color) > PC.GetEnemyPassengersDelivered(_color))
                 {
                     _state = BuildingScoreState.PlayerStar;
-																				_star.material.color = Game.ColorKey.UIStarPlayer;
+																				_star.material.color = Game.ColorKey.UIStarSuccess;
                 }
+
+																// Enemy won building
                 else
                 {
                     _state = BuildingScoreState.EnemyStar;
-																				_star.material.color = Game.ColorKey.UIStarEnemy;
+																				_star.gameObject.SetActive(false);
+																				_x.gameObject.SetActive(true);
 																}
-            }
+
+																// set text to "inactive" to convey the building can no longer be delivered to
+																_playerScoreText.GetComponent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
+																_enemyScoreText.GetComponent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
+												}
 												return _state;
         }
     }
