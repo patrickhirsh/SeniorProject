@@ -143,7 +143,7 @@ public class PlayerVehicleController : VehicleController
         {
             vehicle.AddTask(new PickupPassengerTask(vehicle, true, passenger));
         }
-        vehicle.playSound();
+        vehicle.PlaySound();
     }
 
     public void HandleNotHit(GameObject arg0)

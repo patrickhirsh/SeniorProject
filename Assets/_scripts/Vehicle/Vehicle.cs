@@ -9,41 +9,43 @@ namespace RideShareLevel
 {
     public class Vehicle : LevelObject
     {
+        [Header("Auto Serialized")]
         public Route CurrentRoute;              // the route this vehicle is currently on
         public Connection CurrentConnection;    // the connection this vehicle is currently on
+        public VehicleController Controller;
 
+        [Header("Movement")]
         public float Speed = 5f;                // the speed at which this vehicle will traverse it's current path
         public float RotationSpeed = 10f;                // the speed at which this vehicle will traverse it's current path
         public float Granularity = .005f;
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
-        public Gradient PickupGradient;
-        public Gradient DropoffGradient;
-        public GameObject RingPrefab;
 
         public LineRenderer VehiclePathLine;
         public BezierCurve VehiclePath;
-        public float PathCompletionPercent;
-        public bool PathIsComplete => PathCompletionPercent >= 1;
-        public Vector3 NextPosition;
+        public bool PathIsComplete => _pathCompletionPercent >= 1;
+        private float _pathCompletionPercent;
+        private Vector3 _nextPosition;
         private bool _canMove;
 
         public HashSet<Passenger> Passengers;
         public bool HasPassengers => Passengers != null && Passengers.Any();
         public bool PlayerControlled => Controller.GetType() == typeof(PlayerVehicleController);
         public bool NeutralControlled => Controller.GetType() == typeof(NeutralVehicleController);
-        public VehicleController Controller;
 
         private Vector3 _startingPos;
         private Quaternion _startingRot;
         private GameObject _ring;
+
+        [Header("Ring")]
+        public GameObject RingPrefab;
         //the speed at which the selection ring will pulse when it's being hovered on
-        public float ringPulseSpeedDefault;
-        public float ringPulseSpeedOnHover;
-        public Color defaultRingPulseColor;
+        public float DefaultRingPulseSpeed;
+        public float RingPulseSpeedOnHover;
+        public Color DefaultRingPulseColor;
         public Color HoverRingPulseColor;
 
-        private AudioSource AudioSource;
+        private AudioSource _audioSource;
 
 #if UNITY_EDITOR
         public void Bake()
@@ -51,7 +53,7 @@ namespace RideShareLevel
             UnityEditor.Undo.RecordObject(this, "Bake Vehicle Controller");
             Controller = GetComponentInParent<VehicleController>();
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
-            AudioSource = this.GetComponent<AudioSource>();
+            _audioSource = this.GetComponent<AudioSource>();
         }
 #endif
 
@@ -66,7 +68,7 @@ namespace RideShareLevel
             Broadcaster.AddListener(GameEvent.GameStateChanged, GameStateChanged);
             InputManager.Instance.HoverChanged.AddListener(ChangeRingColor);
 
-            _ring = SpawnRing(defaultRingPulseColor, ringPulseSpeedDefault);
+            _ring = SpawnRing(DefaultRingPulseColor, DefaultRingPulseSpeed);
             _ring.transform.parent = transform;
             _ring.SetActive(false);
         }
@@ -78,7 +80,7 @@ namespace RideShareLevel
 
             if (!CurrentTask.IsComplete())
             {
-                if (_canMove && PathCompletionPercent < 1)
+                if (_canMove && _pathCompletionPercent < 1)
                 {
                     Move();
                 }
@@ -155,11 +157,11 @@ namespace RideShareLevel
             }
         }
 
-        internal void playSound()
+        internal void PlaySound()
         {
-            if(this.AudioSource != null)
+            if(this._audioSource != null)
             {
-                AudioSource.Play();
+                _audioSource.Play();
             }
         }
 
@@ -264,16 +266,16 @@ namespace RideShareLevel
                 else
                 {
                     // We are already at our destination
-                    PathCompletionPercent = 1;
+                    _pathCompletionPercent = 1;
                 }
             }
         }
 
         private void StartPathing(Queue<Connection> connections)
         {
-            PathCompletionPercent = 0;
+            _pathCompletionPercent = 0;
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
-            NextPosition = VehiclePath.GetPointAt(0);
+            _nextPosition = VehiclePath.GetPointAt(0);
 
             // Green if has passenger else purple
             //            VehiclePathLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
@@ -294,8 +296,8 @@ namespace RideShareLevel
         public void Move()
         {
             var t = transform;
-            var targetPosition = Vector3.MoveTowards(t.position, NextPosition, Speed * Time.deltaTime);
-            var difference = NextPosition - t.position;
+            var targetPosition = Vector3.MoveTowards(t.position, _nextPosition, Speed * Time.deltaTime);
+            var difference = _nextPosition - t.position;
 
             if (difference.magnitude > Granularity)
             {
@@ -305,11 +307,11 @@ namespace RideShareLevel
 
             t.position = targetPosition;
 
-            if (Vector3.Distance(t.position, NextPosition) < Granularity)
+            if (Vector3.Distance(t.position, _nextPosition) < Granularity)
             {
-                PathCompletionPercent = PathCompletionPercent + Granularity * 2;
-                NextPosition = VehiclePath.GetPointAt(PathCompletionPercent);
-                CurrentRoute = VehiclePath.GetNearestPoint(PathCompletionPercent)?.Route;
+                _pathCompletionPercent = _pathCompletionPercent + Granularity * 2;
+                _nextPosition = VehiclePath.GetPointAt(_pathCompletionPercent);
+                CurrentRoute = VehiclePath.GetNearestPoint(_pathCompletionPercent)?.Route;
 
                 if (!NeutralControlled) DrawPath(VehiclePath, VehiclePathLine);
             }
@@ -317,7 +319,7 @@ namespace RideShareLevel
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
         {
-            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, PathCompletionPercent);
+            PathfindingManager.Instance.DrawCurve(vehicleCurve, travelLine, _pathCompletionPercent);
         }
 
         #endregion
@@ -350,13 +352,13 @@ namespace RideShareLevel
             if (hoverobject == this.gameObject)
             {
 
-                _ring.GetComponent<Renderer>().material.SetColor("_Color", Color.magenta);
-                _ring.GetComponent<Renderer>().material.SetFloat("_Speed", ringPulseSpeedOnHover);
+                _ring.GetComponent<Renderer>().material.SetColor("_Color", HoverRingPulseColor);
+                _ring.GetComponent<Renderer>().material.SetFloat("_Speed", RingPulseSpeedOnHover);
             }
             else
             {
-                _ring.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
-                _ring.GetComponent<Renderer>().material.SetFloat("_Speed", 2);
+                _ring.GetComponent<Renderer>().material.SetColor("_Color", DefaultRingPulseColor);
+                _ring.GetComponent<Renderer>().material.SetFloat("_Speed", DefaultRingPulseSpeed);
             }
         }
 

@@ -45,7 +45,6 @@ namespace RideShareLevel
             if (_timeRemaining == 0 && !PickedUp && !EnemyVehicleEnroute)
             {
                 CurrentLevel.EnemyVehicleController.PickupPassenger(this);
-                Debug.Log("Enemy Vehicle Spawned!");
                 EnemyVehicleEnroute = true;
                 //                Ring.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
             }
@@ -91,6 +90,7 @@ namespace RideShareLevel
         {
             PickedUp = true;
             DestroyRing();
+            SetPickupReticleActive(false);
         }
 
         private void Reset(GameEvent @event)
@@ -117,7 +117,7 @@ namespace RideShareLevel
 
             PickedUp = false;
             EnemyVehicleEnroute = false;
-            SpawnPickupReticle();
+            CreatePickupReticle();
         }
 
         public void DestroyRing()
@@ -136,7 +136,7 @@ namespace RideShareLevel
         }
 
         #region Reticle Methods
-        public void SpawnPickupReticle()
+        public void CreatePickupReticle()
         {
             _pickupPin = Instantiate(PassengerPickupReticle, transform, false);
             _pickupPin.transform.position += AdjustmentVector;
@@ -145,6 +145,12 @@ namespace RideShareLevel
 
             _RadialTimer = _pickupPin.RadialTimerImg;
         }
+
+        public void SetPickupReticleActive(bool value)
+        {
+            _pickupPin.gameObject.SetActive(value);
+        }
+
         #endregion
 
         public void Deliver(Vehicle vehicle)
