@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,12 +43,15 @@ namespace RideShareLevel
         public Color defaultRingPulseColor;
         public Color HoverRingPulseColor;
 
+        private AudioSource AudioSource;
+
 #if UNITY_EDITOR
         public void Bake()
         {
             UnityEditor.Undo.RecordObject(this, "Bake Vehicle Controller");
             Controller = GetComponentInParent<VehicleController>();
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+            AudioSource = this.GetComponent<AudioSource>();
         }
 #endif
 
@@ -148,6 +152,14 @@ namespace RideShareLevel
             {
                 CurrentTask = null;
                 Controller.IdleVehicle(this);
+            }
+        }
+
+        internal void playSound()
+        {
+            if(this.AudioSource != null)
+            {
+                AudioSource.Play();
             }
         }
 

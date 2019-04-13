@@ -121,6 +121,7 @@ public class PlayerVehicleController : VehicleController
 
     private void HandleVehicleSelect(Vehicle vehicle)
     {
+        //TODO: This needs to be optimized out
         var tutorialObject = GameObject.Find("TutorialManager");
 
         if (tutorialObject != null)
@@ -131,6 +132,7 @@ public class PlayerVehicleController : VehicleController
 
         BuildTasks(vehicle);
         SelectedPins = new List<Pin>();
+        
     }
 
     private void BuildTasks(Vehicle vehicle)
@@ -141,6 +143,7 @@ public class PlayerVehicleController : VehicleController
         {
             vehicle.AddTask(new PickupPassengerTask(vehicle, passenger));
         }
+        vehicle.playSound();
     }
 
     public void HandleNotHit(GameObject arg0)
