@@ -71,6 +71,26 @@ public class LevelManager : Singleton<LevelManager>
         GenerateLevel(level);
     }
 
+
+    public void TransitionLevelPrefab(GameObject levelprefab, AudioClip NewLayer1, AudioClip NewLayer2, AudioClip NewLayer3)
+    {
+        fireworks = false;
+        //Destroy old level object
+        var oldLevel = CurrentLevel.gameObject;
+
+        //Switch music to music of new level
+        Osborne_AudioManager.Instance.SwitchLevels(NewLayer1, NewLayer2, NewLayer3);
+
+        //Spawn and place new level prefab in that spot.
+        CurrentLevel = Instantiate(levelprefab, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();
+        Destroy(oldLevel);
+        CurrentLevel.EntityController.Initialize();
+
+        //Notify controllers of the new gamestate
+        Broadcaster.Broadcast(GameEvent.GameStateChanged);
+        Broadcaster.Broadcast(GameEvent.LevelChange);
+    }
+
     public void TransitionLevel(MenuBuilding newLevel)
     {
         fireworks = false;
@@ -88,6 +108,8 @@ public class LevelManager : Singleton<LevelManager>
         //Notify controllers of the new gamestate
         Broadcaster.Broadcast(GameEvent.GameStateChanged);
 								Broadcaster.Broadcast(GameEvent.LevelChange);
-				}
+	}
+
+
 
 }

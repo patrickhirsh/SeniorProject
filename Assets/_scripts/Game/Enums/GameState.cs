@@ -5,5 +5,6 @@
     LevelRePlacement,
     LevelPlaced,
     LevelSimulating,
-    Score
+    Score,
+    GameEndManu
 }

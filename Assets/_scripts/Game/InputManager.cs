@@ -36,6 +36,9 @@ public class InputManager : Singleton<InputManager>
             case GameState.LevelSimulating:
                 SetDebugPlanesActive(false);
                 break;
+            case GameState.GameEndManu:
+
+                break;
         }
     }
 
@@ -172,6 +175,9 @@ public class InputManager : Singleton<InputManager>
                 break;
             case GameState.LevelSimulating:
                 HandleLevelSimulating(Input.touchCount > 0 && touch.phase == TouchPhase.Began);
+                break;
+            case GameState.GameEndManu:
+                //Might not have to do anything here
                 break;
         }
     }
