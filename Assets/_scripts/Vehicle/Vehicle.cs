@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using _scripts;
 
 namespace RideShareLevel
 {
@@ -45,8 +46,12 @@ namespace RideShareLevel
         public Color DefaultRingPulseColor;
         public Color HoverRingPulseColor;
 
+        [Header("Taxiing UI")]
+        public Taxiing Taxiing;
+
         private AudioSource _audioSource;
 
+        #region Bake
 #if UNITY_EDITOR
         public void Bake()
         {
@@ -56,6 +61,7 @@ namespace RideShareLevel
             _audioSource = this.GetComponent<AudioSource>();
         }
 #endif
+        #endregion
 
         #region Unity Methods
 
@@ -71,6 +77,8 @@ namespace RideShareLevel
             _ring = SpawnRing(DefaultRingPulseColor, DefaultRingPulseSpeed);
             _ring.transform.parent = transform;
             _ring.SetActive(false);
+
+            SetTaxiingActive(false);
         }
 
 
@@ -214,12 +222,20 @@ namespace RideShareLevel
             Passengers.Add(passenger);
             passenger.transform.SetParent(transform, false);
             AddTask(new DropoffPassengerTask(this, true, passenger));
+            SetTaxiingActive(true);
+            UpdateTaxiingPassengers();
         }
 
         public void RemovePassenger(Passenger passenger)
         {
             Debug.Assert(Passengers.Contains(passenger), "Passenger is not in vehicle???");
             Passengers.Remove(passenger);
+            UpdateTaxiingPassengers();
+
+            if (!HasPassengers)
+            {
+                SetTaxiingActive(false);
+            }
         }
 
         public bool HasPassenger(Passenger passenger)
@@ -253,7 +269,7 @@ namespace RideShareLevel
             transform.rotation = _startingRot;
         }
 
-        #region VEHICLE PATHING
+        #region Vehicle Pathing
 
         public void FindPath(Route destinationRoute)
         {
@@ -364,6 +380,23 @@ namespace RideShareLevel
 
         #endregion
 
+        #region Passenger UI
+
+        public void SetTaxiingActive(bool value)
+        {
+            if (Taxiing != null)
+            {
+                Taxiing.gameObject.SetActive(value);
+            }
+        }
+
+        public void UpdateTaxiingPassengers()
+        {
+            if (Taxiing != null) Taxiing.SetPassengers(Passengers);
+        }
+
+
+        #endregion
         public void Despawn()
         {
             Destroy(gameObject);

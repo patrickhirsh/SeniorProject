@@ -9,7 +9,7 @@ namespace Game
 								public static Color32 UIStarSuccess = new Color32(255, 255, 0, 255);
 								public static Color32 UITextInactive = UIStarTBD;
 
-        public static Color GetColor(Building.BuildingColors buildingColor)
+        public static Color GetBuildingColor(Building.BuildingColors buildingColor)
         {
             switch (buildingColor)
             {

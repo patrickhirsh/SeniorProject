@@ -92,18 +92,18 @@ public class PassengerController : LevelObject
     public void PassengerDelivered(Passenger passenger, bool byPlayer = false)
     {
         // passenger deliveries enroute during building completion should be ignored
-        if (_active[passenger.GetColor()])
+        if (_active[passenger.GetBuildingColor()])
         {
-            _delivered[passenger.GetColor()]++;
-            if (byPlayer) { _playerDelivered[passenger.GetColor()]++; }
-            else { _enemyDelivered[passenger.GetColor()]++; }
+            _delivered[passenger.GetBuildingColor()]++;
+            if (byPlayer) { _playerDelivered[passenger.GetBuildingColor()]++; }
+            else { _enemyDelivered[passenger.GetBuildingColor()]++; }
             Broadcaster.Broadcast(GameEvent.PassengerDelivered);
 
             // if the player or enemy has completed the building, stop spawning this type
-            if (_playerDelivered[passenger.GetColor()] >= _types[passenger.GetColor()].NumRequired ||
-                            _enemyDelivered[passenger.GetColor()] >= _types[passenger.GetColor()].NumRequired)
+            if (_playerDelivered[passenger.GetBuildingColor()] >= _types[passenger.GetBuildingColor()].NumRequired ||
+                            _enemyDelivered[passenger.GetBuildingColor()] >= _types[passenger.GetBuildingColor()].NumRequired)
             {
-                _active[passenger.GetColor()] = false;
+                _active[passenger.GetBuildingColor()] = false;
                 Broadcaster.Broadcast(GameEvent.BuildingComplete);
             }
         }

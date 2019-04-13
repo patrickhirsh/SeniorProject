@@ -28,7 +28,7 @@ public class Building : MonoBehaviour
         Debug.Assert(DeliveryLocation != null, $"Delivery location is not set for {gameObject}", gameObject);
         foreach (var rend in GetComponentsInChildren<Renderer>())
         {
-            rend.material.color = ColorKey.GetColor(BuildingColor);
+            rend.material.color = ColorKey.GetBuildingColor(BuildingColor);
         }
     }
 }

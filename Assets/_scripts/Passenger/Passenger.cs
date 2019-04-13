@@ -130,7 +130,7 @@ namespace RideShareLevel
             return _timeRemaining;
         }
 
-        public Building.BuildingColors GetColor()
+        public Building.BuildingColors GetBuildingColor()
         {
             return _color;
         }
@@ -141,7 +141,7 @@ namespace RideShareLevel
             _pickupPin = Instantiate(PassengerPickupReticle, transform, false);
             _pickupPin.transform.position += AdjustmentVector;
             _pickupPin.Passenger = this;
-            _pickupPin.SetColor(ColorKey.GetColor(_color));
+            _pickupPin.SetColor(ColorKey.GetBuildingColor(_color));
 
             _RadialTimer = _pickupPin.RadialTimerImg;
         }
