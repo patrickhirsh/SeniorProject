@@ -3061,7 +3061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a319b11245f40b24caf3812ca4ffdc11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RepresentedLevel: {fileID: 5408343215565133105, guid: 048938864b3d5a94ca361203355005e8,
+  RepresentedLevel: {fileID: 464026793735367421, guid: 048938864b3d5a94ca361203355005e8,
     type: 3}
   NewLayer1: {fileID: 0}
   NewLayer2: {fileID: 0}
@@ -5463,6 +5463,22 @@ PrefabInstance:
       propertyPath: Vehicles.Array.data[0]
       value: 
       objectReference: {fileID: 2146450789}
+    - target: {fileID: 6854362763060269433, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: BuildingScorePrefab
+      value: 
+      objectReference: {fileID: 1087905868272269997, guid: 45d91bb227bfb9848acc2fc0541997f4,
+        type: 3}
+    - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: Controller
+      value: 
+      objectReference: {fileID: 1827586622}
+    - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: Level
+      value: 
+      objectReference: {fileID: 587449498}
     - target: {fileID: 691366879, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
       propertyPath: m_LocalScale.x
       value: 91.5
@@ -5720,6 +5736,26 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 29fdac032ba0f854e8e2faa9db63f5fa, type: 2}
+    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3.2057693
+      objectReference: {fileID: 0}
+    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 4.2672524
+      objectReference: {fileID: 0}
+    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.039572004
+      objectReference: {fileID: 0}
+    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.40265945
+      objectReference: {fileID: 0}
     - target: {fileID: 7727474474892025498, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: NewLayer1
@@ -5745,42 +5781,6 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 29fdac032ba0f854e8e2faa9db63f5fa, type: 2}
-    - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: Controller
-      value: 
-      objectReference: {fileID: 1827586622}
-    - target: {fileID: 7684713492728746195, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: Level
-      value: 
-      objectReference: {fileID: 587449498}
-    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 3.2057693
-      objectReference: {fileID: 0}
-    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 4.2672524
-      objectReference: {fileID: 0}
-    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: m_Center.x
-      value: -0.039572004
-      objectReference: {fileID: 0}
-    - target: {fileID: 3592825711758299470, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0.40265945
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854362763060269433, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: BuildingScorePrefab
-      value: 
-      objectReference: {fileID: 1087905868272269997, guid: 45d91bb227bfb9848acc2fc0541997f4,
-        type: 3}
     m_RemovedComponents:
     - {fileID: 2159632767435604379, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
