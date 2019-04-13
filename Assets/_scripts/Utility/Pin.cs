@@ -10,7 +10,9 @@ using UnityEngine.UI;
 public class Pin : LevelObject
 {
     public Passenger Passenger;
-    public Transform Sprite;
+
+    public CanvasGroup CanvasGroup;
+    public Image Icon;
     public LineRenderer LineRenderer;
     public Text SelectionNumber;
     public Image RadialTimerImg;
@@ -44,14 +46,9 @@ public class Pin : LevelObject
 
     private void Update()
     {
-        if (Sprite.gameObject.activeInHierarchy)
+        if (CanvasGroup.gameObject.activeInHierarchy)
         {
-            Sprite.LookAt(_camera.transform);
-        }
-
-        if (SelectionNumber.gameObject.activeInHierarchy)
-        {
-            SelectionNumber.transform.parent.LookAt(_camera.transform);
+            CanvasGroup.transform.LookAt(_camera.transform);
         }
 
         ComputeLine();
@@ -77,9 +74,10 @@ public class Pin : LevelObject
 
     public void SetColor(Color color)
     {
-        Sprite.GetComponent<SpriteRenderer>().color = color;
-        LineRenderer.startColor = LineRenderer.endColor = color;
+        Icon.color = color;
         SelectionNumber.color = color;
+        RadialTimerImg.color = color;
+        LineRenderer.startColor = LineRenderer.endColor = color;
     }
 
 
@@ -128,14 +126,14 @@ public class Pin : LevelObject
             SelectionNumber.text = index.ToString();
             _selectionSequence.Append(transform.DOLocalMoveY(-2f, .1f).SetRelative(true));
             _selectionSequence.Append(transform.DOLocalMoveY(17f, .5f).SetRelative(true));
-            _selectionSequence.Append(Sprite.GetComponent<SpriteRenderer>().DOFade(0f, .2f));
+            _selectionSequence.Append(Icon.DOFade(0f, .2f));
             _selectionSequence.Join(SelectionNumber.DOFade(1f, .2f));
         }
         else
         {
             _selectionSequence.Append(transform.DOLocalMoveY(-15f, .5f).SetRelative(true));
             _selectionSequence.Join(SelectionNumber.DOFade(0f, .1f));
-            _selectionSequence.Join(Sprite.GetComponent<SpriteRenderer>().DOFade(1f, .2f));
+            _selectionSequence.Join(Icon.DOFade(1f, .2f));
         }
         
         _selectionSequence.Play();
