@@ -13,16 +13,12 @@ public enum BuildingScoreState { PlayerStar, EnemyStar, TBD };
 /// Initialize() should be called upon loading a new level.
 /// </summary>
 public class ScoreController : LevelObject
-{
-				// UI prefab to display above buildings, used in BuildingScore objects
-				public GameObject BuildingScorePrefab;
+{			
+				public GameObject BuildingScorePrefab;  // UI prefab to display above buildings, used in BuildingScore objects				
+				public int BuildingScoreHeight;         // Height offset for BuildingScore UI element
 
-				// Height offset for BuildingScore UI element
-				public int BuildingScoreHeight;
-
-				// Controllers
-				private PassengerController _PC;    // PassengerController
-				private EntityController _EC;							// EntityController
+				private PassengerController _PC;								// PassengerController
+				private EntityController _EC;											// EntityController
 
 				// BuildingScore UI objects by color
 				private Dictionary<Building.BuildingColors, BuildingScore> _buildingScores;					
