@@ -53,17 +53,20 @@ namespace RideShareLevel
         private void Awake()
         {
             CheckLevelSetup();
-
-            // Start of Level
-            EntityController.Initialize();
-            PassengerController.Initialize();
-            NeutralVehicleController.Initialize();
-            ScoreController.Initialize(PassengerController, EntityController);
         }
 
         public void SetArtActive(bool b)
         {
             ArtContainer.SetActive(b);
+        }
+
+        public void Initialize()
+        {
+            // Start of Level
+            EntityController.Initialize();
+            PassengerController.Initialize();
+            NeutralVehicleController.Initialize();
+            ScoreController.Initialize();
         }
     }
 }

@@ -10,9 +10,7 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
-				System.Random rnd;
-
-				public Level CurrentLevel;
+    public Level CurrentLevel;
     //Bool for firing fireworks
     private bool fireworks = false;
     //timer for firing fireworks
@@ -28,7 +26,6 @@ public class LevelManager : Singleton<LevelManager>
     private void Start()
     {
         Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, LaunchSuccessFireworks);
-								rnd = new System.Random();
     }
 
     private void FixedUpdate()
@@ -41,9 +38,9 @@ public class LevelManager : Singleton<LevelManager>
             randPos.y += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
             randPos.z += Random.Range(-FireworkPositionVariance, FireworkPositionVariance);
 
-												Array colors = Enum.GetValues(typeof(Building.BuildingColors));
-												Building.BuildingColors randomColor = (Building.BuildingColors)colors.GetValue(rnd.Next(colors.Length));
-												ParticleManager.Instance.GenerateFirework(randPos, randomColor);
+            Array colors = Enum.GetValues(typeof(Building.BuildingColors));
+            Building.BuildingColors randomColor = (Building.BuildingColors)colors.GetValue(Random.Range(0, colors.Length - 1));
+            ParticleManager.Instance.GenerateFirework(randPos, randomColor);
 
             fTimer += FireworkInterval + Random.Range(-FireworkIntervalVariance, FireworkIntervalVariance);
         }
@@ -110,12 +107,12 @@ public class LevelManager : Singleton<LevelManager>
         //Spawn and place new level prefab in that spot.
         CurrentLevel = Instantiate(newLevel.RepresentedLevel, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();
         Destroy(oldLevel);
-        CurrentLevel.EntityController.Initialize();
+        CurrentLevel.Initialize();
 
         //Notify controllers of the new gamestate
         Broadcaster.Broadcast(GameEvent.GameStateChanged);
-								Broadcaster.Broadcast(GameEvent.LevelChange);
-	}
+        Broadcaster.Broadcast(GameEvent.LevelChange);
+    }
 
 
 

@@ -31,7 +31,7 @@ public class PassengerController : LevelObject
     private Dictionary<Building.BuildingColors, int> _enemyDelivered;
     private Dictionary<Building.BuildingColors, PassengerTypes> _types;
     private Dictionary<Building.BuildingColors, float> _spawnTimer;
-    private Dictionary<Building.BuildingColors, List<Route>> _buildingRoutes;
+    private Dictionary<Building.BuildingColors, List<Building>> _buildings;
 
     private bool _canSpawn;
 
@@ -62,6 +62,14 @@ public class PassengerController : LevelObject
     }
 
     #endregion
+
+    /// <summary>
+    /// Indicates whether this PassengerController has been initialized
+    /// </summary>
+    public bool Initialized()
+    {
+        return _canSpawn;
+    }
 
     private void SpawnPassenger(PassengerTypes spec)
     {
@@ -101,7 +109,7 @@ public class PassengerController : LevelObject
 
             // if the player or enemy has completed the building, stop spawning this type
             if (_playerDelivered[passenger.GetBuildingColor()] >= _types[passenger.GetBuildingColor()].NumRequired ||
-                            _enemyDelivered[passenger.GetBuildingColor()] >= _types[passenger.GetBuildingColor()].NumRequired)
+                _enemyDelivered[passenger.GetBuildingColor()] >= _types[passenger.GetBuildingColor()].NumRequired)
             {
                 _active[passenger.GetBuildingColor()] = false;
                 Broadcaster.Broadcast(GameEvent.BuildingComplete);
@@ -132,7 +140,7 @@ public class PassengerController : LevelObject
         _terminals = CurrentLevel.EntityController.Routes.SelectMany(route => route.Terminals).ToArray();
         Debug.Assert(_terminals.Any(), "Missing terminals for the level. Has the EntityManager been baked?");
 
-        _buildingRoutes = new Dictionary<Building.BuildingColors, List<Route>>();
+        _buildings = new Dictionary<Building.BuildingColors, List<Building>>();
         _delivered = new Dictionary<Building.BuildingColors, int>();
         _playerDelivered = new Dictionary<Building.BuildingColors, int>();
         _enemyDelivered = new Dictionary<Building.BuildingColors, int>();
@@ -141,15 +149,13 @@ public class PassengerController : LevelObject
         _types = new Dictionary<Building.BuildingColors, PassengerTypes>();
         _active = new Dictionary<Building.BuildingColors, bool>();
 
-        foreach (var building in CurrentLevel.EntityController.Buildings)
+        foreach (var building in EntityController.Buildings)
         {
-            if (_buildingRoutes.ContainsKey(building.BuildingColor))
-                _buildingRoutes[building.BuildingColor].Add(building.DeliveryLocation);
-            else
-                _buildingRoutes.Add(building.BuildingColor, new List<Route> { building.DeliveryLocation });
+            if (!_buildings.ContainsKey(building.BuildingColor)) _buildings[building.BuildingColor] = new List<Building>();
+            _buildings[building.BuildingColor].Add(building);
         }
 
-        foreach (var color in _buildingRoutes.Keys)
+        foreach (var color in _buildings.Keys)
         {
             var spec = PassengerSpecs.FirstOrDefault(types => types.PassColor == color);
             Debug.Assert(spec != null, $"Could not find passenger type in {CurrentLevel.name} for {color}");
@@ -166,19 +172,11 @@ public class PassengerController : LevelObject
         _canSpawn = true;
     }
 
-				/// <summary>
-				/// Indicates whether this PassengerController has been initialized
-				/// </summary>
-				public bool Initialized()
-				{
-								return _canSpawn;
-				}
-
-    public Route GetBuildingRoute(Building.BuildingColors color)
+    public Building GetBuilding(Building.BuildingColors color)
     {
-        if (_buildingRoutes[color].Any())
+        if (_buildings[color].Any())
         {
-            return _buildingRoutes[color].First();
+            return _buildings[color][Random.Range(0, _buildings[color].Count - 1)];
         }
         else
         {
@@ -192,7 +190,7 @@ public class PassengerController : LevelObject
 
     public IEnumerable<Building.BuildingColors> GetBuildingColors()
     {
-        return _buildingRoutes.Keys;
+        return _buildings.Keys;
     }
 
     public int GetPlayerPassengersDelivered(Building.BuildingColors color)

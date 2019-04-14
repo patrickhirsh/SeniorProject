@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7397682443168228341}
-  - component: {fileID: 3571297232670625538}
+  - component: {fileID: 3789593894866729978}
   - component: {fileID: 7883973191307846120}
+  - component: {fileID: 3571297232670625538}
   m_Layer: 0
   m_Name: Passenger Icon
   m_TagString: Untagged
@@ -37,14 +38,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3571297232670625538
-CanvasRenderer:
+--- !u!114 &3789593894866729978
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4905785900553239067}
-  m_CullTransparentMesh: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 17d98bc90c4a4452bc978c6ab1543576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 7883973191307846120}
 --- !u!114 &7883973191307846120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,3 +82,11 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!222 &3571297232670625538
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4905785900553239067}
+  m_CullTransparentMesh: 0

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using RideShareLevel;
 using UnityEngine;
 
@@ -13,185 +14,80 @@ public enum BuildingScoreState { PlayerStar, EnemyStar, TBD };
 /// Initialize() should be called upon loading a new level.
 /// </summary>
 public class ScoreController : LevelObject
-{			
-				public GameObject BuildingScorePrefab;  // UI prefab to display above buildings, used in BuildingScore objects				
-				public int BuildingScoreHeight;         // Height offset for BuildingScore UI element
+{
+    public BuildingScore BuildingScorePrefab;  // UI prefab to display above buildings, used in BuildingScore objects				
 
-				private PassengerController _PC;								// PassengerController
-				private EntityController _EC;											// EntityController
+    #region Public Methods
 
-				// BuildingScore UI objects by color
-				private Dictionary<Building.BuildingColors, BuildingScore> _buildingScores;					
-
-
-				#region Public Methods
-
-				/// <summary>
-				/// Links required Controllers to the ScoreController and initializes
-				/// UI elements accordingly. Initialize() uses data from these controllers to
-				/// construct the UI, so they MUST be initialized before passing them
-				/// to the ScoreController's Initialize().
-				/// </summary>
-				public void Initialize(PassengerController PC, EntityController EC)
-				{
-								if (!PC.Initialized())
-												throw new Exception("Score Controller was given an uninitialized Passenger Controller. " +
-																"Did you forget to call PassengerController.Initialize() before passing the controller" +
-																" to ScoreController.Initialize() ?");
-
-								if (!EC.Initialized())
-												throw new Exception("Score Controller was given an uninitialized Entity Controller. " +
-																"Did you forget to call EntityController.Initialize() before passing the controller" +
-																" to ScoreController.Initialize() ?");
-
-								if (BuildingScorePrefab == null)
-												throw new Exception("BuildingScorePrefab not set in ScoreController");
-
-								_PC = PC;
-								_EC = EC;
-								_buildingScores = new Dictionary<Building.BuildingColors, BuildingScore>();
-								Transform buildingScoreParent = this.gameObject.GetComponent<Transform>();
-
-								Broadcaster.AddListener(GameEvent.PassengerDelivered, PassengerDelivered);
-								Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
-
-								foreach (Building building in _EC.Buildings)
-								{
-												Vector3 buildingScorePosition = new Vector3(building.transform.position.x, BuildingScoreHeight, building.transform.position.z);
-												var buildingScore = new BuildingScore(building.BuildingColor, buildingScorePosition, building.transform.rotation, buildingScoreParent, BuildingScorePrefab);
-												buildingScore.UpdateDelivered(_PC);
-												buildingScore.UpdateState(_PC);
-												_buildingScores.Add(building.BuildingColor, buildingScore);
-								}
-				}
-				#endregion
-
-				#region Building Score Object
-
-				/// <summary>
-				/// This container acts as a wrapper for the logic required to update a 
-				/// single building's "BuildingScore" prefab. Each BuildingScore object contains all
-				/// necessary UI information & logic for updating it's own internal prefab. Data regarding
-				/// passenger stats is pulled from this level's PassengerController and not stored internally.
-				/// </summary>
-				private class BuildingScore
+    /// <summary>
+    /// Links required Controllers to the ScoreController and initializes
+    /// UI elements accordingly. Initialize() uses data from these controllers to
+    /// construct the UI, so they MUST be initialized before passing them
+    /// to the ScoreController's Initialize().
+    /// </summary>
+    public void Initialize()
     {
-								ScoreController _SC;																// back reference to the parent ScoreController
-								Building.BuildingColors _color;     // This building's color
-								BuildingScoreState _state;          // This building's current completion state.
-								GameObject _buildingScorePrefab;    // The UI prefab asociated with this building
-								//SpriteRenderer _icon;
-								SpriteRenderer _star;
-								SpriteRenderer _x;
-								TextMesh _playerScoreText;
-								TextMesh _enemyScoreText;
+        if (!PassengerController.Initialized())
+            throw new Exception("Score Controller was given an uninitialized Passenger Controller. " +
+                            "Did you forget to call PassengerController.Initialize() before passing the controller" +
+                            " to ScoreController.Initialize() ?");
 
-								/// <summary>
-								/// Creates a new BuildingScore object
-								/// </summary>
-								/// <param name="color"> Color associated with this building </param>
-								/// <param name="position"> Position to place this BuildingScore prefab (typically above the building) </param>
-								/// <param name="rotation"> Usually just the transform.rotation of the parent. 
-								/// This is changed dynamically, so the initial value doesn't matter much </param>
-								/// <param name="ScoreController"> Parent object to instantiate the BuildingScore under (usually ScoreController) </param>
-								/// <param name="buildingScorePrefab"> Prefab that should be instantiated for the BuildingScore object. </param>
-								public BuildingScore(Building.BuildingColors color, Vector3 position, Quaternion rotation, Transform ScoreController, GameObject buildingScorePrefab)
+        if (!EntityController.Initialized())
+            throw new Exception("Score Controller was given an uninitialized Entity Controller. " +
+                            "Did you forget to call EntityController.Initialize() before passing the controller" +
+                            " to ScoreController.Initialize() ?");
+
+        foreach (Building building in EntityController.Buildings)
         {
-												_SC = ScoreController.GetComponent<ScoreController>();
-												_color = color;
-            _state = BuildingScoreState.TBD;
-												_buildingScorePrefab = Instantiate(buildingScorePrefab, position, rotation, ScoreController);
-												//_icon = _buildingScorePrefab.transform.Find("ColorIcon").GetComponent<SpriteRenderer>();
-												Transform ScorePanel = _buildingScorePrefab.transform.Find("ScorePanel");
-												_star = ScorePanel.Find("Star").GetComponent<SpriteRenderer>();
-												_x = ScorePanel.Find("X").GetComponent<SpriteRenderer>();
-												_playerScoreText = ScorePanel.Find("PlayerScore").GetComponent<TextMesh>();
-												_enemyScoreText = ScorePanel.Find("EnemyScore").GetComponent<TextMesh>();
-												//_icon.material.color = Game.ColorKey.GetColor(_color);
-												_star.material.color = Game.ColorKey.UIStarTBD;
-												_x.gameObject.SetActive(false);
+            building.InitializeScoreUI(BuildingScorePrefab);
         }
 
-								/// <summary>
-								/// Updates the scoring UI for this building
-								/// </summary>
-								/// <param name="PC"> The PassengerController associated with this level </param>
-        public void UpdateDelivered(PassengerController PC)
-        {
-												if (_state == BuildingScoreState.TBD)
-												{
-																_playerScoreText.text = PC.GetPlayerPassengersDelivered(_color).ToString() + "/" + PC.GetPassengersRequired(_color).ToString();
-																_enemyScoreText.text = PC.GetEnemyPassengersDelivered(_color).ToString() + "/" + PC.GetPassengersRequired(_color).ToString();
-												}
-								}
+        Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
+    }
+    #endregion
 
-								/// <summary>
-								/// Updates the star rating UI for this building.
-								/// Returns the new state of the building
-								/// </summary>
-								/// <param name="PC"> The PassengerController associated with this level </param>
-								public BuildingScoreState UpdateState(PassengerController PC)
+    #region Event Handlers
+
+    /// <summary>
+    /// Updates the star rating UI for this building.
+    /// Returns the new state of the building
+    /// </summary>
+    /// <param name="PC"> The PassengerController associated with this level </param>
+    public BuildingScoreState GetStatusForBuilding(Building.BuildingColors color)
+    {
+        if (!PassengerController.GetSpawnStatus(color))
         {
-            if (!PC.GetSpawnStatus(_color))
+            if (PassengerController.GetPlayerPassengersDelivered(color) > PassengerController.GetEnemyPassengersDelivered(color))
             {
-																// Player won building
-                if (PC.GetPlayerPassengersDelivered(_color) > PC.GetEnemyPassengersDelivered(_color))
-                {
-                    _state = BuildingScoreState.PlayerStar;
-																				_star.material.color = Game.ColorKey.UIStarSuccess;
-                }
-
-																// Enemy won building
-                else
-                {
-                    _state = BuildingScoreState.EnemyStar;
-																				_star.gameObject.SetActive(false);
-																				_x.gameObject.SetActive(true);
-																}
-
-																// set text to "inactive" to convey the building can no longer be delivered to
-																_playerScoreText.GetComponent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
-																_enemyScoreText.GetComponent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
-												}
-												return _state;
+                // Player won building
+                return BuildingScoreState.PlayerStar;
+            }
+            else
+            {
+                // Enemy won building
+                return BuildingScoreState.EnemyStar;
+            }
         }
+
+        return BuildingScoreState.TBD;
     }
 
-				#endregion
-
-				#region Event Handlers
-
-				/// <summary>
-				/// Handles the PassengerDelivered Broadcast.
-				/// </summary>
-				private void PassengerDelivered(GameEvent action)
-    {
-        foreach (BuildingScore building in _buildingScores.Values)
-            building.UpdateDelivered(_PC);
-    }
-
-				/// <summary>
-				/// Handles the BuildingComplete Broadcast.
-				/// Checks for GameOver and broadcasts accordingly
-				/// </summary>
+    /// <summary>
+    /// Handles the BuildingComplete Broadcast.
+    /// Checks for GameOver and broadcasts accordingly
+    /// </summary>
     private void BuildingComplete(GameEvent action)
     {
-								bool gameOver = true;			// true only if NONE of the buildings are still TBD (active)
-								bool success = false;			// true if the player has AT LEAST 1 star
-        foreach (BuildingScore building in _buildingScores.Values)
-								{
-												BuildingScoreState state = building.UpdateState(_PC);
-												if (state == BuildingScoreState.TBD) { gameOver = false; }
-												if (state == BuildingScoreState.PlayerStar) { success = true; }
-								}
+        bool gameOver = EntityController.Buildings.All(building => GetStatusForBuilding(building.BuildingColor) != BuildingScoreState.TBD);           // true only if NONE of the buildings are still TBD (active)
+        bool success = EntityController.Buildings.Any(building => GetStatusForBuilding(building.BuildingColor) == BuildingScoreState.PlayerStar);			// true if the player has AT LEAST 1 star
 
-								if (gameOver)
-								{
-												if (success) { Debug.Log("Success Broadcasted!"); Broadcaster.Broadcast(GameEvent.LevelCompleteSuccess); }
-												else { Debug.Log("Fail Broadcasted!"); Broadcaster.Broadcast(GameEvent.LevelCompleteFail); }
-								}
+        if (gameOver)
+        {
+            if (success) { Debug.Log("Success Broadcasted!"); Broadcaster.Broadcast(GameEvent.LevelCompleteSuccess); }
+            else { Debug.Log("Fail Broadcasted!"); Broadcaster.Broadcast(GameEvent.LevelCompleteFail); }
+        }
     }
 
-				#endregion
+    #endregion
 
 }

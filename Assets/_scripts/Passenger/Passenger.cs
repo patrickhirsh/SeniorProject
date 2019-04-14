@@ -10,7 +10,9 @@ namespace RideShareLevel
 
         public Route StartRoute => StartTerminal.ParentRoute;
        
-        public Route DestRoute;
+        public Route DestRoute { get; private set; }
+        public Building DestBuilding { get; private set; }
+
         public Pin PassengerPickupReticle;
         public Vector3 AdjustmentVector;
         public bool PickedUp;
@@ -113,12 +115,14 @@ namespace RideShareLevel
             _timeRemaining = type.PassengerTimer;
             _color = type.PassColor;
 
-            DestRoute = CurrentLevel.PassengerController.GetBuildingRoute(_color);
+            DestBuilding = CurrentLevel.PassengerController.GetBuilding(_color);
+            DestRoute = DestBuilding.DeliveryLocation;
 
             PickedUp = false;
             EnemyVehicleEnroute = false;
             CreatePickupReticle();
         }
+
 
         public void DestroyRing()
         {
