@@ -13,8 +13,8 @@ public class LevelManager : Singleton<LevelManager>
     public Level CurrentLevel;
     //Bool for firing fireworks
     private bool fireworks = false;
-    //timer for firing fireworks
-    private float fTimer;
+				//timer for firing fireworks
+				private float fTimer = 0;
     //interval at which to fire fireworks
     public float FireworkInterval;
     //interval variance for firing fireworks
@@ -30,7 +30,6 @@ public class LevelManager : Singleton<LevelManager>
 
     private void FixedUpdate()
     {
-
         if (fireworks && (fTimer <= 0))
         {
             var randPos = CurrentLevel.transform.position;
@@ -43,11 +42,12 @@ public class LevelManager : Singleton<LevelManager>
             ParticleManager.Instance.GenerateFirework(randPos, randomColor);
 
             fTimer += FireworkInterval + Random.Range(-FireworkIntervalVariance, FireworkIntervalVariance);
-        }
-        fTimer -= .01f;
-    }
+								}
+								fTimer -= .01f;
 
-    private void LaunchSuccessFireworks(GameEvent arg0)
+				}
+
+    private void LaunchSuccessFireworks(GameEvent action)
     {
         fireworks = true;
     }

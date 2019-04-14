@@ -81,7 +81,7 @@ public class BuildingScore : LevelObject
     private void SetTextInactive()
     {
         // set text to "inactive" to convey the building can no longer be delivered to
-        PlayerScoreText.GetComponentInParent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
-								EnemyScoreText.GetComponentInParent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
+        PlayerScoreText.color = Game.ColorKey.UITextInactive;
+								EnemyScoreText.color = Game.ColorKey.UITextInactive;
     }
 }

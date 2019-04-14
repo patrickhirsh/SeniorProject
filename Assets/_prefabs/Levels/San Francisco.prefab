@@ -1544,7 +1544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingScoreHeight: 10
+  Level: {fileID: 0}
   DeliveryLocation: {fileID: 1343241170997497484}
   BuildingColor: 0
 --- !u!1 &1383382812483578279
@@ -1836,7 +1836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingScoreHeight: 10
+  Level: {fileID: 0}
   DeliveryLocation: {fileID: 1343662750048085794}
   BuildingColor: 1
 --- !u!1 &1383382812710071811
@@ -4054,12 +4054,12 @@ MonoBehaviour:
   PassengerPrefab: {fileID: 114575948943433876, guid: 002ee8d4b0c874556a8985d17b8e0407,
     type: 3}
   PassengerSpecs:
-  - NumRequired: 6
+  - NumRequired: 1
     InitialDelay: 0
     TimeBetweenSpawn: 15
     PassengerTimer: 15
     PassColor: 0
-  - NumRequired: 5
+  - NumRequired: 1
     InitialDelay: 10
     TimeBetweenSpawn: 25
     PassengerTimer: 45

@@ -78,8 +78,8 @@ public class ScoreController : LevelObject
     /// </summary>
     private void BuildingComplete(GameEvent action)
     {
-        bool gameOver = EntityController.Buildings.All(building => GetStatusForBuilding(building.BuildingColor) != BuildingScoreState.TBD);           // true only if NONE of the buildings are still TBD (active)
-        bool success = EntityController.Buildings.Any(building => GetStatusForBuilding(building.BuildingColor) == BuildingScoreState.PlayerStar);			// true if the player has AT LEAST 1 star
+        bool gameOver = EntityController.Buildings.All(building => GetStatusForBuilding(building.BuildingColor) != BuildingScoreState.TBD);													// true only if NONE of the buildings are still TBD (active)
+        bool success = EntityController.Buildings.Any(building => GetStatusForBuilding(building.BuildingColor) == BuildingScoreState.PlayerStar);							// true if the player has AT LEAST 1 star
 
         if (gameOver)
         {
