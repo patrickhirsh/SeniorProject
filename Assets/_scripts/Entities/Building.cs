@@ -6,7 +6,8 @@ public class Building : LevelObject
 {
     [Header("Score UI")]
     private BuildingScore _buildingScore;
-    public Transform ScoreLocation;
+
+    public Vector3 ScoreLocation { get; private set; }
 
     /// Location that vehicles will deliver passengers to
     public Route DeliveryLocation;
@@ -39,9 +40,11 @@ public class Building : LevelObject
 
     public void InitializeScoreUI(BuildingScore buildingScorePrefab)
     {
+        ScoreLocation = FindScoreLocation();
+
         _buildingScore = Instantiate(buildingScorePrefab, transform, true);
         _buildingScore.SetBuilding(this);
-        _buildingScore.transform.position = FindScoreLocation();
+        _buildingScore.transform.position = ScoreLocation;
         _buildingScore.UpdateDelivered();
 
         Broadcaster.AddListener(GameEvent.PassengerDelivered, PassengerDelivered);

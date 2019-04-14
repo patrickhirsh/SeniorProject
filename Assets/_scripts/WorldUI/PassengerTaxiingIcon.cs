@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using DG.Tweening;
+using Game;
 using RideShareLevel;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +19,11 @@ namespace _scripts
 
         public void Deliver()
         {
-            Destroy(gameObject);
+            transform.SetParent(null, true);
+            var tween = DOTween.Sequence();
+            tween.Append(transform.DOMove(_passenger.DestBuilding.ScoreLocation, 1f));
+            tween.Join(transform.DOScale(Vector3.zero, 1f));
+            tween.OnComplete(() => { Destroy(gameObject); });
         }
     }
 }

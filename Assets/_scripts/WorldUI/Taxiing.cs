@@ -70,13 +70,14 @@ namespace _scripts
             }
             else
             {
-                Line.gameObject.SetActive(true);
+                CanvasGroup.gameObject.SetActive(true);
+
                 CanvasGroup.alpha = 0;
                 _sequence = DOTween.Sequence();
-                _sequence.Append(CanvasGroup.DOFade(1, .5f));
+                _sequence.Append(CanvasGroup.DOFade(1f, .5f));
                 _sequence.OnComplete(() =>
                 {
-                    CanvasGroup.gameObject.SetActive(true);
+                    Line.gameObject.SetActive(true);
                 });
             }
         }
