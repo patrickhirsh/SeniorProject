@@ -134,9 +134,12 @@ namespace RideShareLevel
         private Queue<Connection> ConstructPath(ref PathNode current, ref Dictionary<Connection, PathNode> processed)
         {
             // temporarily store the reversed path
-            List<Connection> reversePath = new List<Connection>();
-            reversePath.Add(current.connection);
-
+            List<Connection> reversePath = new List<Connection>
+            {
+                current.connection.ConnectsTo,
+                current.connection
+            };
+            
             // traverse backwards through the best path (using prevConnection) to construct the path
             while (current.prevConnection != null)
             {
@@ -580,23 +583,20 @@ namespace RideShareLevel
             var obj = new GameObject("BezierCurve", typeof(BezierCurve));
             var objCurve = obj.GetComponent<BezierCurve>();
 
-            if (connections.Peek().Paths.Count <= 0)
+            // We should start with an inbound node, not an outbound
+            if (connections.Peek().PathCount <= 0)
             {
                 connections.Dequeue();
             }
 
             // traverse each path in _connectionsPath
-            while (connections.Count > 0)
+            while (connections.Count > 2)
             {
-                BezierCurve curve;
-                Connection current = connections.Dequeue();
-                Connection target = connections.Dequeue();
-
-                Debug.Assert(current != null, "Current is null");
-                Debug.Assert(target != null, "Target is null");
+                var current = connections.Dequeue();
+                var target = connections.Dequeue();
 
                 // get path between this connection and the next connection
-                if (current.GetPathToConnection(target, out curve))
+                if (current.GetPathToConnection(target, out var curve))
                 {
                     objCurve.AddCurve(curve);
                 }

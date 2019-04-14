@@ -54,8 +54,8 @@ public class BezierCurve : MonoBehaviour {
 	[SerializeField] private bool _close;
 	public bool close
 	{
-		get { return _close; }
-		set
+		get => _close;
+        set
 		{
 			if(_close == value) return;
 			_close = value;
@@ -71,12 +71,9 @@ public class BezierCurve : MonoBehaviour {
 	/// <param name='index'>
 	/// 	- the index
 	/// </param>
-	public BezierPoint this[int index]
-	{
-		get { return points[index]; }
-	}
-	
-	/// <summary>
+	public BezierPoint this[int index] => points[index];
+
+    /// <summary>
 	/// 	- number of points stored in 'points' variable
 	///		- set internally
 	///		- does not include "handles"
@@ -84,12 +81,9 @@ public class BezierCurve : MonoBehaviour {
 	/// <value>
 	/// 	- The point count
 	/// </value>
-	public int pointCount
-	{
-		get { return points.Length; }
-	}
-	
-	/// <summary>
+	public int PointCount => points.Length;
+
+    /// <summary>
 	/// 	- The approximate length of the curve
 	/// 	- recalculates if the curve is "dirty"
 	/// </summary>
@@ -173,7 +167,7 @@ public class BezierCurve : MonoBehaviour {
 	/// </param>
 	public BezierPoint AddPointAt(Vector3 position)
 	{
-		GameObject pointObject = new GameObject("Point "+pointCount);
+		GameObject pointObject = new GameObject("Point "+PointCount);
 
 		pointObject.transform.parent = transform;
 		pointObject.transform.position = position;

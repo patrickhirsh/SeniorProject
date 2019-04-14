@@ -275,7 +275,7 @@ namespace RideShareLevel
         {
             if (PathfindingManager.Instance.GetPath(CurrentRoute, destinationRoute, out var connections))
             {
-                if (connections.Any())
+                if (connections.Count >= 2)
                 {
                     StartPathing(connections);
                 }
@@ -291,6 +291,8 @@ namespace RideShareLevel
         {
             _pathCompletionPercent = 0;
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
+            Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
+
             _nextPosition = VehiclePath.GetPointAt(0);
 
             if (CurrentTask.DrawPath)
