@@ -8,6 +8,7 @@ namespace _scripts
 {
     public class Taxiing : MonoBehaviour
     {
+        public Canvas AnimationCanvas;
         public CanvasGroup CanvasGroup;
         public Transform PassengerContainer;
         public PassengerTaxiingIcon PassengerIconPrefab;
@@ -48,6 +49,9 @@ namespace _scripts
         {
             Debug.Assert(_icons.ContainsKey(passenger), "Passenger not in icon", gameObject);
             var icon = _icons[passenger];
+
+            // Move it off the ring canvas as it may disappear
+            icon.transform.SetParent(AnimationCanvas.transform, false);
             icon.Deliver();
             
             // Remove at end
