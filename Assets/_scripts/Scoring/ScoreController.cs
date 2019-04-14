@@ -42,7 +42,7 @@ public class ScoreController : LevelObject
             building.InitializeScoreUI(BuildingScorePrefab);
         }
 
-        Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
+								Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
     }
     #endregion
 

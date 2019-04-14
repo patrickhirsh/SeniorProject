@@ -15,9 +15,9 @@ public class LevelManager : Singleton<LevelManager>
     private bool fireworks = false;
     //timer for firing fireworks
     private float fTimer;
-    //interval at which to fire firewors
+    //interval at which to fire fireworks
     public float FireworkInterval;
-    //interval variance for firing firewors
+    //interval variance for firing fireworks
     public float FireworkIntervalVariance;
     //variance of fireworks position
     public float FireworkPositionVariance;

@@ -63,7 +63,7 @@ public class BuildingScore : LevelObject
         switch (state)
         {
             case BuildingScoreState.PlayerStar:
-                StarIcon.material.color = Game.ColorKey.UIStarSuccess;
+                StarIcon.color = Game.ColorKey.UIStarSuccess;
                 SetTextInactive();
                 break;
             case BuildingScoreState.EnemyStar:
@@ -81,7 +81,7 @@ public class BuildingScore : LevelObject
     private void SetTextInactive()
     {
         // set text to "inactive" to convey the building can no longer be delivered to
-        PlayerScoreText.GetComponent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
-        EnemyScoreText.GetComponent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
+        PlayerScoreText.GetComponentInParent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
+								EnemyScoreText.GetComponentInParent<MeshRenderer>().material.color = Game.ColorKey.UITextInactive;
     }
 }
