@@ -174,6 +174,7 @@ GameObject:
   - component: {fileID: 114867229838792336}
   - component: {fileID: 65671402932093442}
   - component: {fileID: 54024363699632262}
+  - component: {fileID: 2808362233942787229}
   m_Layer: 0
   m_Name: Neutral2
   m_TagString: Car
@@ -253,11 +254,24 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 1
   m_AngularDrag: 0.5
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
+--- !u!114 &2808362233942787229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667412018430948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: c81dfa957b4d47d44a47b0285b33aed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8088930007842467216
 GameObject:
   m_ObjectHideFlags: 0
