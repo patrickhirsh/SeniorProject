@@ -36,7 +36,7 @@ namespace UserInterface
             }
 
             var vehicle = hoverGameObject.GetComponent<Vehicle>();
-            var pin = hoverGameObject.GetComponent<Pin>();
+            var pin = hoverGameObject.GetComponent<PassengerPin>();
             var menuBuilding = hoverGameObject.GetComponent<MenuBuilding>();
 
             if (vehicle && CurrentLevel.PlayerVehicleController.HasOwnership(vehicle) && CurrentLevel.PlayerVehicleController.SelectedPins.Any() && !vehicle.HasTask)
