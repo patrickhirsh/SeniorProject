@@ -5568,6 +5568,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menu Selection
       objectReference: {fileID: 0}
+    - target: {fileID: 7727474473596856369, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7727474474826903131, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: ArtContainer
@@ -5628,11 +5633,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7727474473596856369, guid: f4a84096b104f4f4fa38586a5479b361,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 9203650486766694880, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_IsActive
@@ -5691,6 +5691,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281930238, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
+      propertyPath: RepresentedLevel
+      value: 
+      objectReference: {fileID: 4487134617271833461, guid: 162e23bf781099947a38167aa7b27b1f,
+        type: 3}
+    - target: {fileID: 5395344541175549371, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Positions.Array.data[1].x
+      value: 0.000000081652225
+      objectReference: {fileID: 0}
+    - target: {fileID: 5395344541175549371, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Positions.Array.data[1].y
+      value: -2.2841797
+      objectReference: {fileID: 0}
+    - target: {fileID: 5395344541175549371, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_Positions.Array.data[1].z
+      value: -0.00000008511262
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 328063529, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
