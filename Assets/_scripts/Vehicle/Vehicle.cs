@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using _scripts;
 
@@ -36,10 +37,10 @@ namespace RideShareLevel
 
         private Vector3 _startingPos;
         private Quaternion _startingRot;
-        private GameObject _ring;
 
         [Header("Ring")]
         public GameObject RingPrefab;
+        private GameObject _ring;
         //the speed at which the selection ring will pulse when it's being hovered on
         public float DefaultRingPulseSpeed;
         public float RingPulseSpeedOnHover;
@@ -47,7 +48,9 @@ namespace RideShareLevel
         public Color HoverRingPulseColor;
 
         [Header("Taxiing UI")]
-        public Taxiing Taxiing;
+        public Taxiing TaxiingPrefab;
+        private Taxiing _taxiing;
+        public float TaxiingHeight;
 
         private AudioSource _audioSource;
 
@@ -67,6 +70,9 @@ namespace RideShareLevel
 
         protected void Awake()
         {
+            Debug.Assert(RingPrefab != null, "Missing Ring Prefab", gameObject);
+            Debug.Assert(TaxiingPrefab != null, "Missing Taxiing Prefab", gameObject);
+
             CurrentTask = null;
             Passengers = new HashSet<Passenger>();
 
@@ -78,7 +84,7 @@ namespace RideShareLevel
             _ring.transform.parent = transform;
             _ring.SetActive(false);
 
-            SetTaxiingActive(false);
+            CreateTaxiing();
         }
 
 
@@ -167,7 +173,7 @@ namespace RideShareLevel
 
         internal void PlaySound()
         {
-            if(this._audioSource != null)
+            if (this._audioSource != null)
             {
                 _audioSource.Play();
             }
@@ -222,20 +228,14 @@ namespace RideShareLevel
             Passengers.Add(passenger);
             passenger.transform.SetParent(transform, false);
             AddTask(new DropoffPassengerTask(this, true, passenger));
-            SetTaxiingActive(true);
-            UpdateTaxiingPassengers();
+            _taxiing.AddPassenger(passenger);
         }
 
         public void RemovePassenger(Passenger passenger)
         {
             Debug.Assert(Passengers.Contains(passenger), "Passenger is not in vehicle???");
             Passengers.Remove(passenger);
-            UpdateTaxiingPassengers();
-
-            if (!HasPassengers)
-            {
-                SetTaxiingActive(false);
-            }
+            _taxiing.RemovePassenger(passenger);
         }
 
         public bool HasPassenger(Passenger passenger)
@@ -293,10 +293,15 @@ namespace RideShareLevel
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
             _nextPosition = VehiclePath.GetPointAt(0);
 
-            // Green if has passenger else purple
-            //            VehiclePathLine.colorGradient = HasPassengers ? DropoffGradient : PickupGradient;
-            VehiclePathLine.positionCount = 20;
-            if (CurrentTask.DrawPath) DrawPath(VehiclePath, VehiclePathLine);
+            if (CurrentTask.DrawPath)
+            {
+                SetLineActive(true);
+                DrawPath(VehiclePath, VehiclePathLine);
+            }
+            else
+            {
+                SetLineActive(false);
+            }
 
             _canMove = true;
         }
@@ -329,8 +334,21 @@ namespace RideShareLevel
                 _nextPosition = VehiclePath.GetPointAt(_pathCompletionPercent);
                 CurrentRoute = VehiclePath.GetNearestPoint(_pathCompletionPercent)?.Route;
 
-                if (!NeutralControlled) DrawPath(VehiclePath, VehiclePathLine);
+                if (CurrentTask.DrawPath)
+                {
+                    DrawPath(VehiclePath, VehiclePathLine);
+                }
             }
+        }
+
+        #endregion
+
+        #region Line
+
+        private void SetLineActive(bool value)
+        {
+            VehiclePathLine.positionCount = 25;
+            VehiclePathLine.gameObject.SetActive(value);
         }
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
@@ -380,25 +398,40 @@ namespace RideShareLevel
 
         #endregion
 
-        #region Passenger UI
+        #region Taxiing
 
-        public void SetTaxiingActive(bool value)
+        public void CreateTaxiing()
         {
-            if (Taxiing != null)
+            if (_taxiing == null)
             {
-                Taxiing.gameObject.SetActive(value);
+                _taxiing = Instantiate(TaxiingPrefab, transform, false);
+                _taxiing.transform.localPosition = Vector3.up * TaxiingHeight;
             }
         }
 
-        public void UpdateTaxiingPassengers()
+        private void EnableTaxiing()
         {
-            if (Taxiing != null) Taxiing.SetPassengers(Passengers);
+            if (_taxiing.gameObject.activeInHierarchy) return;
+            _taxiing.gameObject.SetActive(true);
+            _taxiing.transform.localPosition = Vector3.zero;
+            _taxiing.transform.DOLocalMoveY(TaxiingHeight, 1);
         }
 
+        private void DisableTaxiing()
+        {
+            if (!_taxiing.gameObject.activeInHierarchy) return;
+//            _taxiing.transform.DOLocalMoveY(TaxiingHeight * 2, 1).OnComplete(() =>
+//            {
+//                _taxiing.gameObject.SetActive(false);
+//            });
+        }
 
         #endregion
+
         public void Despawn()
         {
+
+            Destroy(VehiclePath.gameObject);
             Destroy(gameObject);
         }
     }

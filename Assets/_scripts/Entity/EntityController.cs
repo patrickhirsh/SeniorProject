@@ -27,20 +27,16 @@ public class EntityController : LevelObject
     private Dictionary<Entity, IList<CellIndex>> _entitiesToCellIndex = new Dictionary<Entity, IList<CellIndex>>();
     private Dictionary<CellIndex, IList<Entity>> _cellIndexToEntities = new Dictionary<CellIndex, IList<Entity>>();
 
-				private bool _initialized = false;
-
-    //    public IEnumerable<Connection> OutboundConnections => Entities.SelectMany(entity => entity.OutboundConnections);
-
-    //public GameObject LevelPrefab;
-
-    #region Unity Methods
-
-    #endregion
+    private bool _initialized = false;
 
     public void Initialize()
     {
-								_initialized = true;
+        _initialized = true;
+        SetupEntities();
+    }
 
+    private void SetupEntities()
+    {
         // Verify that we have baked all the entities in the scene
         if (Entities.Length != GetComponentsInChildren<Entity>().Length)
         {
@@ -60,13 +56,15 @@ public class EntityController : LevelObject
         }
     }
 
-				/// <summary>
-				/// Indicates whether this EntityController has been initialized
-				/// </summary>
-				public bool Initialized()
-				{
-								return _initialized;
-				}
+    /// <summary>
+    /// Indicates whether this EntityController has been initialized
+    /// </summary>
+    public bool Initialized()
+    {
+        return _initialized;
+    }
+
+    #region Bake
 
 #if UNITY_EDITOR
     public void Bake()
@@ -76,7 +74,7 @@ public class EntityController : LevelObject
         Buildings = CurrentLevel.GetComponentsInChildren<Building>();
         Routes = Entities.OfType<Route>().ToArray();
         Connections = Routes.SelectMany(route => route.Connections).ToArray();
-        
+
         foreach (var route in Routes)
         {
             route.Bake();
@@ -85,6 +83,8 @@ public class EntityController : LevelObject
         UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
     }
 #endif
+
+    #endregion
 
     public Connection GetConnectionById(int instanceId)
     {
@@ -152,12 +152,5 @@ public class EntityController : LevelObject
         AddEntity(entity);
     }
 
-    public void SpawnLevel(Vector3 pos)
-    {
-        throw new NotImplementedException();
-        //        transform.position = pos;
-        //        var spawnedLevel = Instantiate(LevelPrefab, pos, Quaternion.identity, transform);
-        //        spawnedLevel.transform.localScale = scale;
-        //        Initialize();
-    }
+
 }

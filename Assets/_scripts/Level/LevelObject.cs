@@ -16,11 +16,14 @@ namespace RideShareLevel
                 {
                     return Level;
                 }
-                return Level = GetComponentInParent<Level>();
+
+                return Level = LevelManager.Instance.CurrentLevel;
             }
         }
 
         internal EntityController EntityController => CurrentLevel.EntityController;
+        internal PassengerController PassengerController => CurrentLevel.PassengerController;
+        internal ScoreController ScoreController => CurrentLevel.ScoreController;
 
 #if UNITY_EDITOR
         public void SetLevel(Level level)

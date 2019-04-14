@@ -286,8 +286,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CanvasGroup: {fileID: 2146350333707948755}
   PassengerContainer: {fileID: 7158274726248848879}
-  PassengerIconPrefab: {fileID: 7883973191307846120, guid: 60a6c380884112d4caf590171e9fa881,
+  PassengerIconPrefab: {fileID: 3789593894866729978, guid: 60a6c380884112d4caf590171e9fa881,
     type: 3}
+  Line: {fileID: 1934356966675363727}
 --- !u!1 &1499306894901214
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,6 +582,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Passenger Icon
       objectReference: {fileID: 0}
+    - target: {fileID: 4905785900553239067, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -610,6 +616,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7397682443168228341, guid: 60a6c380884112d4caf590171e9fa881,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30.000002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60a6c380884112d4caf590171e9fa881, type: 3}

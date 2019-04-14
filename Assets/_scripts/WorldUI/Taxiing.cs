@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
-using Game;
 using RideShareLevel;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _scripts
 {
@@ -12,14 +10,20 @@ namespace _scripts
     {
         public CanvasGroup CanvasGroup;
         public Transform PassengerContainer;
-        public Image PassengerIconPrefab;
+        public PassengerTaxiingIcon PassengerIconPrefab;
+        public LineRaycaster Line;
 
         private Camera _camera;
+        private Dictionary<Passenger, PassengerTaxiingIcon> _icons = new Dictionary<Passenger, PassengerTaxiingIcon>();
+        private Sequence _sequence;
+
         #region Unity Methods
 
         private void Awake()
         {
             _camera = Camera.main;
+            Line.gameObject.SetActive(false);
+            CanvasGroup.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -31,19 +35,50 @@ namespace _scripts
         }
         #endregion
 
-        public void SetPassengers(IEnumerable<Passenger> passengers)
+        public void AddPassenger(Passenger passenger)
         {
-            // Clear all of them out
-            foreach (Transform child in PassengerContainer)
-            {
-                Destroy(child.gameObject);
-            }
+            var passengerIcon = Instantiate(PassengerIconPrefab, PassengerContainer, false);
+            passengerIcon.SetPassenger(passenger);
+            _icons[passenger] = passengerIcon;
 
-            // Create icons
-            foreach (var passenger in passengers)
+            CheckVisibility();
+        }
+
+        public void RemovePassenger(Passenger passenger)
+        {
+            Debug.Assert(_icons.ContainsKey(passenger), "Passenger not in icon", gameObject);
+            var icon = _icons[passenger];
+            icon.Deliver();
+            
+            // Remove at end
+            _icons.Remove(passenger);
+            CheckVisibility();
+        }
+
+        private void CheckVisibility()
+        {
+            _sequence.Kill();
+            if (!_icons.Any())
             {
-                var passengerIcon = Instantiate(PassengerIconPrefab, PassengerContainer, false);
-                passengerIcon.color = ColorKey.GetBuildingColor(passenger.GetBuildingColor());
+                _sequence = DOTween.Sequence();
+                _sequence.Append(CanvasGroup.DOFade(0, .5f));
+                _sequence.OnComplete(() =>
+                {
+                    Line.gameObject.SetActive(false);
+                    CanvasGroup.gameObject.SetActive(false);
+                });
+            }
+            else
+            {
+                CanvasGroup.gameObject.SetActive(true);
+
+                CanvasGroup.alpha = 0;
+                _sequence = DOTween.Sequence();
+                _sequence.Append(CanvasGroup.DOFade(1f, .5f));
+                _sequence.OnComplete(() =>
+                {
+                    Line.gameObject.SetActive(true);
+                });
             }
         }
     }
