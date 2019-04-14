@@ -26,7 +26,6 @@
             {
                 Vehicle.AddPassenger(TargetPassenger);
                 TargetPassenger.Pickup(Vehicle);
-
             }
         }
 

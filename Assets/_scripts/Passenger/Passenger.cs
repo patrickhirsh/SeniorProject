@@ -13,7 +13,8 @@ namespace RideShareLevel
         public Route DestRoute { get; private set; }
         public Building DestBuilding { get; private set; }
 
-        public PassengerPin PassengerPin;
+        public PassengerPin PassengerPinPrefab;
+        private PassengerPin _pickupPassengerPin;
         public float DefaultHeight;
         public float HoverHeight;
         public float SelectedHeight;
@@ -25,7 +26,6 @@ namespace RideShareLevel
         private Building.BuildingColors _color;
         private float _timeRemaining;
         private float _totalTime;
-        public PassengerPin PickupPassengerPin;
         private GameObject Ring;
         private Image _RadialTimer;
 
@@ -137,17 +137,17 @@ namespace RideShareLevel
         #region Reticle Methods
         public void CreatePickupReticle()
         {
-            PickupPassengerPin = Instantiate(PassengerPin, transform, false);
-            PickupPassengerPin.transform.localPosition = DefaultHeight * Vector3.up;
-            PickupPassengerPin.SetPassenger(this);
-            PickupPassengerPin.SetColor(ColorKey.GetBuildingColor(_color));
+            _pickupPassengerPin = Instantiate(PassengerPinPrefab, transform, false);
+            _pickupPassengerPin.transform.localPosition = DefaultHeight * Vector3.up;
+            _pickupPassengerPin.SetPassenger(this);
+            _pickupPassengerPin.SetColor(ColorKey.GetBuildingColor(_color));
 
-            _RadialTimer = PickupPassengerPin.RadialTimerImg;
+            _RadialTimer = _pickupPassengerPin.RadialTimerImg;
         }
 
         public void SetPickupReticleActive(bool value)
         {
-            PickupPassengerPin.gameObject.SetActive(value);
+            _pickupPassengerPin.gameObject.SetActive(value);
         }
 
         #endregion
@@ -155,9 +155,9 @@ namespace RideShareLevel
         public void Pickup(Vehicle vehicle)
         {
             PickedUp = true;
+            CurrentLevel.PlayerVehicleController.DeselectPassengerPin(_pickupPassengerPin);
             DestroyRing();
             SetPickupReticleActive(false);
-            CurrentLevel.PlayerVehicleController.DeselectPassengerPin(PassengerPin);
         }
 
         public void Deliver(Vehicle vehicle)
