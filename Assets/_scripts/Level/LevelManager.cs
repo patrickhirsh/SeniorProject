@@ -84,7 +84,7 @@ public class LevelManager : Singleton<LevelManager>
 
         //Switch music to music of new level
         Osborne_AudioManager.Instance.SwitchLevels(NewLayer1, NewLayer2, NewLayer3);
-
+        
         //Spawn and place new level prefab in that spot.
         CurrentLevel = Instantiate(levelprefab, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();
         Destroy(oldLevel);
