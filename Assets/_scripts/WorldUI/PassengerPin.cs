@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Pin : LevelObject
+public class PassengerPin : LevelObject
 {
     public Passenger Passenger;
 
@@ -33,10 +33,14 @@ public class Pin : LevelObject
         InputManager.Instance.HoverChanged.AddListener(HandleHoverChange);
 
         _hoverSequence = DOTween.Sequence();
-        _hoverSequence.Append(transform.DOMoveY(3f, .2f).SetRelative(true));
+        _hoverSequence.Append(transform.DOLocalMoveY(Passenger.HoverHeight, .2f));
         _hoverSequence.SetAutoKill(false).Pause();
     }
 
+    public void SetPassenger(Passenger passenger)
+    {
+        Passenger = passenger;
+    }
 
     private void HandleHoverChange(GameObject go)
     {
@@ -79,7 +83,6 @@ public class Pin : LevelObject
         RadialTimerImg.color = color;
         LineRenderer.startColor = LineRenderer.endColor = color;
     }
-
 
     public void SetSelected(bool selected, int index = -1)
     {
@@ -124,20 +127,21 @@ public class Pin : LevelObject
         if (selected)
         {
             SelectionNumber.text = index.ToString();
-            _selectionSequence.Append(transform.DOLocalMoveY(-2f, .1f).SetRelative(true));
-            _selectionSequence.Append(transform.DOLocalMoveY(17f, .5f).SetRelative(true));
+            _selectionSequence.Append(transform.DOLocalMoveY(-3f, .1f).SetRelative(true));
+            _selectionSequence.Append(transform.DOLocalMoveY(Passenger.SelectedHeight, .5f));
             _selectionSequence.Append(Icon.DOFade(0f, .2f));
             _selectionSequence.Join(SelectionNumber.DOFade(1f, .2f));
         }
         else
         {
-            _selectionSequence.Append(transform.DOLocalMoveY(-15f, .5f).SetRelative(true));
+            _selectionSequence.Append(transform.DOLocalMoveY(Passenger.DefaultHeight, .5f));
             _selectionSequence.Join(SelectionNumber.DOFade(0f, .1f));
             _selectionSequence.Join(Icon.DOFade(1f, .2f));
         }
         
         _selectionSequence.Play();
     }
+
 
 
 }

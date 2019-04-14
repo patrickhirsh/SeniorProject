@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace RideShareLevel
 {
@@ -20,6 +21,8 @@ namespace RideShareLevel
         }
         #endregion
 
+        #region Baking
+
 #if UNITY_EDITOR
         public void Bake(Level level)
         {
@@ -33,6 +36,13 @@ namespace RideShareLevel
 
         }
 #endif
+
+        #endregion
+
+        public bool HasOwnership(Vehicle vehicle)
+        {
+            return Vehicles.Contains(vehicle);
+        }
 
         private void Reset(GameEvent @event)
         {

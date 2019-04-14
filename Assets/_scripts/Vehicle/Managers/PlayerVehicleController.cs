@@ -10,8 +10,8 @@ using Random = UnityEngine.Random;
 
 public class PlayerVehicleController : VehicleController
 {
-    public List<Pin> SelectedPins = new List<Pin>();
-
+    public List<PassengerPin> SelectedPins = new List<PassengerPin>();
+    public bool HasSelectedPins => SelectedPins.Any();
 
     #region Unity Methods
 
@@ -21,15 +21,10 @@ public class PlayerVehicleController : VehicleController
         {
             Debug.LogWarning("This level is missing vehicles or needs to be baked!");
         }
+
         InputManager.Instance.Hit.AddListener(HandleHit);
         InputManager.Instance.NoHit.AddListener(HandleNotHit);
-
     }
-
-    #endregion
-
-
-    #region Unity Methods
 
     private void OnDrawGizmos()
     {
@@ -45,7 +40,7 @@ public class PlayerVehicleController : VehicleController
         if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Hit: {obj.transform.gameObject}", obj.transform.gameObject);
 
         var vehicle = obj.GetComponent<Vehicle>();
-        var pin = obj.GetComponent<Pin>();
+        var pin = obj.GetComponent<PassengerPin>();
         var menuBuilding = obj.GetComponent<MenuBuilding>();
 
 
@@ -62,7 +57,7 @@ public class PlayerVehicleController : VehicleController
                 menuBuilding.setClicked(true);
             }
         }
-        else if (vehicle && HasOwnership(vehicle) && SelectedPins.Any() && !vehicle.HasTask)
+        else if (vehicle && HasOwnership(vehicle) && HasSelectedPins && !vehicle.HasTask)
         {
             foreach (Vehicle x in Vehicles)
             {
@@ -81,41 +76,8 @@ public class PlayerVehicleController : VehicleController
                 manager.PickupPassenger();
             }
 
-            foreach (Vehicle v in Vehicles)
-            {
-                if (!v.HasTask) { v.ActivateRing(); }
-            }
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Passengers {pin}", pin);
             HandlePinSelect(pin);
-        }
-    }
-
-    private void HandlePinSelect(Pin pin)
-    {
-        if (!SelectedPins.Contains(pin))
-        {
-            SelectedPins.Add(pin);
-        }
-        else
-        {
-            pin.SetSelected(false);
-            SelectedPins.Remove(pin);
-            if (SelectedPins.Count == 0)
-            {
-                foreach (Vehicle x in Vehicles)
-                {
-                    x.DeactivateRing();
-                }
-            }
-        }
-        UpdateSelectedPins();
-    }
-
-    private void UpdateSelectedPins()
-    {
-        for (var i = 0; i < SelectedPins.Count; i++)
-        {
-            SelectedPins[i].SetSelected(true, i + 1);
         }
     }
 
@@ -131,8 +93,7 @@ public class PlayerVehicleController : VehicleController
         }
 
         BuildTasks(vehicle);
-        SelectedPins = new List<Pin>();
-        
+        SelectedPins = new List<PassengerPin>();
     }
 
     private void BuildTasks(Vehicle vehicle)
@@ -151,21 +112,69 @@ public class PlayerVehicleController : VehicleController
 
     }
 
-    private void Deselect()
+    #endregion
+
+    #region Pins
+
+    private void HandlePinSelect(PassengerPin passengerPin)
     {
-        if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log("DESELECT");
+        if (!SelectedPins.Contains(passengerPin))
+        {
+            SelectedPins.Add(passengerPin);
+        }
+        else
+        {
+            passengerPin.SetSelected(false);
+            SelectedPins.Remove(passengerPin);
+        }
+        UpdateSelectedPins();
+        UpdateVehicleRings();
+    }
+
+    private void UpdateVehicleRings()
+    {
+        foreach (Vehicle vehicle in Vehicles)
+        {
+            if (HasSelectedPins && !vehicle.HasTask) vehicle.ActivateRing();
+            else vehicle.DeactivateRing();
+        }
+    }
+
+    private void UpdateSelectedPins()
+    {
+        for (var i = 0; i < SelectedPins.Count; i++)
+        {
+            SelectedPins[i].SetSelected(true, i + 1);
+        }
+    }
+
+    private void DeselectAllPins()
+    {
+        foreach (var pin in SelectedPins)
+        {
+            pin.SetSelected(false);
+        }
+    }
+
+    public void DeselectPassengerPin(PassengerPin pin)
+    {
+        if (SelectedPins.Contains(pin))
+        {
+            pin.SetSelected(false);
+            SelectedPins.Remove(pin);
+        }
+        UpdateSelectedPins();
+        UpdateVehicleRings();
     }
 
     #endregion
 
-    public bool HasOwnership(Vehicle vehicle)
-    {
-        return Vehicles.Contains(vehicle);
-    }
-
+    /// <summary>
+    /// Called when a vehicle has no further tasks and becomes idle
+    /// </summary>
     public override void IdleVehicle(Vehicle vehicle)
     {
-        // Do Nothing for Player Vehicle
+        UpdateVehicleRings();
     }
 
 }

@@ -23,7 +23,8 @@ namespace _scripts
             var tween = DOTween.Sequence();
             tween.Append(transform.DOMove(_passenger.DestBuilding.ScoreLocation, 1f));
             tween.Join(transform.DOScale(Vector3.zero, 1f));
-            tween.OnComplete(() => { Destroy(gameObject); });
+//            tween.OnComplete(() => { Destroy(gameObject); });
+            tween.Play();
         }
     }
 }

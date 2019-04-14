@@ -25,7 +25,8 @@
             if (TargetPassenger != null && !TargetPassenger.PickedUp)
             {
                 Vehicle.AddPassenger(TargetPassenger);
-                TargetPassenger.SetVehicle(Vehicle);
+                TargetPassenger.Pickup(Vehicle);
+
             }
         }
 

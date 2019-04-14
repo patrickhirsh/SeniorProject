@@ -409,23 +409,6 @@ namespace RideShareLevel
             }
         }
 
-        private void EnableTaxiing()
-        {
-            if (_taxiing.gameObject.activeInHierarchy) return;
-            _taxiing.gameObject.SetActive(true);
-            _taxiing.transform.localPosition = Vector3.zero;
-            _taxiing.transform.DOLocalMoveY(TaxiingHeight, 1);
-        }
-
-        private void DisableTaxiing()
-        {
-            if (!_taxiing.gameObject.activeInHierarchy) return;
-//            _taxiing.transform.DOLocalMoveY(TaxiingHeight * 2, 1).OnComplete(() =>
-//            {
-//                _taxiing.gameObject.SetActive(false);
-//            });
-        }
-
         #endregion
 
         public void Despawn()
