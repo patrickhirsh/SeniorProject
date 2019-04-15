@@ -58,7 +58,7 @@ namespace RideShareLevel
                 frontier.Remove(current);
 
                 // if we're processing the end node, we've found the shortest path to it!
-                if (current.Route == destination || current.ConnectsToRoute == destination)
+                if (current.Route == destination)
                 {
                     connections = ConstructPath(ref current, ref processed);
                     return true;
