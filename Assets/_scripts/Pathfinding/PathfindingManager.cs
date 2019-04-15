@@ -9,8 +9,8 @@ namespace RideShareLevel
     {
         private bool _debugMode = true;
 
-								#region Singleton
-								private static PathfindingManager _instance;
+        #region Singleton
+        private static PathfindingManager _instance;
         public static PathfindingManager Instance => _instance ?? (_instance = Create());
 
         private static PathfindingManager Create()
@@ -32,21 +32,24 @@ namespace RideShareLevel
         /// </summary>
         public bool GetPath(Route start, Route destination, out Queue<Connection> connections)
         {
-            // input validation
             connections = new Queue<Connection>();
-            if ((start == null) || (destination == null)) { Debug.LogError("PathfindingManager.GetPath() was given a null connection"); return false; }
-            if (start == destination) { return true; }
+
+            // input validation
+            Debug.Assert(start != null, "Start route to GetPath should not be null");
+            Debug.Assert(destination != null, "Start route to GetPath should not be null");
+
+            if (start == destination) return true;
 
             PathNodeComparer pathNodeComparer = new PathNodeComparer();                                 // used to compare the weights of PathNodes when sorting the frontier
             Dictionary<Connection, PathNode> processed = new Dictionary<Connection, PathNode>();        // all processed nodes. used to check if a connection has been processed already
-            List<PathNode> frontier = new List<PathNode>();                                             // queue of nearby unprocessed nodes, sorted after each processing step. NOTE: stores "outbound" connections
+            List<PathNode> frontier = start.Connections
+                .Where(connection => connection.IsOutbound) // Take only outbound
+                .Select(connection => new PathNode(connection, 0, null)) // Convert to PathNode
+                .ToList();
 
-            // add all valid starting connections leaving the "start" Route to frontier
-            foreach (Connection connection in start.Connections)
-                if (connection.IsOutbound)
-                    frontier.Add(new PathNode(connection, 0, null));
+            Debug.Assert(frontier.Any(), "Frontier does not have any connections");
 
-            PathNode current = frontier[0];
+            PathNode current;
             bool endRouteDiscovered = false;
 
             // These are the voyages of the Starship Enterprise...
@@ -56,30 +59,27 @@ namespace RideShareLevel
                 frontier.Sort(pathNodeComparer);
                 current = frontier[0];
                 frontier.Remove(current);
-                bool processNode = true;
-
-																Debug.Assert(current.connection.IsOutbound, "GetPath added an inbound connection to the Frontier");
-
-                //if (current.connection.ConnectsTo != null && current.connection.ConnectsTo.ParentRoute == destination)
-                //{
-                //    endRouteDiscovered = true; break;
-                //}
 
                 // if we're processing the end node, we've found the shortest path to it!
-                if (current.connection.ParentRoute == destination)
-                { endRouteDiscovered = true; break; }
+                if (current.Route == destination)
+                {
+                    connections = ConstructPath(ref current, ref processed);
+                    return true;
+                }
 
-                // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
-                if (current.connection.GetConnectsTo == null)
-                { processNode = false; }
-
-                // not all nodes need to be processed (see above) but ALL nodes should be added to procesed at this stage
-                if (processNode) { ProcessNode(ref current, ref processed, ref frontier); }
-                else { processed.Add(current.connection, current); }
+                // If there are paths in the connecting connection, then process it
+                if (current.HasConnections)
+                {
+                    ProcessNode(ref current, ref processed, ref frontier);
+                }
+                else
+                {
+                    // not all nodes need to be processed (see above) but ALL nodes should be added to processed at this stage
+                    processed.Add(current.Connection, current);
+                }
             }
 
-            if (endRouteDiscovered) { connections = ConstructPath(ref current, ref processed); return true; }
-            else { return false; }
+            return false;
         }
 
 
@@ -90,32 +90,29 @@ namespace RideShareLevel
         private void ProcessNode(ref PathNode current, ref Dictionary<Connection, PathNode> processed, ref List<PathNode> frontier)
         {
             // explore the (current connection => linked inbound connection)'s outbound connections.
-            foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
+            foreach (Connection.ConnectionPath path in current.NextPaths)
             {
-																Debug.Assert(current.connection.IsOutbound, "PROCESSNODE ERROR: Processing a node that's not outbound");
-																Debug.Assert(connectionPath.Connection.IsOutbound, "PROCESSNODE ERROR: Found a connection with paths both to it and from it");
-
-																// only observe connections we haven't yet processed
-																if (!processed.ContainsKey(connectionPath.Connection))
+                // only observe connections we haven't yet processed
+                if (!processed.ContainsKey(path.NextConnection))
                 {
                     PathNode discoveredNode;
                     bool newNodeDiscovered = true;
-                    float distance = Vector3.Distance(current.connection.GetConnectsTo.transform.position, connectionPath.Connection.transform.position) + current.distance;
+                    float distance = Vector3.Distance(current.Connection.GetConnectsTo.transform.position, path.NextConnection.transform.position) + current.Distance;
                     // TODO: add additional calculated weight here... (vehicles currently in path, etc.)
 
                     // check if this connection has already been discovered (is it in the frontier?)
                     foreach (PathNode node in frontier)
-                        if (node.connection == connectionPath.Connection)
+                        if (node.Connection == path.NextConnection)
                         {
                             // we've already discovered this node!
                             discoveredNode = node;
                             newNodeDiscovered = false;
 
                             // is this path better than its current path? If so, change its best path to this one. If not, move on
-                            if (discoveredNode.distance > distance)
+                            if (discoveredNode.Distance > distance)
                             {
-                                discoveredNode.distance = distance;
-                                discoveredNode.prevConnection = current.connection;
+                                discoveredNode.Distance = distance;
+                                discoveredNode.PrevConnection = current.Connection;
                             }
                             break;
                         }
@@ -123,12 +120,12 @@ namespace RideShareLevel
                     // this connection has never been discovered before. Add it to the frontier!
                     if (newNodeDiscovered)
                     {
-                        discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
-																								frontier.Add(discoveredNode);
+                        discoveredNode = new PathNode(path.NextConnection, distance, current.Connection);
+                        frontier.Add(discoveredNode);
                     }
                 }
             }
-            processed.Add(current.connection, current);
+            processed.Add(current.Connection, current);
         }
 
 
@@ -138,25 +135,25 @@ namespace RideShareLevel
         /// </summary>
         private Queue<Connection> ConstructPath(ref PathNode current, ref Dictionary<Connection, PathNode> processed)
         {
-												/*
+            /*
+// temporarily store the reversed path
+List<Connection> reversePath = new List<Connection>
+{
+current.connection.ConnectsTo,
+current.connection
+};
+            */
+
             // temporarily store the reversed path
-            List<Connection> reversePath = new List<Connection>
-            {
-                current.connection.ConnectsTo,
-                current.connection
-            };
-												*/
+            List<Connection> reversePath = new List<Connection>();
+            //reversePath.Add(current.connection);
 
-												// temporarily store the reversed path
-												List<Connection> reversePath = new List<Connection>();
-												//reversePath.Add(current.connection);
-
-												// traverse backwards through the best path (using prevConnection) to construct the path
-												while (current.prevConnection != null)
+            // traverse backwards through the best path (using prevConnection) to construct the path
+            while (current.PrevConnection != null)
             {
-                reversePath.Add(current.prevConnection.GetConnectsTo);
-                reversePath.Add(current.prevConnection);
-                current = processed[current.prevConnection];
+                reversePath.Add(current.PrevConnection.GetConnectsTo);
+                reversePath.Add(current.PrevConnection);
+                current = processed[current.PrevConnection];
             }
 
             // add all final connections to the queue in the proper order
@@ -230,11 +227,11 @@ namespace RideShareLevel
                 bool processNode = true;
 
                 // if we're processing the end node, we've found the shortest path to it!
-                if (current.connection == end)
+                if (current.Connection == end)
                 { endConnectionDiscovered = true; break; }
 
                 // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
-                if (current.connection.GetConnectsTo == null)
+                if (current.Connection.GetConnectsTo == null)
                 { processNode = false; }
 
 
@@ -244,29 +241,29 @@ namespace RideShareLevel
                 if (processNode)
                 {
                     // explore the (current connection => linked inbound connection)'s outbound connections.
-                    foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
+                    foreach (Connection.ConnectionPath connectionPath in current.Connection.GetConnectsTo.Paths)
                     {
                         // only observe connections we haven't yet processed
-                        if (!processed.ContainsKey(connectionPath.Connection))
+                        if (!processed.ContainsKey(connectionPath.NextConnection))
                         {
                             PathNode discoveredNode;
                             bool newNodeDiscovered = true;
-                            float distance = Vector3.Distance(current.connection.GetConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                            float distance = Vector3.Distance(current.Connection.GetConnectsTo.gameObject.transform.position, connectionPath.NextConnection.gameObject.transform.position) + current.Distance;
                             // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
 
                             // check if this connection has already been discovered (is in the frontier)
                             foreach (PathNode node in frontier)
-                                if (node.connection == connectionPath.Connection)
+                                if (node.Connection == connectionPath.NextConnection)
                                 {
                                     // we've already discovered this node!
                                     discoveredNode = node;
                                     newNodeDiscovered = false;
 
                                     // is this path better than its current path? If so, change its best path to this one. If not, move on
-                                    if (discoveredNode.distance > distance)
+                                    if (discoveredNode.Distance > distance)
                                     {
-                                        discoveredNode.distance = distance;
-                                        discoveredNode.prevConnection = current.connection;
+                                        discoveredNode.Distance = distance;
+                                        discoveredNode.PrevConnection = current.Connection;
                                     }
                                     break;
                                 }
@@ -274,7 +271,7 @@ namespace RideShareLevel
                             // this connection has never been discovered before. Add it to the frontier!
                             if (newNodeDiscovered)
                             {
-                                discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
+                                discoveredNode = new PathNode(connectionPath.NextConnection, distance, current.Connection);
                                 frontier.Add(discoveredNode);
                             }
                         }
@@ -283,7 +280,7 @@ namespace RideShareLevel
 
 
                 // processing for this connection is complete. Add to processed and continue
-                processed.Add(current.connection, current);
+                processed.Add(current.Connection, current);
             }
 
             #endregion
@@ -297,14 +294,14 @@ namespace RideShareLevel
 
                 // temporarily store the reversed path
                 List<Connection> reversePath = new List<Connection>();
-                reversePath.Add(current.connection);
+                reversePath.Add(current.Connection);
 
                 // traverse backwards through the best path (using prevConnection) to construct the path
-                while (current.prevConnection != null)
+                while (current.PrevConnection != null)
                 {
-                    reversePath.Add(current.prevConnection.GetConnectsTo);
-                    reversePath.Add(current.prevConnection);
-                    current = processed[current.prevConnection];
+                    reversePath.Add(current.PrevConnection.GetConnectsTo);
+                    reversePath.Add(current.PrevConnection);
+                    current = processed[current.PrevConnection];
                 }
 
                 // add all final connections to the queue in the proper order
@@ -410,10 +407,10 @@ namespace RideShareLevel
                     // CHECK THE NODE WE'RE PROCESSING
 
                     // if this is true, there exists a connection with a path to it, but no paths leaving it. Ignore
-                    if (current.connection.GetConnectsTo == null)
+                    if (current.Connection.GetConnectsTo == null)
                     {
                         processNode = false;
-                        processed.Add(current.connection, current);
+                        processed.Add(current.Connection, current);
                     }
 
                     else
@@ -422,31 +419,31 @@ namespace RideShareLevel
                         if (!lookForEnd)
                         {
                             // we're looking for "intersection"
-                            if (current.connection.GetConnectsTo.ParentRoute == intersection)
+                            if (current.Connection.GetConnectsTo.ParentRoute == intersection)
                             {
                                 processNode = false;
                                 destinationPathnodes.Add(current);
-                                processed.Add(current.connection, current);
+                                processed.Add(current.Connection, current);
                             }
                         }
 
                         else
                         {
                             // we're looking for "end"
-                            if (current.connection.GetConnectsTo.ParentRoute == end)
+                            if (current.Connection.GetConnectsTo.ParentRoute == end)
                             {
                                 processNode = false;
                                 destinationPathnodes.Add(current);
-                                processed.Add(current.connection, current);
+                                processed.Add(current.Connection, current);
                             }
                         }
 
                         // don't process (or explore any further) if we reach an intersection that isn't "intersection" or "end"
-                        if ((current.connection.GetConnectsTo.ParentRoute.GetType() == typeof(IntersectionRoute)) && (current.connection.GetConnectsTo.ParentRoute != end) &&
-                            (current.connection.GetConnectsTo.ParentRoute != intersection))
+                        if ((current.Connection.GetConnectsTo.ParentRoute.GetType() == typeof(IntersectionRoute)) && (current.Connection.GetConnectsTo.ParentRoute != end) &&
+                            (current.Connection.GetConnectsTo.ParentRoute != intersection))
                         {
                             processNode = false;
-                            processed.Add(current.connection, current);
+                            processed.Add(current.Connection, current);
                         }
                     }
 
@@ -458,29 +455,29 @@ namespace RideShareLevel
                     if (processNode)
                     {
                         // explore the (current connection => linked inbound connection)'s outbound connections.
-                        foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
+                        foreach (Connection.ConnectionPath connectionPath in current.Connection.GetConnectsTo.Paths)
                         {
                             // only observe connections we haven't yet processed
-                            if (!processed.ContainsKey(connectionPath.Connection))
+                            if (!processed.ContainsKey(connectionPath.NextConnection))
                             {
                                 PathNode discoveredNode;
                                 bool newNodeDiscovered = true;
-                                float distance = Vector3.Distance(current.connection.GetConnectsTo.gameObject.transform.position, connectionPath.Connection.gameObject.transform.position) + current.distance;
+                                float distance = Vector3.Distance(current.Connection.GetConnectsTo.gameObject.transform.position, connectionPath.NextConnection.gameObject.transform.position) + current.Distance;
                                 // TODO: add additional calculated wieght here... (vehicles currently in path, etc.)
 
                                 // check if this connection has already been discovered (is in the frontier)
                                 foreach (PathNode node in frontier)
-                                    if (node.connection == connectionPath.Connection)
+                                    if (node.Connection == connectionPath.NextConnection)
                                     {
                                         // we've already discovered this node!
                                         discoveredNode = node;
                                         newNodeDiscovered = false;
 
                                         // is this path better than its current path? If so, change its best path to this one. If not, move on
-                                        if (discoveredNode.distance > distance)
+                                        if (discoveredNode.Distance > distance)
                                         {
-                                            discoveredNode.distance = distance;
-                                            discoveredNode.prevConnection = current.connection;
+                                            discoveredNode.Distance = distance;
+                                            discoveredNode.PrevConnection = current.Connection;
                                         }
                                         break;
                                     }
@@ -488,14 +485,14 @@ namespace RideShareLevel
                                 // this connection has never been discovered before. Add it to the frontier!
                                 if (newNodeDiscovered)
                                 {
-                                    discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
+                                    discoveredNode = new PathNode(connectionPath.NextConnection, distance, current.Connection);
                                     frontier.Add(discoveredNode);
                                 }
                             }
                         }
 
                         // processing for this connection is complete. Add to processed and continue
-                        processed.Add(current.connection, current);
+                        processed.Add(current.Connection, current);
                     }
                 }
 
@@ -522,22 +519,22 @@ namespace RideShareLevel
                     // note that inbound is actually holding the outbound connection outside the target. Use ConnectsTo to find paths
                     foreach (PathNode inbound in destinationPathnodes)
                     {
-                        foreach (var pathsTo in inbound.connection.GetConnectsTo.Paths)
+                        foreach (var pathsTo in inbound.Connection.GetConnectsTo.Paths)
                         {
                             // if we've already added a "path", see if this inbound gets there in a shorter path. If so, replace it with this one
-                            float distance = Vector3.Distance(inbound.connection.GetConnectsTo.transform.position, pathsTo.Connection.transform.position) + inbound.distance;
-                            if (reachableOutbound.ContainsKey(pathsTo.Connection))
+                            float distance = Vector3.Distance(inbound.Connection.GetConnectsTo.transform.position, pathsTo.NextConnection.transform.position) + inbound.Distance;
+                            if (reachableOutbound.ContainsKey(pathsTo.NextConnection))
                             {
-                                if (reachableOutbound[pathsTo.Connection].distance > distance)
+                                if (reachableOutbound[pathsTo.NextConnection].Distance > distance)
                                 {
-                                    reachableOutbound.Remove(pathsTo.Connection);
-                                    reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection.GetConnectsTo));
+                                    reachableOutbound.Remove(pathsTo.NextConnection);
+                                    reachableOutbound.Add(pathsTo.NextConnection, new PathNode(pathsTo.NextConnection, distance, inbound.Connection.GetConnectsTo));
                                 }
                             }
 
                             // otherwise, this is the first inbound that reaches this outbound. Add the path
                             else
-                                reachableOutbound.Add(pathsTo.Connection, new PathNode(pathsTo.Connection, distance, inbound.connection));
+                                reachableOutbound.Add(pathsTo.NextConnection, new PathNode(pathsTo.NextConnection, distance, inbound.Connection));
                         }
                     }
 
@@ -558,14 +555,14 @@ namespace RideShareLevel
 
             // temporarily store the reversed path
             List<Connection> reversePath = new List<Connection>();
-            reversePath.Add(current.connection);
+            reversePath.Add(current.Connection);
 
             // traverse backwards through the best path (using prevConnection) to construct the path
-            while (current.prevConnection != null)
+            while (current.PrevConnection != null)
             {
-                reversePath.Add(current.prevConnection.GetConnectsTo);
-                reversePath.Add(current.prevConnection);
-                current = processed[current.prevConnection];
+                reversePath.Add(current.PrevConnection.GetConnectsTo);
+                reversePath.Add(current.PrevConnection);
+                current = processed[current.PrevConnection];
             }
 
             // add all final connections to the queue in the proper order

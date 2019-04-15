@@ -99,17 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Level: {fileID: 3651787944845832804}
   Vehicles: []
-  AVG_SPAWN_TIMER: 1
-  SPAWN_TIMER_VARIANCE: 0
-  _neutralVehiclePrefabs:
-  - {fileID: 1667412018430948, guid: 47aedc68359e82144b5e66b00050ac6a, type: 3}
-  - {fileID: 1667412018430948, guid: effe08e4da079ad4ea8b04a737717901, type: 3}
-  - {fileID: 5401078216111928913, guid: 728c69fdaea4ab24aa6bd1cdbfec27c0, type: 3}
-  - {fileID: 329139830398444773, guid: 09a187d62e72d514d82bd9c14e183bf3, type: 3}
-  - {fileID: 8605542555932641796, guid: 2e7aac3ff70bf5448b7af34361bfe2c4, type: 3}
-  - {fileID: 3238799598980395830, guid: dcd424bc99f364445a6ceba0354125cc, type: 3}
-  _serializedPaths:
-    allPaths: []
+  AvgSpawnTimer: 1
+  SpawnTimerVariance: 0
+  NeutralVehiclePrefabs: []
 --- !u!65 &1383382811846089374
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1544,7 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: {fileID: 0}
+  Level: {fileID: 3651787944845832804}
   DeliveryLocation: {fileID: 1343241170997497484}
   BuildingColor: 0
 --- !u!1 &1383382812483578279
@@ -1836,7 +1828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: {fileID: 0}
+  Level: {fileID: 3651787944845832804}
   DeliveryLocation: {fileID: 1343662750048085794}
   BuildingColor: 1
 --- !u!1 &1383382812710071811
