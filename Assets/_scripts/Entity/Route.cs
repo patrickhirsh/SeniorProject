@@ -74,12 +74,6 @@ namespace RideShareLevel
 
             if (Connections != null)
             {
-                foreach (var connection in Connections)
-                {
-                    Gizmos.color = connection.Paths.Any() ? Color.blue : Color.red;
-                    Gizmos.DrawSphere(connection.transform.position, .05f);
-                }
-
                 if (NeighborRoutes != null)
                 {
                     Gizmos.color = Color.green;

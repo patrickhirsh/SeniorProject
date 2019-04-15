@@ -292,7 +292,6 @@ namespace RideShareLevel
             _pathCompletionPercent = 0;
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
             Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
-
             _nextPosition = VehiclePath.GetPointAt(0);
 
             if (CurrentTask.DrawPath)

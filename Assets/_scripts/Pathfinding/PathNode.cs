@@ -12,6 +12,8 @@ namespace RideShareLevel
 
         public PathNode(Connection connection, float distance, Connection prevConnection)
         {
+            Debug.Assert(connection.IsOutbound, "PATHNODE ERROR: connection should be an outbound connection");
+            Debug.Assert(prevConnection == null || prevConnection.IsOutbound, "PATHNODE ERROR: prevConnection should be an outbound connection");
             this.connection = connection;
             this.prevConnection = prevConnection;
             this.distance = distance;

@@ -20,6 +20,9 @@ namespace RideShareLevel
         [HideInInspector]
         public Connection ConnectsTo;
         public Connection GetConnectsTo => ConnectsTo;
+        public bool ConnectsToRoute => GetConnectsTo != null;
+        public bool IsInbound => Paths.Any();
+        public bool IsOutbound => !IsInbound;
 
         [HideInInspector]
         [SerializeField]
@@ -50,6 +53,13 @@ namespace RideShareLevel
         {
             ValidatePaths();
         }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = IsInbound ? Color.blue : Color.red;
+            Gizmos.DrawSphere(transform.position, .05f);
+        }
+
         #endregion
 
 #if UNITY_EDITOR
