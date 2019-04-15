@@ -9,8 +9,8 @@ namespace RideShareLevel
     {
         private bool _debugMode = true;
 
-        #region Singleton
-        private static PathfindingManager _instance;
+								#region Singleton
+								private static PathfindingManager _instance;
         public static PathfindingManager Instance => _instance ?? (_instance = Create());
 
         private static PathfindingManager Create()
@@ -43,7 +43,7 @@ namespace RideShareLevel
 
             // add all valid starting connections leaving the "start" Route to frontier
             foreach (Connection connection in start.Connections)
-                if (connection.GetConnectsTo != null)
+                if (connection.IsOutbound)
                     frontier.Add(new PathNode(connection, 0, null));
 
             PathNode current = frontier[0];
@@ -58,10 +58,12 @@ namespace RideShareLevel
                 frontier.Remove(current);
                 bool processNode = true;
 
-                if (current.connection.ConnectsTo != null && current.connection.ConnectsTo.ParentRoute == destination)
-                {
-                    endRouteDiscovered = true; break;
-                }
+																Debug.Assert(current.connection.IsOutbound, "GetPath added an inbound connection to the Frontier");
+
+                //if (current.connection.ConnectsTo != null && current.connection.ConnectsTo.ParentRoute == destination)
+                //{
+                //    endRouteDiscovered = true; break;
+                //}
 
                 // if we're processing the end node, we've found the shortest path to it!
                 if (current.connection.ParentRoute == destination)
@@ -90,8 +92,11 @@ namespace RideShareLevel
             // explore the (current connection => linked inbound connection)'s outbound connections.
             foreach (Connection.ConnectionPath connectionPath in current.connection.GetConnectsTo.Paths)
             {
-                // only observe connections we haven't yet processed
-                if (!processed.ContainsKey(connectionPath.Connection))
+																Debug.Assert(current.connection.IsOutbound, "PROCESSNODE ERROR: Processing a node that's not outbound");
+																Debug.Assert(connectionPath.Connection.IsOutbound, "PROCESSNODE ERROR: Found a connection with paths both to it and from it");
+
+																// only observe connections we haven't yet processed
+																if (!processed.ContainsKey(connectionPath.Connection))
                 {
                     PathNode discoveredNode;
                     bool newNodeDiscovered = true;
@@ -119,7 +124,7 @@ namespace RideShareLevel
                     if (newNodeDiscovered)
                     {
                         discoveredNode = new PathNode(connectionPath.Connection, distance, current.connection);
-                        frontier.Add(discoveredNode);
+																								frontier.Add(discoveredNode);
                     }
                 }
             }
@@ -133,15 +138,21 @@ namespace RideShareLevel
         /// </summary>
         private Queue<Connection> ConstructPath(ref PathNode current, ref Dictionary<Connection, PathNode> processed)
         {
+												/*
             // temporarily store the reversed path
             List<Connection> reversePath = new List<Connection>
             {
                 current.connection.ConnectsTo,
                 current.connection
             };
-            
-            // traverse backwards through the best path (using prevConnection) to construct the path
-            while (current.prevConnection != null)
+												*/
+
+												// temporarily store the reversed path
+												List<Connection> reversePath = new List<Connection>();
+												//reversePath.Add(current.connection);
+
+												// traverse backwards through the best path (using prevConnection) to construct the path
+												while (current.prevConnection != null)
             {
                 reversePath.Add(current.prevConnection.GetConnectsTo);
                 reversePath.Add(current.prevConnection);
@@ -576,18 +587,14 @@ namespace RideShareLevel
         /// <returns>A BezierCurve component</returns>
         public BezierCurve GenerateCurves(Queue<Connection> connections)
         {
-            Debug.Assert(connections != null, "Connections should not be null");
-            Debug.Assert(connections.Any(), "No connections found in queue");
+            Debug.Assert(connections != null, "GENERATECURVES ERROR: Connections should not be null");
+            Debug.Assert(connections.Any(), "GENERATECURVES ERROR:No connections found in queue");
 
             connections = new Queue<Connection>(connections);
             var obj = new GameObject("BezierCurve", typeof(BezierCurve));
             var objCurve = obj.GetComponent<BezierCurve>();
 
-            // We should start with an inbound node, not an outbound
-            if (connections.Peek().PathCount <= 0)
-            {
-                connections.Dequeue();
-            }
+            Debug.Assert(connections.Peek().PathCount > 0, "First connection is outbound and should be inbound");
 
             // traverse each path in _connectionsPath
             while (connections.Count > 2)
@@ -603,7 +610,7 @@ namespace RideShareLevel
                 else
                 {
                     // no path between two adjacent connections in the queue
-                    Debug.LogWarning($"Could not find path between connections");
+                    Debug.LogWarning($"GENERATECURVES ERROR: Could not find path between connections");
                 }
             }
             return objCurve;
