@@ -49,15 +49,12 @@ namespace RideShareLevel
 
             Debug.Assert(frontier.Any(), "Frontier does not have any connections");
 
-            PathNode current;
-            bool endRouteDiscovered = false;
-
             // These are the voyages of the Starship Enterprise...
             while (frontier.Count > 0)
             {
                 // lowest weight PathNode in Frontier is next to be evaluated
                 frontier.Sort(pathNodeComparer);
-                current = frontier[0];
+                var current = frontier[0];
                 frontier.Remove(current);
 
                 // if we're processing the end node, we've found the shortest path to it!
