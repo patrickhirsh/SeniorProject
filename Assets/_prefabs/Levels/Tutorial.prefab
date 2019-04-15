@@ -1591,7 +1591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: {fileID: 0}
+  Level: {fileID: 3651787944845832804}
   DeliveryLocation: {fileID: 1343241170997497484}
   BuildingColor: 0
 --- !u!1 &1383382812483578279
@@ -1883,7 +1883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267dfc52be8913741a477b42d8b95795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: {fileID: 0}
+  Level: {fileID: 3651787944845832804}
   DeliveryLocation: {fileID: 1343662750048085794}
   BuildingColor: 1
 --- !u!1 &1383382812710071811
@@ -2511,6 +2511,8 @@ MonoBehaviour:
   PassengerController: {fileID: 6985268536302448319}
   ScoreController: {fileID: 5748169245037304050}
   ArtContainer: {fileID: 0}
+  menubuildingprefab: {fileID: 7215751333614209384, guid: e1c0823b2ce6bfb42b2e67a97404be35,
+    type: 3}
 --- !u!1 &1383382813223901382
 GameObject:
   m_ObjectHideFlags: 0
@@ -4004,9 +4006,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc39bfb7c03b38240b80fe8009e3c178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: {fileID: 0}
+  Level: {fileID: 3651787944845832804}
   BuildingScorePrefab: {fileID: 2275701667118458129, guid: 45d91bb227bfb9848acc2fc0541997f4,
     type: 3}
+  ScoreHeight: 8
 --- !u!1 &4288338628445489690
 GameObject:
   m_ObjectHideFlags: 0
