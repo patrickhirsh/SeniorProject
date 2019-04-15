@@ -290,7 +290,10 @@ namespace RideShareLevel
         private void StartPathing(Queue<Connection> connections)
         {
             _pathCompletionPercent = 0;
+
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
+            VehiclePath.transform.SetParent(transform, true);
+
             Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
             _nextPosition = VehiclePath.GetPointAt(0);
 

@@ -22,8 +22,7 @@ namespace RideShareLevel
         public Connection ConnectsTo;
         public Connection GetConnectsTo => ConnectsTo;
         public bool ConnectsToRoute => GetConnectsTo != null;
-        public bool IsInbound => Paths.Any();
-        public bool IsOutbound => !IsInbound;
+        public bool HasPaths => Paths.Any();
 
         [HideInInspector]
         [SerializeField]
@@ -52,7 +51,7 @@ namespace RideShareLevel
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = IsInbound ? Color.blue : Color.red;
+            Gizmos.color = HasPaths ? Color.blue : Color.red;
             Gizmos.DrawSphere(transform.position, .05f);
         }
 

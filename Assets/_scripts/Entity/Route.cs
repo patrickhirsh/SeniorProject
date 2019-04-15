@@ -143,9 +143,14 @@ namespace RideShareLevel
             {
                 foreach (var point in curve.GetAnchorPoints())
                 {
-                    point.BeginBake();
-                    point.Connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, point.transform.position)).FirstOrDefault();
-                    point.EndBake();
+                    if (point != null)
+                    {
+                        point.BeginBake();
+                        point.Connection = connections
+                            .OrderBy(c => Vector3.Distance(c.transform.position, point.transform.position))
+                            .FirstOrDefault();
+                        point.EndBake();
+                    }
                 }
             }
         }

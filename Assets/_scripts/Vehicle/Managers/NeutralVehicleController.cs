@@ -139,11 +139,14 @@ namespace RideShareLevel
                 _proceduralSpawnTimer = AvgSpawnTimer + Random.Range(SpawnTimerVariance * -1, SpawnTimerVariance);
 
                 var keys = _validNeutralPaths.Keys.ToArray();
-                var key = keys[Random.Range(0, keys.Length)];
-                    
-                // spawn the vehicle
-                SpawnVehicle(key, NeutralVehiclePrefabs[Random.Range(0, NeutralVehiclePrefabs.Count - 1)]);
-                if (Debugger.Profile.DebugNeutralVehicleManager) { Debug.Log("Spawning vehicle"); }
+                Debug.Assert(keys.Any(), "No keys for pathing neutral cars");
+                if (keys.Any())
+                {
+                    var key = keys[Random.Range(0, keys.Length)];
+                    // spawn the vehicle
+                    SpawnVehicle(key, NeutralVehiclePrefabs[Random.Range(0, NeutralVehiclePrefabs.Count - 1)]);
+                    if (Debugger.Profile.DebugNeutralVehicleManager) { Debug.Log("Spawning vehicle"); }
+                }
             }
         }
 
@@ -163,6 +166,10 @@ namespace RideShareLevel
                     if (PathfindingManager.Instance.GetPath(spawnRoute, route, out var connections))
                     {
                         _validNeutralPaths.Add(key, connections);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Could not find a path between {spawnRoute.name} and {route}", spawnRoute);
                     }
                 }
             }

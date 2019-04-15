@@ -13,11 +13,10 @@ namespace RideShareLevel
         public List<Connection.ConnectionPath> NextPaths => Connection.ConnectsTo.Paths;
         public bool HasConnections => Connection.GetConnectsTo != null;
         public Route Route => Connection.ParentRoute;
+        public Route ConnectsToRoute => Connection.ConnectsTo != null ? Connection.ConnectsTo.ParentRoute : null;
 
         public PathNode(Connection connection, float distance, Connection prevConnection)
         {
-            Debug.Assert(connection.IsOutbound, "PATHNODE ERROR: connection should be an outbound connection");
-            Debug.Assert(prevConnection == null || prevConnection.IsOutbound, "PATHNODE ERROR: prevConnection should be an outbound connection");
             Connection = connection;
             PrevConnection = prevConnection;
             Distance = distance;
