@@ -6,12 +6,12 @@ namespace RideShareLevel
     {
         public abstract bool IsComplete();
         public Vehicle Vehicle { get; }
-        public bool DrawPath { get; }
+        public bool DrawPath => false;
 
         protected VehicleTask(Vehicle vehicle, bool drawPath)
         {
             Vehicle = vehicle;
-            DrawPath = drawPath;
+//            DrawPath = drawPath;
         }
 
         public abstract bool ShouldStart();

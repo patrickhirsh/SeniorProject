@@ -336,7 +336,11 @@ namespace RideShareLevel
             {
                 _pathCompletionPercent = _pathCompletionPercent + Granularity * 2;
                 _nextPosition = VehiclePath.GetPointAt(_pathCompletionPercent);
-                CurrentRoute = VehiclePath.GetNearestPoint(_pathCompletionPercent)?.Route;
+
+                if (!NeutralControlled)
+                {
+                    CurrentRoute = VehiclePath.GetNearestPoint(_pathCompletionPercent)?.Route;
+                }
 
                 if (CurrentTask.DrawPath)
                 {

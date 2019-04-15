@@ -26,7 +26,7 @@ public class BezierCurve : MonoBehaviour
     ///  	- used for drawing the curve in the editor
     ///  	- used for calculating the "length" variable
     /// </summary>
-    public int resolution = 10;
+    private const int resolution = 2;
 
     /// <summary>
     /// Gets or sets a value indicating whether this <see cref="BezierCurve"/> is dirty.
@@ -260,22 +260,37 @@ public class BezierCurve : MonoBehaviour
         if (t >= 1) return points[points.Length - 1];
 
         float totalPercent = 0;
-        float curvePercent = 0;
 
-        BezierPoint p2 = null;
-
+        BezierPoint bezierPoint = null;
         for (int i = 0; i < points.Length - 1; i++)
         {
-            curvePercent = ApproximateLength(points[i], points[i + 1], 10) / length;
+            var curvePercent = ApproximateLength(points[i], points[i + 1], 10) / length;
             if (totalPercent + curvePercent > t)
             {
-                p2 = points[i + 1];
+                bezierPoint = points[i + 1];
                 break;
             }
             totalPercent += curvePercent;
         }
 
-        return p2;
+        return bezierPoint;
+    }
+
+    public BezierPoint GetNearestPoint(Vector3 position)
+    {
+        BezierPoint point = points.FirstOrDefault();
+        float best = float.MaxValue;
+        foreach (var bezierPoint in points)
+        {
+            var distance = Vector3.SqrMagnitude(position - bezierPoint.position);
+            if (distance < best)
+            {
+                best = distance;
+                point = bezierPoint;
+            }
+        }
+
+        return point;
     }
 
     /// <summary>

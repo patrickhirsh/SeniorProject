@@ -111,14 +111,16 @@ namespace RideShareLevel
         /// </summary>
         private void SpawnVehicle(Tuple<SpawnRoute, SpawnRoute> pathKey, GameObject vehiclePrefab)
         {
-            // instantiate the new vehicle
-            var vehicle = Instantiate(vehiclePrefab, pathKey.Item1.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
-            vehicle.Controller = this;
-
             // construct a copy of the cached connection Queue
             Queue<Connection> path = new Queue<Connection>();
             foreach (Connection connection in _validNeutralPaths[pathKey])
                 path.Enqueue(connection);
+
+            // instantiate the new vehicle
+            var vehicle = Instantiate(vehiclePrefab, path.First().transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
+            vehicle.Controller = this;
+
+
 
             // assign the pathing task to this new vehicle
             vehicle.AddTask(new NeutralPathingTask(vehicle, false, path));

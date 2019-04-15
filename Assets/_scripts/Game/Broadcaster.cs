@@ -27,7 +27,7 @@ public class Broadcaster : Singleton<Broadcaster>
     {
         if (!_subscribers.ContainsKey(@event))
         {
-            Debug.LogWarning($"No subscribers for @event {@event}");
+            Debug.LogWarning($"No subscribers for event {@event}");
             return;
         }
         if (Debugger.Profile.DebugGameState) Debug.Log($"Broadcast: {@event}");

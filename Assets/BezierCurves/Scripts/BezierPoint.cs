@@ -56,7 +56,8 @@ public class BezierPoint : MonoBehaviour{
 	/// 	- Value describing the relationship between this point's handles
 	/// </summary>
 	public HandleStyle handleStyle;
-	
+
+    private Vector3? _position;
 	/// <summary>
 	/// 	- Shortcut to transform.position
 	/// </summary>
@@ -65,8 +66,12 @@ public class BezierPoint : MonoBehaviour{
 	/// </value>
 	public Vector3 position
 	{
-		get { return transform.position; }
-		set { transform.position = value; }
+		get => _position ?? (_position = transform.position).Value;
+        set
+        {
+            _position = value;
+            transform.position = value;
+        }
 	}
 	
 	/// <summary>
