@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace RideShareLevel
@@ -74,12 +75,6 @@ namespace RideShareLevel
 
             if (Connections != null)
             {
-                foreach (var connection in Connections)
-                {
-                    Gizmos.color = connection.Paths.Any() ? Color.blue : Color.red;
-                    Gizmos.DrawSphere(connection.transform.position, .05f);
-                }
-
                 if (NeighborRoutes != null)
                 {
                     Gizmos.color = Color.green;
@@ -114,10 +109,12 @@ namespace RideShareLevel
         //            }
         //        }
 
+        #region Baking
+
 #if UNITY_EDITOR
         public void Bake()
         {
-            UnityEditor.Undo.RecordObject(this, "Bake Route");
+            Undo.RecordObject(this, "Bake Route");
             Connections = GetComponentsInChildren<Connection>();
             Nodes = GetComponentsInChildren<Node>().ToList();
             VehiclePaths = GetComponentsInChildren<BezierCurve>();
@@ -127,11 +124,17 @@ namespace RideShareLevel
             {
                 connection.Bake();
             }
+            // Do some validation
 
             BakePaths(Connections, VehiclePaths);
             BakePathPoints(Connections, VehiclePaths);
             BakePickupLocations(Connections);
-            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+
+            foreach (var connection in Connections)
+            {
+                connection.ValidatePaths();
+            }
+            PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
 
         private void BakePathPoints(Connection[] connections, BezierCurve[] vehiclePaths)
@@ -140,13 +143,54 @@ namespace RideShareLevel
             {
                 foreach (var point in curve.GetAnchorPoints())
                 {
-                    point.BeginBake();
-                    point.Connection = connections.OrderBy(c => Vector3.Distance(c.transform.position, point.transform.position)).FirstOrDefault();
-                    point.EndBake();
+                    if (point != null)
+                    {
+                        point.BeginBake();
+                        point.Connection = connections
+                            .OrderBy(c => Vector3.Distance(c.transform.position, point.transform.position))
+                            .FirstOrDefault();
+                        point.EndBake();
+                    }
                 }
             }
         }
-#endif
+
+        private void BakePaths(Connection[] connections, BezierCurve[] paths)
+        {
+            foreach (var connection in connections)
+            {
+                Undo.RecordObject(connection, "Bake Paths on Connection");
+                connection.Paths = new List<Connection.ConnectionPath>();
+            }
+            foreach (var path in paths)
+            {
+                var firstPoint = path.GetAnchorPoints().FirstOrDefault();
+                var lastPoint = path.GetAnchorPoints().LastOrDefault();
+                if (firstPoint != null & lastPoint != null)
+                {
+                    var startConnection = connections.FirstOrDefault(connection => Vector3.Distance(firstPoint.position, connection.transform.position) < Connection.CONNECTION_DISTANCE);
+                    var endConnection = connections.FirstOrDefault(connection => Vector3.Distance(lastPoint.position, connection.transform.position) < Connection.CONNECTION_DISTANCE);
+                    if (startConnection != null & endConnection != null)
+                    {
+                        startConnection.Paths.Add(new Connection.ConnectionPath
+                        {
+                            NextConnection = endConnection,
+                            Path = path
+                        });
+                        //                        endConnection.VehiclePaths.Add(new Connection.ConnectionPath
+                        //                        {
+                        //                            Connection = startConnection,
+                        //                            Path = path
+                        //                        });
+                    }
+
+                }
+            }
+            foreach (var connection in connections)
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications(connection);
+            }
+        }
         private void BakePickupLocations(Connection[] connections)
         {
             foreach (var connection in connections)
@@ -163,39 +207,10 @@ namespace RideShareLevel
                 }
             }
         }
+#endif
 
-        private void BakePaths(Connection[] connections, BezierCurve[] paths)
-        {
-            foreach (var connection in connections)
-            {
-                connection.Paths = new List<Connection.ConnectionPath>();
-            }
-            foreach (var path in paths)
-            {
-                var firstPoint = path.GetAnchorPoints().FirstOrDefault();
-                var lastPoint = path.GetAnchorPoints().LastOrDefault();
-                if (firstPoint != null & lastPoint != null)
-                {
-                    var startConnection = connections.FirstOrDefault(connection => Vector3.Distance(firstPoint.position, connection.transform.position) < Connection.CONNECTION_DISTANCE);
-                    var endConnection = connections.FirstOrDefault(connection => Vector3.Distance(lastPoint.position, connection.transform.position) < Connection.CONNECTION_DISTANCE);
-                    if (startConnection != null & endConnection != null)
-                    {
-                        // Bi-directional pathing
-                        startConnection.Paths.Add(new Connection.ConnectionPath
-                        {
-                            Connection = endConnection,
-                            Path = path
-                        });
-                        //                        endConnection.VehiclePaths.Add(new Connection.ConnectionPath
-                        //                        {
-                        //                            Connection = startConnection,
-                        //                            Path = path
-                        //                        });
-                    }
+        #endregion
 
-                }
-            }
-        }
 
         public bool FindPathToEntity(Connection inboundConnection, Entity target, out BezierCurve path)
         {

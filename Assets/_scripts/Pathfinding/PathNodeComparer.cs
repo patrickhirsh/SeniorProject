@@ -8,14 +8,13 @@ namespace RideShareLevel
     {
         public int Compare(PathNode node1, PathNode node2)
         {
-            if (node1.distance < node2.distance)
+            if (node1.Distance < node2.Distance)
                 return -1;
-            else if (node1.distance > node2.distance)
+            if (node1.Distance > node2.Distance)
                 return 1;
-            else if (node1.distance == node2.distance)
+            if (node1.Distance == node2.Distance)
                 return 0;
-
-            else return 0;
+            return 0;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ public class BezierCurveEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(resolutionProp);
+//        EditorGUILayout.PropertyField(resolutionProp);
         EditorGUILayout.PropertyField(closeProp);
         EditorGUILayout.PropertyField(colorProp);
 
@@ -56,6 +57,21 @@ public class BezierCurveEditor : Editor
 
                 pointsProp.InsertArrayElementAtIndex(pointsProp.arraySize);
                 pointsProp.GetArrayElementAtIndex(pointsProp.arraySize - 1).objectReferenceValue = newPoint;
+            }
+
+            if (GUILayout.Button("Reverse"))
+            {
+                var points = curve.GetAnchorPoints().ToArray();
+                foreach (var point in points)
+                {
+                    curve.RemovePoint(point);
+                }
+
+                points = points.Reverse().ToArray();
+                foreach (var point in points)
+                {
+                    curve.AddPoint(point);
+                }
             }
         }
 

@@ -7,6 +7,7 @@ namespace RideShareLevel
     [ExecuteInEditMode]
     public class Snap : MonoBehaviour
     {
+#if UNITY_EDITOR
         private void Update()
         {
             if (!Application.isPlaying && transform.hasChanged && !Input.GetMouseButton(0))
@@ -22,5 +23,6 @@ namespace RideShareLevel
             rotation.y = Mathf.Round(rotation.y / 90) * 90;
             transform.eulerAngles = rotation;
         }
+#endif
     }
 }

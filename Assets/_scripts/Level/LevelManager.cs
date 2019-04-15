@@ -21,11 +21,13 @@ public class LevelManager : Singleton<LevelManager>
     public float FireworkIntervalVariance;
     //variance of fireworks position
     public float FireworkPositionVariance;
+
     #region Unity Methods
 
     private void Start()
     {
         Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, LaunchSuccessFireworks);
+        CurrentLevel.Initialize();
     }
 
     private void FixedUpdate()
@@ -58,64 +60,22 @@ public class LevelManager : Singleton<LevelManager>
     {
     }
 
-    public void GenerateLevel(Level data)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SaveLevel(Level data)
-    {
-        throw new NotImplementedException();
-        // var json = JsonUtility.ToJson(data);
-    }
-
-    public void LoadLevel(Level data)
-    {
-        var level = JsonUtility.FromJson<Level>("{}");
-        GenerateLevel(level);
-    }
-
-
-    public void TransitionLevelPrefab(GameObject levelprefab)
-    {
-        fireworks = false;
-        //Destroy old level object
-        var oldLevel = CurrentLevel.gameObject;
-
-        //Switch music to music of new level
-
-        //Spawn and place new level prefab in that spot.
-        CurrentLevel = Instantiate(levelprefab, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();
-        Destroy(oldLevel);
-        CurrentLevel.Initialize();
-
-        //Notify controllers of the new gamestate
-        Broadcaster.Broadcast(GameEvent.GameStateChanged);
-        Broadcaster.Broadcast(GameEvent.LevelChange);
-    }
-
     public void TransitionLevel(MenuBuilding newLevel)
     {
         fireworks = false;
         //Destroy old level object
         var oldLevel = CurrentLevel.gameObject;
-        
+
         //Switch music to music of new level
         Osborne_AudioManager.Instance.SwitchLevels(newLevel.NewLayer1, newLevel.NewLayer2, newLevel.NewLayer3);
 
         //Spawn and place new level prefab in that spot.
         CurrentLevel = Instantiate(newLevel.RepresentedLevel, oldLevel.transform.position, oldLevel.transform.rotation).GetComponent<Level>();
         Destroy(oldLevel);
-
-        
-        //Broadcaster.Broadcast(GameEvent.Reset);
         CurrentLevel.Initialize();
+
         //Notify controllers of the new gamestate
-        //Broadcaster.Broadcast(GameEvent.GameStateChanged);
+        Broadcaster.Broadcast(GameEvent.GameStateChanged);
         Broadcaster.Broadcast(GameEvent.LevelChange);
-    }
-
-    public void ResetCurrentLevel(){
-        CurrentLevel.Initialize();
     }
 }

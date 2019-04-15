@@ -290,9 +290,11 @@ namespace RideShareLevel
         private void StartPathing(Queue<Connection> connections)
         {
             _pathCompletionPercent = 0;
-            VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
-            Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
 
+            VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
+            VehiclePath.transform.SetParent(transform, true);
+
+            Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
             _nextPosition = VehiclePath.GetPointAt(0);
 
             if (CurrentTask.DrawPath)
@@ -334,7 +336,11 @@ namespace RideShareLevel
             {
                 _pathCompletionPercent = _pathCompletionPercent + Granularity * 2;
                 _nextPosition = VehiclePath.GetPointAt(_pathCompletionPercent);
-                CurrentRoute = VehiclePath.GetNearestPoint(_pathCompletionPercent)?.Route;
+
+                if (!NeutralControlled)
+                {
+                    CurrentRoute = VehiclePath.GetNearestPoint(_pathCompletionPercent)?.Route;
+                }
 
                 if (CurrentTask.DrawPath)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening.Plugins.Core.PathCore;
 using UnityEngine;
 
 namespace RideShareLevel
@@ -13,13 +14,15 @@ namespace RideShareLevel
         [Serializable]
         public class ConnectionPath
         {
-            public Connection Connection;
+            public Connection NextConnection;
             public BezierCurve Path;
         }
 
         [HideInInspector]
         public Connection ConnectsTo;
         public Connection GetConnectsTo => ConnectsTo;
+        public bool ConnectsToRoute => GetConnectsTo != null;
+        public bool HasPaths => Paths.Any();
 
         [HideInInspector]
         [SerializeField]
@@ -42,14 +45,16 @@ namespace RideShareLevel
 
         // This can't be serialized, so we compute once at runtime
         private Dictionary<Connection, BezierCurve> _connectionPaths;
-        private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.Connection, path => path.Path));
+        private Dictionary<Connection, BezierCurve> ConnectionPaths => _connectionPaths ?? (_connectionPaths = Paths.ToDictionary(path => path.NextConnection, path => path.Path));
 
         #region Unity Methods
 
-        private void OnValidate()
+        private void OnDrawGizmos()
         {
-            ValidatePaths();
+            Gizmos.color = HasPaths ? Color.blue : Color.red;
+            Gizmos.DrawSphere(transform.position, .05f);
         }
+
         #endregion
 
 #if UNITY_EDITOR
@@ -59,22 +64,15 @@ namespace RideShareLevel
             ParentRoute = GetComponentInParent<Route>();
             ConnectsTo = FindNeighborConnection(CurrentLevel.EntityController.Connections);
 
-            // Do some validation
-            ValidatePaths();
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
         }
-#endif
 
-        private void ValidatePaths()
+        public void ValidatePaths()
         {
-            foreach (var connectionPath in Paths)
-            {
-                if (Paths.Count(path => path.Connection == connectionPath.Connection) > 1)
-                {
-                    Debug.LogError($"Multiple paths to a connection detected!", gameObject);
-                }
-            }
+            var uniqueConnections = Paths.Select(path => path.NextConnection).Where(connection => connection != null).Distinct().Count();
+            Debug.Assert(uniqueConnections == Paths.Count, "Multiple paths to a connection detected!", gameObject);
         }
+#endif
 
         /// <summary>
         /// Finds a neighbor connection given an array of connections to look from
