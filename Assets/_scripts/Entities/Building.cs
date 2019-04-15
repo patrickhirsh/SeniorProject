@@ -40,7 +40,7 @@ public class Building : LevelObject
 
     public void InitializeScoreUI(BuildingScore buildingScorePrefab)
     {
-        ScoreLocation = FindScoreLocation();
+        ScoreLocation = new Vector3(transform.position.x, ScoreController.ScoreHeight, transform.position.z);
 
         _buildingScore = Instantiate(buildingScorePrefab, transform, true);
         _buildingScore.SetBuilding(this);
@@ -49,12 +49,6 @@ public class Building : LevelObject
 
         Broadcaster.AddListener(GameEvent.PassengerDelivered, PassengerDelivered);
         Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
-    }
-
-    private Vector3 FindScoreLocation()
-    {
-        var hit = Physics.Raycast(transform.position + Vector3.up * 5000, Vector3.down, out var hitInfo);
-        return hitInfo.point + Vector3.up * 20;
     }
 
     private void BuildingComplete(GameEvent arg0)

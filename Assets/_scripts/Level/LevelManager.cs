@@ -78,7 +78,4 @@ public class LevelManager : Singleton<LevelManager>
         Broadcaster.Broadcast(GameEvent.GameStateChanged);
         Broadcaster.Broadcast(GameEvent.LevelChange);
     }
-
-
-
 }
