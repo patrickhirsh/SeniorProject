@@ -190,7 +190,7 @@ public class InputManager : Singleton<InputManager>
 
     private void MoveLevel(Vector3 position)
     {
-        Level.transform.position = position;
+        LevelManager.Instance.CurrentLevel.transform.position = position;
     }
 
     private void SetDebugPlanesActive(bool active)

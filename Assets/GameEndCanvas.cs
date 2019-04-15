@@ -11,11 +11,21 @@ public class GameEndCanvas : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, OnSuccess);
-        Broadcaster.AddListener(GameEvent.LevelCompleteFail, OnFailure);
+        Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, OnSuccessParent);
+        Broadcaster.AddListener(GameEvent.LevelCompleteFail, OnFailureParent);
         var tempColor = BlurImage.color;
         tempColor.a = 0f;
         BlurImage.color = tempColor;
+    }
+
+    private void OnSuccessParent(GameEvent arg0)
+    {
+        StartCoroutine(OnSuccess());
+    }
+
+    private void OnFailureParent(GameEvent arg0)
+    {
+        StartCoroutine(OnFailure());
     }
 
     private void SetText(string v)
@@ -23,16 +33,18 @@ public class GameEndCanvas : MonoBehaviour
         VOFText.text = v;
     }
 
-    private void OnFailure(GameEvent arg0)
+    private IEnumerator OnFailure()
     {
+        yield return new WaitForSeconds(5);
         GameManager.SetGameState(GameState.GameEndManu);
         SetText("Failure");
         FadeInBlurImage();
     }
 
 
-    private void OnSuccess(GameEvent arg0)
+    private IEnumerator OnSuccess()
     {
+        yield return new WaitForSeconds(5);
         GameManager.SetGameState(GameState.GameEndManu);
         SetText("Success!");
         FadeInBlurImage();

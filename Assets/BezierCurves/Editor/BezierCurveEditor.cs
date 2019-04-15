@@ -27,7 +27,7 @@ public class BezierCurveEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(resolutionProp);
+//        EditorGUILayout.PropertyField(resolutionProp);
         EditorGUILayout.PropertyField(closeProp);
         EditorGUILayout.PropertyField(colorProp);
 
