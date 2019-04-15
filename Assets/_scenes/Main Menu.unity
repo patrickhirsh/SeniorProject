@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44420946, g: 0.4936499, b: 0.57304376, a: 1}
+  m_IndirectSpecularColor: {r: 0.4442094, g: 0.4936499, b: 0.57304394, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5596,7 +5596,7 @@ PrefabInstance:
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
@@ -5606,7 +5606,7 @@ PrefabInstance:
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
@@ -5621,12 +5621,32 @@ PrefabInstance:
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 7727474474826903128, guid: f4a84096b104f4f4fa38586a5479b361,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1787227788774115165, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_FontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1787227788002328836, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_FontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1787227787861203658, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_FontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1787227787871235322, guid: f4a84096b104f4f4fa38586a5479b361,
+        type: 3}
+      propertyPath: m_FontSize
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4a84096b104f4f4fa38586a5479b361, type: 3}
