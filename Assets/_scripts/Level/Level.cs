@@ -13,6 +13,7 @@ namespace RideShareLevel
         public PassengerController PassengerController;
         public ScoreController ScoreController;
         public GameObject ArtContainer;
+        public GameObject menubuildingprefab;
     
 
 #if UNITY_EDITOR
