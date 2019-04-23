@@ -12,10 +12,12 @@ namespace RideShareLevel
     {
         public Vehicle Vehicle;
 
+//        public float LookAheadDistance;
         public float GodModeWait = 2f;          // how long a vehicle waits before entering godmode
         public float GodModeDuration = 2f;      // how long godmode lasts
+
+        private List<Collider> _collidingVehicles = new List<Collider>();
         private bool IsVehicleCollision => _collidingVehicles.Any();
-        private bool IsAtIntersection => _collidingIntersections.Any();
 
         private float _timer = 0;
         private bool _isInGodMode;
@@ -23,26 +25,13 @@ namespace RideShareLevel
         private bool _isSlowed;
 
         private Coroutine _current;
-        private List<Collider> _collidingVehicles = new List<Collider>();
-        private List<Collider> _collidingIntersections = new List<Collider>();
         private Tween _speedTween;
+
+        #region Unity Methods
 
         private void Update()
         {
-            if (IsAtIntersection)
-            {
-                if (!_isSlowed) SlowDown();
-                _isInGodMode = false;
-                _isWaiting = false;
-                foreach (var intersection in _collidingIntersections.ToArray())
-                {
-                    if (!intersection.enabled)
-                    {
-                        _collidingIntersections.Remove(intersection);
-                    }
-                }
-            }
-            else if (_isInGodMode)
+            if (_isInGodMode)
             {
                 if (_isSlowed) SpeedUp();
 
@@ -83,28 +72,21 @@ namespace RideShareLevel
             }
         }
 
+        //        private void CheckCollision()
+        //        {
+        //            IsVehicleCollision = Physics.Linecast(transform.position, transform.position + transform.forward * LookAheadDistance, out _, 1 << 9, QueryTriggerInteraction.Collide);
+        //        }
+
+
         private void OnTriggerEnter(Collider other)
         {
             //First check if we're running into a collider meant for collision or net
-            if (other.GetComponent<VehicleCollision>())
+            var vehicle = other.GetComponent<Vehicle>();
+            if (vehicle)
             {
-                //then do the rest of the stuff
-                var vehicle = other.GetComponent<Vehicle>();
-                if (vehicle)
+                if (!_collidingVehicles.Contains(other) && !_isInGodMode && vehicle.HasTask)
                 {
-                    if (!_collidingVehicles.Contains(other) && !_isInGodMode && vehicle.HasTask)
-                    {
-                        _collidingVehicles.Add(other);
-                    }
-                }
-            }
-
-
-            if (other.GetComponent<Stoplight>())
-            {
-                if (!_collidingIntersections.Contains(other))
-                {
-                    _collidingIntersections.Add(other);
+                    _collidingVehicles.Add(other);
                 }
             }
         }
@@ -118,15 +100,18 @@ namespace RideShareLevel
                     _collidingVehicles.Remove(other);
                 }
             }
-
-            if (other.GetComponent<Stoplight>())
-            {
-                if (_collidingIntersections.Contains(other))
-                {
-                    _collidingIntersections.Remove(other);
-                }
-            }
         }
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = IsVehicleCollision ? Color.red : Color.white;
+            var t = transform;
+            Gizmos.DrawSphere(t.position, .15f);
+//            Gizmos.DrawLine(position, position + t.forward * LookAheadDistance);
+        }
+
+        #endregion
 
         private void KillCurrent()
         {
@@ -137,16 +122,16 @@ namespace RideShareLevel
         private void SpeedUp()
         {
             _speedTween?.Kill();
-            _speedTween = DOTween.To(() => Vehicle.Speed, value => Vehicle.Speed = value, Vehicle.BaseSpeed, .3f).SetEase(Ease.InSine);
-//            Vehicle.Speed = Vehicle.BaseSpeed;
+            _speedTween = DOTween.To(() => Vehicle.Speed, value => Vehicle.Speed = value, Vehicle.BaseSpeed, .6f).SetEase(Ease.InSine);
+            //            Vehicle.Speed = Vehicle.BaseSpeed;
             _isSlowed = false;
         }
 
         private void SlowDown()
         {
             _speedTween?.Kill();
-            _speedTween = DOTween.To(() => Vehicle.Speed, value => Vehicle.Speed = value, 0, .3f).SetEase(Ease.OutSine);
-//            Vehicle.Speed = 0;
+            _speedTween = DOTween.To(() => Vehicle.Speed, value => Vehicle.Speed = value, 0, .5f).SetEase(Ease.OutSine);
+            //            Vehicle.Speed = 0;
             _isSlowed = true;
         }
 

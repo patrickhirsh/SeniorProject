@@ -119,8 +119,7 @@ namespace RideShareLevel
             // instantiate the new vehicle
             var vehicle = Instantiate(vehiclePrefab, path.First().transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
             vehicle.Controller = this;
-
-
+            vehicle.SetSpeed(Random.Range(4f, 5f));
 
             // assign the pathing task to this new vehicle
             vehicle.AddTask(new NeutralPathingTask(vehicle, false, path));

@@ -22,9 +22,8 @@ namespace RideShareLevel
         public float Granularity = .005f;
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
-
         public LineRenderer VehiclePathLine;
-        public BezierCurve VehiclePath;
+        public BezierCurve VehiclePath { get; set; }
         public bool PathIsComplete => _pathCompletionPercent >= 1;
         private float _pathCompletionPercent;
         private Vector3 _nextPosition;
@@ -245,6 +244,12 @@ namespace RideShareLevel
 
         #endregion
 
+        public void SetSpeed(float speed)
+        {
+            Speed = speed;
+            BaseSpeed = Speed;
+        }
+
         private void GameStateChanged(GameEvent @event)
         {
             if (GameManager.CurrentGameState == GameState.LevelSimulating)
@@ -292,22 +297,29 @@ namespace RideShareLevel
             _pathCompletionPercent = 0;
 
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
-            VehiclePath.transform.SetParent(transform, true);
-
-            Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
-            _nextPosition = VehiclePath.GetPointAt(0);
-
-            if (CurrentTask.DrawPath)
+            if (VehiclePath.PointCount > 0)
             {
-                SetLineActive(true);
-                DrawPath(VehiclePath, VehiclePathLine);
+                VehiclePath.transform.SetParent(transform, true);
+
+                _nextPosition = VehiclePath.GetPointAt(0);
+
+                if (CurrentTask.DrawPath)
+                {
+                    SetLineActive(true);
+                    DrawPath(VehiclePath, VehiclePathLine);
+                }
+                else
+                {
+                    SetLineActive(false);
+                }
+
+                _canMove = true;
             }
             else
             {
-                SetLineActive(false);
+                // We are already at our destination
+                _pathCompletionPercent = 1;
             }
-
-            _canMove = true;
         }
 
         /// <summary>
