@@ -17,12 +17,15 @@ public class PassengerPin : LevelObject
     public Text SelectionNumber;
     public Image RadialTimerImg;
 
+    public bool QueuedForPickup;
     private bool _selected;
     private bool _hover;
     private Camera _camera;
     private float _y;
     private Sequence _selectionSequence;
     private Sequence _hoverSequence;
+
+    public AudioSource SelectedAudioClip;
 
     #region Unity Methods
 
@@ -75,6 +78,11 @@ public class PassengerPin : LevelObject
     }
 
     #endregion
+
+    public void PlaySelected()
+    {
+        SelectedAudioClip.Play();
+    }
 
     public void SetColor(Color color)
     {

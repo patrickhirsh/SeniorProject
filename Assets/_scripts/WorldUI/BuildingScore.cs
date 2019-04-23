@@ -13,10 +13,14 @@ public class BuildingScore : LevelObject
     public Text PlayerScoreText;
     public Text EnemyScoreText;
 
+    public AudioSource BuildingFailSound;
+    public AudioSource BuildingWinSound;
+
     private Camera _camera;
     private Building _building;
     #region Unity Methods
 
+    private BuildingScoreState _state = BuildingScoreState.TBD;
 
     private void Awake()
     {
@@ -60,22 +64,28 @@ public class BuildingScore : LevelObject
     public void UpdateState()
     {
         var state = ScoreController.GetStatusForBuilding(_building.BuildingColor);
-        switch (state)
+        if (_state != state)
         {
-            case BuildingScoreState.PlayerStar:
-                StarIcon.color = Game.ColorKey.UIStarSuccess;
-                SetTextInactive();
-                break;
-            case BuildingScoreState.EnemyStar:
-                StarIcon.gameObject.SetActive(false);
-                XIcon.gameObject.SetActive(true);
-                SetTextInactive();
-                break;
-            case BuildingScoreState.TBD:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            switch (state)
+            {
+                case BuildingScoreState.PlayerStar:
+                    StarIcon.color = Game.ColorKey.UIStarSuccess;
+                    SetTextInactive();
+                    BuildingWinSound.Play();
+                    break;
+                case BuildingScoreState.EnemyStar:
+                    StarIcon.gameObject.SetActive(false);
+                    XIcon.gameObject.SetActive(true);
+                    SetTextInactive();
+                    BuildingFailSound.Play();
+                    break;
+                case BuildingScoreState.TBD:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
+
     }
 
     private void SetTextInactive()
