@@ -1,30 +1,32 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class Osborne_AudioManager : Singleton<Osborne_AudioManager> {
+public class Osborne_AudioManager : Singleton<Osborne_AudioManager>
+{
+    public AudioSource Layer1;
+    public AudioSource Layer2;
+    public AudioSource Layer3;
 
-    public AudioMixerSnapshot layer1On;
-    public AudioMixerSnapshot layer1Off;
-    public AudioMixerSnapshot layer2On;
-    public AudioMixerSnapshot layer2Off;
-    public AudioMixerSnapshot layer3On;
-    public AudioMixerSnapshot layer3Off;
+    public AudioMixerSnapshot MainSnapshot;
+    public AudioMixerSnapshot FailSnapshot;
+    public AudioMixerSnapshot SuccessSnapshot;
 
-    public float fadeInTime;
-    public float fadeOutTime;
-    public float finalStopFadeTime;
+    public float FadeInTime;
+    public float FadeOutTime;
+    public float TransitionTime;
 
-    private enum ActiveLayer { l1, l2, l3, l0, l12, l13, l123, l23};
-
-    private ActiveLayer al;
+    private Dictionary<int, bool> _layers = new Dictionary<int, bool>();
+    private Sequence _sequence;
 
     // Use this for initialization
-    void Start ()
+    private void Start()
     {
-        StartFirstLayer();
+        SetLayers(true, false, false, true);
+
         Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingCompleteHandler);
         Broadcaster.AddListener(GameEvent.LevelCompleteFail, LevelFailHandler);
         Broadcaster.AddListener(GameEvent.LevelCompleteSuccess, LevelSuccessHandler);
@@ -32,145 +34,74 @@ public class Osborne_AudioManager : Singleton<Osborne_AudioManager> {
 
     private void LevelSuccessHandler(GameEvent arg0)
     {
-        Layer23();
+        SetLayers(true, false, false);
+        SuccessSnapshot.TransitionTo(TransitionTime);
     }
 
     private void LevelFailHandler(GameEvent arg0)
     {
-        Layer1();
+        SetLayers(false, true, true);
+        FailSnapshot.TransitionTo(TransitionTime);
     }
 
     //This could be much more dynamic based on the state of the game, but at the moment it's a very simple progression
     //where a completed building starts the next layer. 
     private void BuildingCompleteHandler(GameEvent arg0)
     {
-        switch (al)
+        if (_layers[0] && !_layers[1])
         {
-            case ActiveLayer.l1:
-                Layer12();
-                break;
-            case ActiveLayer.l2:
-                //Don't know why we'd use this but made it possible anyways
-                break;
-            case ActiveLayer.l3:
-                //Don't know why we'd use this but made it possible anyways
-                break;
-            case ActiveLayer.l12:
-                Layer123();
-                break;
-            case ActiveLayer.l13:
-                //Don't know why we'd use this but made it possible anyways
-                break;
-            case ActiveLayer.l123:
-                //Do nothing here, already at max vol
-                break;
-            case ActiveLayer.l23:
-                //Don't know why we'd use this but made it possible anyways
-                break;
-            case ActiveLayer.l0:
-                //Don't know why we'd use this but made it possible anyways
-                break;
+            SetLayers(false, true, false);
+        }
+
+        if (_layers[0] && _layers[1] && ! _layers[2])
+        {
+            SetLayers(true, true, true);
         }
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
-    //Turn Layer 1 ONLY on
-    public void Layer1 (){
-        layer1On.TransitionTo(fadeInTime);
-        layer2Off.TransitionTo(fadeOutTime);
-        layer3Off.TransitionTo(fadeOutTime);
-        al = ActiveLayer.l1;
-    }
-    //Turn Layer 2 ONLY on
-    public void Layer2()
+    public void SetLayers(bool layer1, bool layer2, bool layer3, bool immediate = false)
     {
-        layer1Off.TransitionTo(fadeInTime);
-        layer2On.TransitionTo(fadeInTime);
-        layer3Off.TransitionTo(fadeInTime);
-        al = ActiveLayer.l2;
+        _layers[0] = layer1;
+        _layers[1] = layer2;
+        _layers[2] = layer3;
+
+        UpdateAudio(immediate);
     }
-    //Turn Layer 3 ONLY on
-    public void Layer3()
+
+    public void UpdateAudio(bool immediate = false)
     {
-        layer1Off.TransitionTo(fadeInTime);
-        layer2Off.TransitionTo(fadeInTime);
-        layer3On.TransitionTo(fadeInTime);
-        al = ActiveLayer.l3;
-    }
-    //Turn Layers 1 & 2 on
-    public void Layer12()
-    {
-        layer1On.TransitionTo(fadeInTime);
-        layer2On.TransitionTo(fadeInTime);
-        layer3Off.TransitionTo(fadeOutTime);
-        al = ActiveLayer.l12;
-    }
-    //Turn Layers 1 & 3 On
-    public void Layer13()
-    {
-        layer1On.TransitionTo(fadeInTime);
-        layer2Off.TransitionTo(fadeInTime);
-        layer3On.TransitionTo(fadeInTime);
-        al = ActiveLayer.l13;
-    }
-    //Turn Layers 2 & 3 On
-    public void Layer23()
-    {
-        layer1Off.TransitionTo(fadeInTime);
-        layer2On.TransitionTo(fadeInTime);
-        layer3On.TransitionTo(fadeInTime);
-        al = ActiveLayer.l23;
-    }
-    //Turn Layers 1, 2, and 3 on
-    public void Layer123()
-    {
-        layer1On.TransitionTo(fadeInTime);
-        layer2On.TransitionTo(fadeInTime);
-        layer3On.TransitionTo(fadeInTime);
-        al = ActiveLayer.l123;
-    }
-    //Turn all layers off
-    public void StopTheMusic()
-    {
-        layer1Off.TransitionTo(finalStopFadeTime);
-        layer2Off.TransitionTo(finalStopFadeTime);
-        layer3Off.TransitionTo(finalStopFadeTime);
-        al = ActiveLayer.l0;
-    }
-    //Initial function, turning layer 1 on and turning layers 2 and 3 to off with 0 second delay
-    void StartFirstLayer()
-    {
-        layer1On.TransitionTo(fadeInTime);
-        layer2Off.TransitionTo(0);
-        layer3Off.TransitionTo(0);
-        al = ActiveLayer.l1;
+        _sequence?.Kill();
+        if (!immediate)
+        {
+            _sequence = DOTween.Sequence();
+            _sequence.Append(Layer1.DOFade(_layers[0] ? 1 : 0, _layers[0] ? FadeInTime : FadeOutTime));
+            _sequence.Append(Layer2.DOFade(_layers[1] ? 1 : 0, _layers[1] ? FadeInTime : FadeOutTime));
+            _sequence.Append(Layer3.DOFade(_layers[2] ? 1 : 0, _layers[2] ? FadeInTime : FadeOutTime));
+            _sequence.Play();
+        }
+        else
+        {
+            Layer1.volume = _layers[0] ? 1 : 0;
+            Layer2.volume = _layers[1] ? 1 : 0;
+            Layer3.volume = _layers[2] ? 1 : 0;
+        }
     }
 
     public void SwitchLevels(AudioClip new1, AudioClip new2, AudioClip new3)
     {
-        AudioSource[] ASList = this.gameObject.GetComponentsInChildren<AudioSource>();
-        foreach(AudioSource x in ASList)
-        {
-            switch (x.name)
-            {
-                case "Layer1":
-                    x.clip = new1;
-                    break;
-                case "Layer2":
-                    x.clip = new2;
-                    break;
-                case "Layer3":
-                    x.clip = new3;
-                    break;
-                
-            }
-            x.Play();
-        }
-        StartFirstLayer();
+        Layer1.volume = 0;
+        Layer2.volume = 0;
+        Layer3.volume = 0;
+
+        Layer1.clip = new1;
+        Layer2.clip = new2;
+        Layer3.clip = new3;
+
+        Layer1.Play();
+        Layer2.Play();
+        Layer3.Play();
+
+        SetLayers(true, false, false, true);
+        MainSnapshot.TransitionTo(1f);
     }
-
-
 }

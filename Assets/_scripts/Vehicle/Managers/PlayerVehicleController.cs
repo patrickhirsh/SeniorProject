@@ -66,7 +66,7 @@ public class PlayerVehicleController : VehicleController
             if (Debugger.Profile.DebugPlayerVehicleManager) Debug.Log($"Selected Vehicle {vehicle}", vehicle);
             HandleVehicleSelect(vehicle);
         }
-        else if (pin)
+        else if (pin && !pin.QueuedForPickup)
         {
             var tutorialObject = GameObject.Find("TutorialManager");
 
@@ -104,7 +104,11 @@ public class PlayerVehicleController : VehicleController
         {
             vehicle.AddTask(new PickupPassengerTask(vehicle, true, passenger));
         }
-        vehicle.PlaySound();
+        vehicle.PlayVehicleSelected();
+        foreach (var pin in SelectedPins)
+        {
+            pin.QueuedForPickup = true;
+        }
     }
 
     public void HandleNotHit(GameObject arg0)
@@ -121,6 +125,7 @@ public class PlayerVehicleController : VehicleController
         if (!SelectedPins.Contains(passengerPin))
         {
             SelectedPins.Add(passengerPin);
+            passengerPin.PlaySelected();
         }
         else
         {

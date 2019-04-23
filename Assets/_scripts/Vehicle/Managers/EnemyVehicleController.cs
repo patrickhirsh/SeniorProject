@@ -24,6 +24,7 @@ public class EnemyVehicleController : VehicleController
         Vehicle vehicle = Instantiate(VehiclePrefab, spawnPoint.transform.position, Quaternion.identity, transform).GetComponent<Vehicle>();
         vehicle.CurrentRoute = spawnPoint;
         vehicle.Controller = this;
+        vehicle.PlayEnemySpawn();
 
         // obtain a path to the passenger and assign the task
         vehicle.AddTask(new PickupPassengerTask(vehicle, true, passenger));

@@ -49,7 +49,7 @@ namespace UserInterface
             }
             else if (pin && !CurrentLevel.PlayerVehicleController.SelectedPins.Contains(pin))
             {
-                UpdateText("Select Passenger");
+                UpdateText(pin.QueuedForPickup ? "Vehicle is on the way" : "Select Passenger");
             }
             else if (pin && CurrentLevel.PlayerVehicleController.SelectedPins.Contains(pin))
             {

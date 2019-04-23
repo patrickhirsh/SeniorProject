@@ -196,6 +196,7 @@ namespace RideShareLevel
                     Debug.LogError($"GENERATECURVES ERROR: Could not find path between connections");
                 }
             }
+
             return bezierCurve;
         }
 

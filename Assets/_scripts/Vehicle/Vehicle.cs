@@ -1,9 +1,6 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using UnityEngine;
 using _scripts;
 
@@ -22,9 +19,8 @@ namespace RideShareLevel
         public float Granularity = .005f;
         public float BaseSpeed = 5f;            // the speed this car will travel at its fastest
 
-
         public LineRenderer VehiclePathLine;
-        public BezierCurve VehiclePath;
+        public BezierCurve VehiclePath { get; set; }
         public bool PathIsComplete => _pathCompletionPercent >= 1;
         private float _pathCompletionPercent;
         private Vector3 _nextPosition;
@@ -52,7 +48,14 @@ namespace RideShareLevel
         private Taxiing _taxiing;
         public float TaxiingHeight;
 
-        private AudioSource _audioSource;
+        public AudioSource VehicleSelectedSound;
+        public AudioSource PassengerPickupSound;
+        public AudioSource CarAvailableSound;
+        public AudioSource EnemyCarSpawnSound;
+        public AudioSource PassengerDeliveredSound;
+
+        private bool _idle;
+        private bool _animating;
 
         #region Bake
 #if UNITY_EDITOR
@@ -61,7 +64,6 @@ namespace RideShareLevel
             UnityEditor.Undo.RecordObject(this, "Bake Vehicle Controller");
             Controller = GetComponentInParent<VehicleController>();
             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
-            _audioSource = this.GetComponent<AudioSource>();
         }
 #endif
         #endregion
@@ -138,6 +140,7 @@ namespace RideShareLevel
                 CurrentTask = _tasks.Dequeue();
                 if (CurrentTask.ShouldStart())
                 {
+                    _idle = _animating = false;
                     switch (CurrentTask)
                     {
                         case PickupPassengerTask pickup:
@@ -157,25 +160,19 @@ namespace RideShareLevel
                             break;
                     }
                 }
-                else
+                else 
                 {
                     // Task was skipped
                     CurrentTask = null;
                     RunNextTask();
                 }
             }
-            else
+            else if(!_idle && !_animating)
             {
+                _idle = true;
                 CurrentTask = null;
+                SetLineActive(false);
                 Controller.IdleVehicle(this);
-            }
-        }
-
-        internal void PlaySound()
-        {
-            if (this._audioSource != null)
-            {
-                _audioSource.Play();
             }
         }
 
@@ -227,8 +224,17 @@ namespace RideShareLevel
         {
             Passengers.Add(passenger);
             passenger.transform.SetParent(transform, false);
-            AddTask(new DropoffPassengerTask(this, true, passenger));
+            StartCoroutine(AddPassengerDelay(passenger));
+            _animating = true;
+        }
+
+        private IEnumerator AddPassengerDelay(Passenger passenger)
+        {
+            PlayPassengerPickup();
+            yield return new WaitForSeconds(0.8f);
             _taxiing.AddPassenger(passenger);
+            yield return new WaitForSeconds(0.2f);
+            AddTask(new DropoffPassengerTask(this, true, passenger));
         }
 
         public void RemovePassenger(Passenger passenger)
@@ -236,7 +242,20 @@ namespace RideShareLevel
             Debug.Assert(Passengers.Contains(passenger), "Passenger is not in vehicle???");
             Passengers.Remove(passenger);
             _taxiing.RemovePassenger(passenger);
+            PlayDelivered();
+            StartCoroutine(CheckIdle());
         }
+
+
+        private IEnumerator CheckIdle()
+        {
+            yield return new WaitForSeconds(2f);
+            if (!HasTask)
+            {
+                PlayAvailable();
+            }
+        }
+
 
         public bool HasPassenger(Passenger passenger)
         {
@@ -244,6 +263,12 @@ namespace RideShareLevel
         }
 
         #endregion
+
+        public void SetSpeed(float speed)
+        {
+            Speed = speed;
+            BaseSpeed = Speed;
+        }
 
         private void GameStateChanged(GameEvent @event)
         {
@@ -292,22 +317,29 @@ namespace RideShareLevel
             _pathCompletionPercent = 0;
 
             VehiclePath = PathfindingManager.Instance.GenerateCurves(connections);
-            VehiclePath.transform.SetParent(transform, true);
-
-            Debug.Assert(VehiclePath.PointCount > 0, "No points in curve!", gameObject);
-            _nextPosition = VehiclePath.GetPointAt(0);
-
-            if (CurrentTask.DrawPath)
+            if (VehiclePath.PointCount > 0)
             {
-                SetLineActive(true);
-                DrawPath(VehiclePath, VehiclePathLine);
+                VehiclePath.transform.SetParent(transform, true);
+
+                _nextPosition = VehiclePath.GetPointAt(0);
+
+                if (CurrentTask.DrawPath)
+                {
+                    SetLineActive(true);
+                    DrawPath(VehiclePath, VehiclePathLine);
+                }
+                else
+                {
+                    SetLineActive(false);
+                }
+
+                _canMove = true;
             }
             else
             {
-                SetLineActive(false);
+                // We are already at our destination
+                _pathCompletionPercent = 1;
             }
-
-            _canMove = true;
         }
 
         /// <summary>
@@ -355,8 +387,11 @@ namespace RideShareLevel
 
         private void SetLineActive(bool value)
         {
-            VehiclePathLine.positionCount = 25;
-            VehiclePathLine.gameObject.SetActive(value);
+            if (VehiclePathLine != null)
+            {
+                VehiclePathLine.positionCount = 25;
+                VehiclePathLine.gameObject.SetActive(value);
+            }
         }
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
@@ -415,6 +450,35 @@ namespace RideShareLevel
                 _taxiing = Instantiate(TaxiingPrefab, transform, false);
                 _taxiing.transform.localPosition = Vector3.up * TaxiingHeight;
             }
+        }
+
+        #endregion
+
+        #region Sounds
+
+        public void PlayVehicleSelected()
+        {
+            if (VehicleSelectedSound != null) VehicleSelectedSound.Play();
+        }
+
+        public void PlayPassengerPickup()
+        {
+            if (PassengerPickupSound != null) PassengerPickupSound.Play();
+        }
+
+        public void PlayEnemySpawn()
+        {
+            if (EnemyCarSpawnSound != null) EnemyCarSpawnSound.Play();
+        }
+
+        public void PlayAvailable()
+        {
+            if (CarAvailableSound != null) CarAvailableSound.Play();
+        }
+
+        public void PlayDelivered()
+        {
+            if (PassengerDeliveredSound != null) PassengerDeliveredSound.Play();
         }
 
         #endregion

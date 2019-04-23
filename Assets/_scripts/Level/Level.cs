@@ -68,7 +68,7 @@ namespace RideShareLevel
             PassengerController.Initialize();
             NeutralVehicleController.Initialize();
             ScoreController.Initialize();
-            Osborne_AudioManager.Instance.Layer1();
+            Osborne_AudioManager.Instance.SetLayers(true, false, false);
         }
     }
 }
