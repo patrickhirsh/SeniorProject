@@ -355,8 +355,11 @@ namespace RideShareLevel
 
         private void SetLineActive(bool value)
         {
-            VehiclePathLine.positionCount = 25;
-            VehiclePathLine.gameObject.SetActive(value);
+            if (VehiclePathLine != null)
+            {
+                VehiclePathLine.positionCount = 25;
+                VehiclePathLine.gameObject.SetActive(value);
+            }
         }
 
         private void DrawPath(BezierCurve vehicleCurve, LineRenderer travelLine)
