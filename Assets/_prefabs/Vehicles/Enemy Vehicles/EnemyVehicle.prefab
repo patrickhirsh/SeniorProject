@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4066096448770726}
   - component: {fileID: 114867229838792336}
-  - component: {fileID: 23102982443230854}
-  - component: {fileID: 54024363699632262}
   - component: {fileID: 8888474847764112275}
+  - component: {fileID: 6528722429697514339}
   m_Layer: 9
   m_Name: EnemyVehicle
   m_TagString: Car
@@ -73,60 +72,6 @@ MonoBehaviour:
   CarAvailableSound: {fileID: 0}
   EnemyCarSpawnSound: {fileID: 7293502765131332776}
   PassengerDeliveredSound: {fileID: 2012192222605143681}
---- !u!23 &23102982443230854
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667412018430948}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: bbfefe2a88513994fa923a33f6a69153, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!54 &54024363699632262
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667412018430948}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &8888474847764112275
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -140,6 +85,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9, y: 0.5, z: 2.25}
   m_Center: {x: 0, y: 0.3, z: 0}
+--- !u!114 &6528722429697514339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667412018430948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: c81dfa957b4d47d44a47b0285b33aed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Vehicle: {fileID: 114867229838792336}
 --- !u!1 &768871753588866215
 GameObject:
   m_ObjectHideFlags: 0

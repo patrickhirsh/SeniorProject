@@ -81,10 +81,10 @@ namespace RideShareLevel
         private void OnTriggerEnter(Collider other)
         {
             //First check if we're running into a collider meant for collision or net
-            var vehicle = other.GetComponent<Vehicle>();
+            var vehicle = other.GetComponent<VehicleCollision>();
             if (vehicle)
             {
-                if (!_collidingVehicles.Contains(other) && !_isInGodMode && vehicle.HasTask)
+                if (!_collidingVehicles.Contains(other) && !_isInGodMode && vehicle.Vehicle.HasTask)
                 {
                     _collidingVehicles.Add(other);
                 }
