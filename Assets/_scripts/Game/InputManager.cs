@@ -8,17 +8,17 @@ using UnityEngine.XR.ARFoundation;
 
 public class InputManager : Singleton<InputManager>
 {
+    private Camera _camera;
+    protected Camera MainCamera => _camera ? _camera : _camera = Camera.main;
+
     [SerializeField]
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
-
-    public Camera Camera;
-
     public GameObject Level;
     public ARSessionOrigin SessionOrigin;
     public float RaycastThickness;
 
     private bool _vehicleSelected;
-    private Camera _camera;
+    public LayerMask ColliderMask;
 
     private void Awake()
     {
@@ -31,10 +31,14 @@ public class InputManager : Singleton<InputManager>
         {
             case GameState.LevelPlacement:
             case GameState.LevelRePlacement:
+#if !PLATFORM_STANDALONE
                 SetDebugPlanesActive(true);
+#endif
                 break;
             case GameState.LevelSimulating:
+#if !PLATFORM_STANDALONE
                 SetDebugPlanesActive(false);
+#endif
                 break;
             case GameState.GameEndManu:
 
@@ -42,21 +46,16 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
-    private void Start()
-    {
-        _camera = Camera.main;
-    }
-
     private void Update()
     {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS) // && !UNITY_EDITOR
         HandleMobileInput();
 #else
         HandleDesktopInput();
 #endif
     }
 
-    #region Hover
+#region Hover
     [Serializable]
     public class HoverEvent : UnityEvent<GameObject> { }
     public HoverEvent HoverChanged = new HoverEvent();
@@ -72,9 +71,9 @@ public class InputManager : Singleton<InputManager>
             HoverChanged.Invoke(null);
         }
     }
-    #endregion
+#endregion
 
-    #region Hit
+#region Hit
     [Serializable]
     public class HitEvent : UnityEvent<GameObject> { }
     public HitEvent Hit = new HitEvent();
@@ -92,14 +91,13 @@ public class InputManager : Singleton<InputManager>
     {
         NoHit?.Invoke(LastHit);
     }
-    #endregion
+#endregion
 
     private void HandleLevelSimulating(bool click)
     {
-        RaycastHit hitInfo;
-        var cameraTransform = _camera.transform;
-        var origin = cameraTransform.position;
-        var hit = Physics.Raycast(origin, cameraTransform.forward, out hitInfo);
+        if (!MainCamera) return;
+        Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
+        var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, ColliderMask);
 
         HandleHover(hit, hitInfo);
 

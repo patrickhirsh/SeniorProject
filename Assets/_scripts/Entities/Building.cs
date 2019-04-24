@@ -40,11 +40,10 @@ public class Building : LevelObject
 
     public void InitializeScoreUI(BuildingScore buildingScorePrefab)
     {
-        ScoreLocation = new Vector3(transform.position.x, ScoreController.ScoreHeight, transform.position.z);
-
-        _buildingScore = Instantiate(buildingScorePrefab, transform, true);
+        ScoreLocation = transform.position + transform.up * ScoreController.ScoreHeight;
+        _buildingScore = Instantiate(buildingScorePrefab, ScoreLocation, Quaternion.identity);
+        _buildingScore.transform.SetParent(transform, true);
         _buildingScore.SetBuilding(this);
-        _buildingScore.transform.position = ScoreLocation;
         _buildingScore.UpdateDelivered();
 
         Broadcaster.AddListener(GameEvent.PassengerDelivered, PassengerDelivered);

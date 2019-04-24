@@ -15,8 +15,8 @@ public enum BuildingScoreState { PlayerStar, EnemyStar, TBD };
 /// </summary>
 public class ScoreController : LevelObject
 {
-    public BuildingScore BuildingScorePrefab;			// UI prefab to display above buildings, used in BuildingScore objects
-				public int ScoreHeight;																					// Determines the height of the BuildingScore objects in this level
+    public BuildingScore BuildingScorePrefab;           // UI prefab to display above buildings, used in BuildingScore objects
+    public int ScoreHeight;																					// Determines the height of the BuildingScore objects in this level
 
     #region Public Methods
 
@@ -43,7 +43,7 @@ public class ScoreController : LevelObject
             building.InitializeScoreUI(BuildingScorePrefab);
         }
 
-								Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
+        Broadcaster.AddListener(GameEvent.BuildingComplete, BuildingComplete);
     }
     #endregion
 

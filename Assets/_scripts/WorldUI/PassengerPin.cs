@@ -20,7 +20,6 @@ public class PassengerPin : LevelObject
     public bool QueuedForPickup;
     private bool _selected;
     private bool _hover;
-    private Camera _camera;
     private float _y;
     private Sequence _selectionSequence;
     private Sequence _hoverSequence;
@@ -31,7 +30,6 @@ public class PassengerPin : LevelObject
 
     private void Awake()
     {
-        _camera = Camera.main;
         SelectionNumber.DOFade(0, 0);
         InputManager.Instance.HoverChanged.AddListener(HandleHoverChange);
 
@@ -53,9 +51,10 @@ public class PassengerPin : LevelObject
 
     private void Update()
     {
+        if (!MainCamera) return;
         if (CanvasGroup.gameObject.activeInHierarchy)
         {
-            CanvasGroup.transform.LookAt(_camera.transform);
+            CanvasGroup.transform.LookAt(MainCamera.transform);
         }
 
         ComputeLine();

@@ -14,7 +14,7 @@ namespace RideShareLevel
         public ScoreController ScoreController;
         public GameObject ArtContainer;
         public GameObject menubuildingprefab;
-    
+        public CameraBubble Bubble;
 
 #if UNITY_EDITOR
         public void Bake()
@@ -27,6 +27,7 @@ namespace RideShareLevel
             EntityController = GetComponentInChildren<EntityController>(true);
             PassengerController = GetComponentInChildren<PassengerController>(true);
             ScoreController = GetComponentInChildren<ScoreController>(true);
+            Bubble = GetComponentInChildren<CameraBubble>(true);
 
             CheckLevelSetup();
 
@@ -49,6 +50,7 @@ namespace RideShareLevel
             Debug.Assert(EntityController != null, "Missing an Entity Controller");
             Debug.Assert(PassengerController != null, "Missing a Passenger Controller");
             Debug.Assert(ScoreController != null, "Missing a Score Controller");
+            Debug.Assert(Bubble != null, "Missing a Camera Bubble");
         }
 
         private void Awake()

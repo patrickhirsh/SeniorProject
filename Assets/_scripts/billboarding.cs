@@ -1,21 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using RideShareLevel;
 using UnityEngine;
 
-public class billboarding : MonoBehaviour
+public class billboarding : LevelObject
 {
-
-    // Use this for initialization
-    public Camera m_Camera;
-
-    private void Start()
-    {
-        m_Camera = Camera.main;
-    }
-
     //Orient the camera after all movement is completed this frame to avoid jittering
     void LateUpdate()
     {
-        transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward);
+        if (!MainCamera) return;
+        transform.LookAt(transform.position + MainCamera.transform.rotation * Vector3.forward);
     }
 }

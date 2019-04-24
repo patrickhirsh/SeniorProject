@@ -4,6 +4,9 @@ namespace RideShareLevel
 {
     public abstract class LevelObject : MonoBehaviour
     {
+        private Camera _camera;
+        protected Camera MainCamera => _camera ? _camera : _camera = Camera.main;
+
         [SerializeField]
         [HideInInspector]
         private Level Level;
