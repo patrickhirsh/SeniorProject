@@ -82,7 +82,7 @@ namespace RideShareLevel
         {
             //First check if we're running into a collider meant for collision or net
             var vehicle = other.GetComponent<VehicleCollision>();
-            if (vehicle)
+            if (vehicle && vehicle.Vehicle != Vehicle)
             {
                 if (!_collidingVehicles.Contains(other) && !_isInGodMode && vehicle.Vehicle.HasTask)
                 {
@@ -93,7 +93,8 @@ namespace RideShareLevel
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.GetComponent<Vehicle>())
+            var vehicle = other.GetComponent<VehicleCollision>();
+            if (vehicle && vehicle.Vehicle != Vehicle)
             {
                 if (_collidingVehicles.Contains(other))
                 {

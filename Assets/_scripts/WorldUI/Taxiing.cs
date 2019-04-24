@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _scripts
 {
-    public class Taxiing : MonoBehaviour
+    public class Taxiing : LevelObject
     {
         public Canvas AnimationCanvas;
         public CanvasGroup CanvasGroup;
@@ -14,7 +14,6 @@ namespace _scripts
         public PassengerTaxiingIcon PassengerIconPrefab;
         public LineRaycaster Line;
 
-        private Camera _camera;
         private Dictionary<Passenger, PassengerTaxiingIcon> _icons = new Dictionary<Passenger, PassengerTaxiingIcon>();
         private Sequence _sequence;
 
@@ -22,16 +21,16 @@ namespace _scripts
 
         private void Awake()
         {
-            _camera = Camera.main;
             Line.gameObject.SetActive(false);
             CanvasGroup.gameObject.SetActive(false);
         }
 
         private void Update()
         {
+            if (!MainCamera) return;
             if (CanvasGroup.gameObject.activeInHierarchy)
             {
-                CanvasGroup.transform.LookAt(_camera.transform);
+                CanvasGroup.transform.LookAt(MainCamera.transform);
             }
         }
         #endregion

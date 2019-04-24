@@ -16,22 +16,18 @@ public class BuildingScore : LevelObject
     public AudioSource BuildingFailSound;
     public AudioSource BuildingWinSound;
 
-    private Camera _camera;
+
     private Building _building;
     #region Unity Methods
 
     private BuildingScoreState _state = BuildingScoreState.TBD;
 
-    private void Awake()
-    {
-        _camera = Camera.main;
-    }
-
     private void Update()
     {
+        if (!MainCamera) return;
         if (CanvasGroup.gameObject.activeInHierarchy)
         {
-            CanvasGroup.transform.LookAt(_camera.transform, Vector3.up);
+            CanvasGroup.transform.LookAt(MainCamera.transform, Vector3.up);
         }
     }
 

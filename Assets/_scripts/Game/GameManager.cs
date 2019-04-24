@@ -17,18 +17,22 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         LevelManager.Instance.Initialize();
+#if UNITY_STANDALONE
+        SetGameState(GameState.LevelSimulating);
+#else
         SetGameState(GameState.LevelPlacement);
+#endif
         Broadcaster.AddListener(GameEvent.Reset, Reset);
     }
 
-    #endregion
+#endregion
 
     private void Reset(GameEvent @event)
     {
         _gameStates.Clear();
     }
 
-    #region GameState
+#region GameState
 
     private static readonly Stack<GameState> _gameStates = new Stack<GameState>();
     public static GameState? CurrentGameState => _gameStates.Any() ? _gameStates.Peek() : (GameState?)null;
@@ -51,7 +55,7 @@ public class GameManager : Singleton<GameManager>
 
 
 
-    #endregion
+#endregion
     
 
     public void gameOver()

@@ -6,11 +6,10 @@ using UnityEngine.UI;
 
 namespace _scripts
 {
-    public class PassengerTaxiingIcon : MonoBehaviour
+    public class PassengerTaxiingIcon : LevelObject
     {
         public Image Icon;
         private Passenger _passenger;
-        private Camera _camera;
 
         public void SetPassenger(Passenger passenger)
         {
@@ -18,16 +17,12 @@ namespace _scripts
             Icon.color = ColorKey.GetBuildingColor(passenger.GetBuildingColor());
         }
 
-        private void Awake()
-        {
-            _camera = Camera.main;
-        }
-
         private void Update()
         {
+            if (!MainCamera) return;
             if (gameObject.activeInHierarchy)
             {
-                transform.LookAt(_camera.transform);
+                transform.LookAt(MainCamera.transform);
             }
         }
 
