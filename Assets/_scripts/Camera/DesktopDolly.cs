@@ -25,7 +25,7 @@ public class DesktopDolly : MonoBehaviour
         var q = Quaternion.AngleAxis(Angle, Vector3.up);
         if (Physics.Linecast(levelTransform.position + q * Vector3.right * 1000, levelTransform.position, out var hitInfo, 1 << 10))
         {
-            transform.position = hitInfo.point + Vector3.up * Height + Vector3.up * LevelManager.Instance.CurrentLevel.Bubble.transform.position.y;
+            transform.position = hitInfo.point + Vector3.up * Height + Vector3.up * LevelManager.Instance.CurrentLevel.Bubble.transform.localPosition.y;
             MainCamera.transform.LookAt(levelTransform);
         }
 

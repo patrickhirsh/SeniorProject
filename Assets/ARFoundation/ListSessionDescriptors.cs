@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine.Experimental;
 using UnityEngine.Experimental.XR;
-using UnityEditor;
 
 namespace UnityEngine.XR.Mock.Example
 {
     static class ListSessionDescriptors
     {
-        [MenuItem("Sessions/List Available Sessions")]
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Sessions/List Available Sessions")]
         static void ListSessions()
         {
             var descriptors = new List<XRSessionSubsystemDescriptor>();
@@ -20,5 +20,6 @@ namespace UnityEngine.XR.Mock.Example
             if (descriptors.Count == 0)
                 Debug.Log("No sessions available.");
         }
+#endif
     }
 }
